@@ -14,6 +14,7 @@ import { Work } from '../apps/Work';
 import { Brain } from '../apps/Brain';
 import { Contact } from '../apps/Contact';
 import { Resume } from '../apps/Resume';
+import { Now } from '../apps/Now';
 
 interface AppDef {
   id: string;
@@ -28,6 +29,7 @@ interface AppDef {
 const APP_LIST: readonly AppDef[] = [
   { id: 'sobre', label: APPS.sobre, glyph: '◈', restX: 5, restY: 13, width: 440, render: () => <About /> },
   { id: 'trabalho', label: APPS.trabalho, glyph: '▣', restX: 37, restY: 22, width: 560, render: () => <Work /> },
+  { id: 'agora', label: APPS.agora, glyph: '◔', restX: 64, restY: 40, width: 430, render: () => <Now /> },
   {
     id: 'cerebro',
     label: APPS.cerebro,
@@ -42,6 +44,8 @@ const APP_LIST: readonly AppDef[] = [
 ];
 
 const INITIAL = ['sobre', 'trabalho'];
+
+const KEY = { palette: 'k', escape: 'Escape' } as const;
 
 function useCompact() {
   const [compact, setCompact] = useState(
@@ -73,14 +77,21 @@ export function Desktop() {
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+      const key = e.key.toLowerCase();
+      if ((e.metaKey || e.ctrlKey) && key === KEY.palette) {
         e.preventDefault();
         setPalette((p) => !p);
+        return;
+      }
+      // Esc fecha a janela do topo — só quando o palette não está aberto,
+      // porque lá ele já significa "fechar o palette".
+      if (e.key === KEY.escape && !palette && wm.topmost) {
+        wm.close(wm.topmost);
       }
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, []);
+  }, [palette, wm]);
 
   const toggleFrom = useCallback(
     (id: string, centerX: number) => {

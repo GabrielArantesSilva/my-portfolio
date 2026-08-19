@@ -17,12 +17,14 @@ const MAG_PEAK = 1.42;
 function DockButton({
   item,
   active,
+  minimized,
   pointerX,
   still,
   onActivate,
 }: {
   item: DockItem;
   active: boolean;
+  minimized: boolean;
   pointerX: MotionValue<number>;
   still: boolean;
   onActivate: (id: string, centerX: number) => void;
@@ -51,7 +53,7 @@ function DockButton({
       onClick={() => onActivate(item.id, centerX())}
       aria-pressed={active}
       style={still ? undefined : { scale }}
-      className={`group relative flex flex-1 origin-bottom flex-col items-center gap-1 rounded-xl px-3 py-2 transition-colors duration-200 sm:flex-none sm:flex-row sm:gap-2 sm:rounded-full sm:px-4 ${
+      className={`group relative flex shrink-0 origin-bottom flex-col items-center gap-1 rounded-xl px-3 py-2 transition-colors duration-200 sm:flex-row sm:gap-2 sm:rounded-full sm:px-4 ${
         active ? 'bg-accent/12 text-heading' : 'text-muted hover:bg-ink-850 hover:text-body'
       }`}
     >
@@ -61,8 +63,10 @@ function DockButton({
       <span className="numeric text-[0.65rem] sm:text-xs">{t(item.label)}</span>
       <span
         aria-hidden
-        className={`absolute -bottom-0.5 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-accent transition-opacity duration-200 sm:-bottom-1 ${
-          active ? 'opacity-100' : 'opacity-0'
+        className={`absolute -bottom-0.5 left-1/2 h-1 -translate-x-1/2 rounded-full transition-all duration-200 sm:-bottom-1 ${
+          active ? 'w-1 bg-accent opacity-100' : ''
+        } ${minimized ? 'w-3 bg-ink-500 opacity-100' : ''} ${
+          !active && !minimized ? 'w-1 opacity-0' : ''
         }`}
       />
     </motion.button>
@@ -92,14 +96,15 @@ export function Dock({
       transition={{ duration: 0.55, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
       onPointerMove={(e) => pointerX.set(e.clientX)}
       onPointerLeave={() => pointerX.set(Number.POSITIVE_INFINITY)}
-      className="fixed inset-x-0 bottom-0 z-40 flex justify-center px-3 pb-3 sm:pb-5"
+      className="fixed inset-x-0 bottom-0 z-40 flex justify-center px-2 pb-2 sm:px-3 sm:pb-5"
     >
-      <div className="glass flex w-full max-w-xl items-end gap-1 rounded-2xl p-1.5 sm:w-auto sm:rounded-full sm:p-2">
+      <div className="glass flex w-full max-w-full items-end gap-1 overflow-x-auto rounded-2xl p-1.5 [scrollbar-width:none] sm:w-auto sm:max-w-xl sm:overflow-visible sm:rounded-full sm:p-2">
         {items.map((item) => (
           <DockButton
             key={item.id}
             item={item}
             active={isOpen(item.id) && !isMinimized(item.id)}
+            minimized={isMinimized(item.id)}
             pointerX={pointerX}
             still={still}
             onActivate={onToggle}

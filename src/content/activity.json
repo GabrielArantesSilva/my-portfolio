@@ -1,0 +1,105 @@
+{
+  "syncedAt": "2026-08-19T20:15:08.654Z",
+  "projects": [
+    {
+      "name": "gabriel.os",
+      "public": true,
+      "total": 7,
+      "lastAt": "2026-08-19",
+      "commits": [
+        {
+          "date": "2026-08-19",
+          "subject": "feat(os): wallpaper vivo, command palette, dock magnetico e curriculo"
+        },
+        {
+          "date": "2026-08-19",
+          "subject": "feat(cerebro): grafo de conhecimento com dataset publico filtrado"
+        },
+        {
+          "date": "2026-08-19",
+          "subject": "feat(os): gabriel.os — shell de sistema operacional"
+        },
+        {
+          "date": "2026-08-19",
+          "subject": "feat(sections): as nove secoes do v2"
+        }
+      ]
+    },
+    {
+      "name": "Bancada",
+      "public": false,
+      "total": 8,
+      "lastAt": "2026-08-16",
+      "commits": [
+        {
+          "date": "2026-08-16",
+          "subject": null
+        },
+        {
+          "date": "2026-08-16",
+          "subject": null
+        },
+        {
+          "date": "2026-08-16",
+          "subject": null
+        },
+        {
+          "date": "2026-08-16",
+          "subject": null
+        }
+      ]
+    },
+    {
+      "name": "Bot de vendas",
+      "public": true,
+      "total": 19,
+      "lastAt": "2026-08-09",
+      "commits": [
+        {
+          "date": "2026-08-09",
+          "subject": "docs(harness): registra Tenant em boundaries, glossário e dívida técnica"
+        },
+        {
+          "date": "2026-08-09",
+          "subject": "test: cobre regressão do tenant 0, split e invariantes de Tenant"
+        },
+        {
+          "date": "2026-08-09",
+          "subject": "feat(orders): resolve o tenant e calcula a taxa na criação do pedido"
+        },
+        {
+          "date": "2026-08-09",
+          "subject": "feat(payments): adiciona split opcional ao contrato e ao cliente Asaas"
+        }
+      ]
+    },
+    {
+      "name": "Dobra SaaS",
+      "public": true,
+      "total": 16,
+      "lastAt": "2026-08-06",
+      "commits": [
+        {
+          "date": "2026-08-06",
+          "subject": "fix(auth): resolve the reset-password URL without a build-time env var"
+        },
+        {
+          "date": "2026-08-05",
+          "subject": "fix(bodyfat): adopt the original scope classification bands"
+        },
+        {
+          "date": "2026-08-05",
+          "subject": "feat(seo): add protocol guide and FAQ content to the landing page"
+        },
+        {
+          "date": "2026-08-05",
+          "subject": "feat(seo): per-route metadata, canonical, robots and sitemap"
+        }
+      ]
+    }
+  ],
+  "totals": {
+    "commits": 50,
+    "repos": 4
+  }
+}
