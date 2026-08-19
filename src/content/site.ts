@@ -31,7 +31,7 @@ export const IDENTITY = {
 
 /** Preencha o WhatsApp com DDI+DDD+numero, só dígitos: 5537999999999 */
 export const CONTACT_CHANNELS = {
-  whatsapp: '',
+  whatsapp: '5537999950605',
 } as const;
 
 export const REQUEST_KINDS = [
