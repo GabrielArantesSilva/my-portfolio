@@ -13,8 +13,16 @@ import type { Txt, WorkItem } from '../content/types';
 const orgOf = (item: WorkItem, t: (v: Txt) => string) =>
   typeof item.org === 'string' ? item.org : t(item.org);
 
-/** Coloque uma foto em src/assets/perfil.jpg e importe aqui para trocar o monograma. */
-const PHOTO: string | null = null;
+/**
+ * Basta soltar o arquivo em src/assets/perfil.jpg (ou .png/.webp/.avif) que a
+ * foto entra no lugar do monograma — o glob do Vite resolve em build, sem
+ * ninguém precisar editar este arquivo.
+ */
+const found = import.meta.glob('../assets/perfil.{jpg,jpeg,png,webp,avif}', {
+  eager: true,
+  import: 'default',
+});
+const PHOTO = (Object.values(found)[0] as string | undefined) ?? null;
 
 export function Resume() {
   const { t } = useLang();

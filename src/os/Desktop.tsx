@@ -59,6 +59,9 @@ export function Desktop() {
   const [clock, setClock] = useState(() => new Date());
   const [palette, setPalette] = useState(false);
   const [note, setNote] = useState<string | null>(null);
+  // Incrementar remonta o conteúdo dos apps, o que zera busca, seleção e
+  // acordeão de uma vez — sem cada tela precisar expor um clearFilters.
+  const [resetKey, setResetKey] = useState(0);
 
   useEffect(() => {
     const timer = setInterval(() => setClock(new Date()), 30_000);
@@ -130,6 +133,14 @@ export function Desktop() {
     [openAndBring]
   );
 
+  /** Volta tudo ao estado de entrada: janelas, posições, câmera e filtros. */
+  const restore = useCallback(() => {
+    wm.reset();
+    setNote(null);
+    setResetKey((k) => k + 1);
+    camera.reset();
+  }, [wm, camera]);
+
   const ctx: Ctx = { note, onNote: setNote };
   const open = LAYOUT.filter((app) => wm.isOpen(app.id) && !wm.isMinimized(app.id));
   const away = Math.hypot(camera.pan.x, camera.pan.y) > 180;
@@ -150,6 +161,15 @@ export function Desktop() {
             ⌖ {t(UI.recenter)}
           </button>
         )}
+
+        <button
+          type="button"
+          onClick={restore}
+          title={t(UI.restoreHint)}
+          className="numeric rounded-full border border-hairline px-2.5 py-1 text-[0.65rem] text-muted transition-colors hover:border-accent hover:text-body"
+        >
+          ⟲ {t(UI.restore)}
+        </button>
 
         <button
           type="button"
@@ -185,7 +205,7 @@ export function Desktop() {
                 onMinimize={() => wm.minimize(app.id)}
                 onMove={() => {}}
               >
-                {RENDERERS[app.id]?.(ctx)}
+                <div key={resetKey}>{RENDERERS[app.id]?.(ctx)}</div>
               </Window>
             ))}
           </AnimatePresence>
@@ -227,7 +247,7 @@ export function Desktop() {
                     onMinimize={() => wm.minimize(app.id)}
                     onMove={(dx, dy) => wm.moveBy(app.id, dx, dy)}
                   >
-                    {RENDERERS[app.id]?.(ctx)}
+                    <div key={resetKey}>{RENDERERS[app.id]?.(ctx)}</div>
                   </Window>
                 );
               })}

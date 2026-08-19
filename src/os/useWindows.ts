@@ -21,13 +21,18 @@ export interface WindowManager {
   minimize: (id: string) => void;
   focus: (id: string) => void;
   moveBy: (id: string, dx: number, dy: number) => void;
+  /** Volta ao conjunto e às posições de fábrica. */
+  reset: () => void;
   topmost: string | null;
 }
 
+const factory = (initial: readonly string[]): WinState[] =>
+  initial.map((id, i) => ({ id, z: i + 1, minimized: false, dx: 0, dy: 0 }));
+
 export function useWindows(initial: readonly string[] = []): WindowManager {
-  const [windows, setWindows] = useState<readonly WinState[]>(() =>
-    initial.map((id, i) => ({ id, z: i + 1, minimized: false, dx: 0, dy: 0 }))
-  );
+  const [windows, setWindows] = useState<readonly WinState[]>(() => factory(initial));
+
+  const reset = useCallback(() => setWindows(factory(initial)), [initial]);
 
   const nextZ = useCallback(
     (list: readonly WinState[]) => list.reduce((max, w) => Math.max(max, w.z), 0) + 1,
@@ -105,6 +110,7 @@ export function useWindows(initial: readonly string[] = []): WindowManager {
     minimize,
     focus,
     moveBy,
+    reset,
     topmost,
   };
 }

@@ -287,6 +287,11 @@ export const UI = {
   shipping: { pt: 'uso em produção', en: 'in production' } satisfies Txt,
   studied: { pt: 'estudei', en: 'studied' } satisfies Txt,
   recenter: { pt: 'recentrar', en: 'recenter' } satisfies Txt,
+  restore: { pt: 'restaurar', en: 'restore' } satisfies Txt,
+  restoreHint: {
+    pt: 'Volta as janelas às posições padrão e limpa buscas e seleções',
+    en: 'Returns windows to default positions and clears searches and selections',
+  } satisfies Txt,
   panHint: {
     pt: 'arraste o fundo para navegar',
     en: 'drag the background to navigate',
