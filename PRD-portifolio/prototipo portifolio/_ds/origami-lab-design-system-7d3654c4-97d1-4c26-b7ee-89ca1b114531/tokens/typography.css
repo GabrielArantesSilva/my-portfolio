@@ -1,0 +1,32 @@
+:root{
+/* Escala fixa, desenhada para o palco de 1920×1080.
+   Nada abaixo de 24px — 24px é o corpo, não o mínimo teórico. */
+--ol-size-display:116px;   --ol-lh-display:1.02;/* @kind other */  --ol-ls-display:-.03em; /* @kind font */
+--ol-size-numeral-hero:280px; --ol-lh-numeral-hero:.8;/* @kind other */ --ol-ls-numeral-hero:-.04em; /* @kind font */
+--ol-size-numeral-xl:200px;--ol-lh-numeral-xl:.86;/* @kind other */--ol-ls-numeral-xl:-.04em; /* @kind font */
+--ol-size-title:88px;      --ol-lh-title:1.05;/* @kind other */    --ol-ls-title:-.03em; /* @kind font */
+--ol-size-heading:76px;    --ol-lh-heading:1.08;/* @kind other */  --ol-ls-heading:-.025em; /* @kind font */
+--ol-size-numeral-lg:72px; --ol-ls-numeral-lg:-.03em; /* @kind font */
+--ol-size-section:64px;    --ol-lh-section:1.1;/* @kind other */   --ol-ls-section:-.025em; /* @kind font */
+--ol-size-subsection:56px; --ol-ls-numeral:-.03em; /* @kind font */
+--ol-size-quote:52px;      --ol-lh-quote:1.35;/* @kind other */    --ol-ls-quote:-.02em; /* @kind font */
+--ol-size-list:38px; /* @kind font */
+--ol-size-subtitle:34px;   --ol-lh-subtitle:1.2;/* @kind other */  --ol-ls-subtitle:-.02em; /* @kind font */
+--ol-size-card-title:32px; /* @kind font */
+--ol-size-lead:28px;       --ol-lh-lead:1.55; /* @kind font */
+--ol-size-body-lg:26px;    --ol-lh-body-lg:1.6; /* @kind font */
+--ol-size-body:24px;       --ol-lh-body:1.6; /* @kind font */
+--ol-size-min:24px; /* @kind font */
+
+--ol-weight-regular:400; /* @kind font */
+--ol-weight-medium:500; /* @kind font */
+--ol-weight-semibold:600; /* @kind font */
+--ol-weight-bold:700; /* @kind font */
+--ol-weight-black:800; /* @kind font */
+
+--ol-eyebrow-size:24px; /* @kind font */
+--ol-eyebrow-weight:600; /* @kind font */
+--ol-eyebrow-tracking:.14em; /* @kind other */
+--ol-table-head-tracking:.08em; /* @kind other */
+--ol-numeric:tabular-nums; /* @kind other */
+}

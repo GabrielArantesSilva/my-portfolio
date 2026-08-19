@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="_ds/origami-lab-design-system-7d3654c4-97d1-4c26-b7ee-89ca1b114531/tokens/fonts.css">
+<link rel="stylesheet" href="_ds/origami-lab-design-system-7d3654c4-97d1-4c26-b7ee-89ca1b114531/tokens/colors.css">
+<link rel="stylesheet" href="_ds/origami-lab-design-system-7d3654c4-97d1-4c26-b7ee-89ca1b114531/tokens/typography.css">
+<link rel="stylesheet" href="_ds/origami-lab-design-system-7d3654c4-97d1-4c26-b7ee-89ca1b114531/tokens/spacing.css">
+<link rel="stylesheet" href="_ds/origami-lab-design-system-7d3654c4-97d1-4c26-b7ee-89ca1b114531/tokens/shape.css">
+<link rel="stylesheet" href="_ds/origami-lab-design-system-7d3654c4-97d1-4c26-b7ee-89ca1b114531/tokens/motion.css">
+<link rel="stylesheet" href="_ds/origami-lab-design-system-7d3654c4-97d1-4c26-b7ee-89ca1b114531/styles.css">
+<script src="_ds/origami-lab-design-system-7d3654c4-97d1-4c26-b7ee-89ca1b114531/_ds_bundle.js"></script>
+<style>
+  html { scroll-behavior: smooth; }
+  body { margin:0; background:#F4F1E8; color:#1C1D1F; font-family:var(--ol-font-sans, Inter), system-ui, sans-serif; -webkit-font-smoothing:antialiased; }
+  a { color:#1F5F4E; text-decoration:none; }
+  a:hover { color:#14463A; }
+  ::selection { background:#DCE7DF; color:#1C1D1F; }
+  @keyframes ol-rise { from { opacity:0; transform:translateY(22px); } to { opacity:1; transform:translateY(0); } }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior:auto; } }
+  @media (max-width:1180px){
+    [data-r="hero"]{grid-template-columns:minmax(0,1fr)!important; gap:44px!important; padding-top:64px!important;}
+    [data-r="c4"]{grid-template-columns:repeat(2,1fr)!important;}
+    [data-r="stack4"]{grid-template-columns:repeat(2,1fr)!important;}
+  }
+  @media (max-width:980px){
+    [data-r="c2"]{grid-template-columns:minmax(0,1fr)!important; gap:32px!important; padding:40px!important;}
+    [data-r="c3"]{grid-template-columns:minmax(0,1fr)!important;}
+    [data-r="side"]{grid-template-columns:minmax(0,1fr)!important;}
+    [data-r="row"]{grid-template-columns:minmax(0,1fr) auto!important; gap:10px 20px!important;}
+    [data-r="thead"]{display:none!important;}
+    [data-r="f3"]{grid-template-columns:minmax(0,1fr) auto!important; gap:8px 20px!important;}
+  }
+  @media (max-width:720px){
+    [data-r="c4"]{grid-template-columns:minmax(0,1fr)!important;}
+    [data-r="stack4"]{grid-template-columns:minmax(0,1fr)!important;}
+    [data-r="pad"]{padding:40px 24px!important;}
+  }
+</style>
+</helmet>
+
+<div ref="{{ rootRef }}" style="min-height:100vh; background:#F4F1E8;">
+
+  <header style="position:sticky; top:0; z-index:40; background:rgba(244,241,232,.92); border-bottom:1px solid #DAD3C2;">
+    <div style="max-width:1240px; margin:0 auto; padding:0 40px; height:68px; display:flex; align-items:center; justify-content:space-between; gap:24px;">
+      <div style="display:flex; align-items:baseline; gap:10px;">
+        <span style="font-size:16px; font-weight:700; letter-spacing:-.02em;">Gabriel Arantes</span>
+        <span style="font-size:12px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:#63625F;" data-en="Software engineer">Engenharia de software</span>
+      </div>
+      <nav style="display:flex; align-items:center; gap:4px;">
+        <button onClick="{{ goVitrine }}" style="appearance:none; border:1px solid transparent; background:{{ navBg1 }}; color:{{ navFg1 }}; font:inherit; font-size:13px; font-weight:600; padding:8px 14px; border-radius:100px; cursor:pointer;" data-en="Showcase">Vitrine</button>
+        <button onClick="{{ goCase }}" style="appearance:none; border:1px solid transparent; background:{{ navBg2 }}; color:{{ navFg2 }}; font:inherit; font-size:13px; font-weight:600; padding:8px 14px; border-radius:100px; cursor:pointer;" data-en="Case study">Case study</button>
+        <button onClick="{{ goPanel }}" style="appearance:none; border:1px solid transparent; background:{{ navBg3 }}; color:{{ navFg3 }}; font:inherit; font-size:13px; font-weight:600; padding:8px 14px; border-radius:100px; cursor:pointer;" data-en="Console">Console</button>
+        <span style="width:1px; height:20px; background:#DAD3C2; margin:0 12px;"></span>
+        <button onClick="{{ toggleLang }}" style="appearance:none; border:1px solid #DAD3C2; background:transparent; color:#1C1D1F; font:inherit; font-size:12px; font-weight:600; letter-spacing:.08em; padding:8px 12px; border-radius:100px; cursor:pointer;" style-hover="border-color:#1F5F4E; color:#1F5F4E;">{{ langLabel }}</button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ══════════ VITRINE ══════════ -->
+  <main style="display:{{ scrVitrine }};">
+
+    <section data-r="hero" style="max-width:1240px; margin:0 auto; padding:96px 40px 80px; display:grid; grid-template-columns:minmax(0,1fr) minmax(0,520px); gap:64px; align-items:center;">
+      <div>
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:28px;">
+          <span style="width:8px; height:8px; border-radius:50%; background:#1F5F4E;"></span>
+          <span style="font-size:12px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:#1F5F4E;" data-en="Full stack · Architecture · AI agents">Full stack · Arquitetura · Agentes de IA</span>
+        </div>
+        <h1 style="margin:0 0 24px; font-size:clamp(38px,5.6vw,72px); line-height:1.03; letter-spacing:-.035em; font-weight:800; text-wrap:pretty;" data-en="I don't ship code from memory. I ship it from a system.">Não escrevo código de memória. Escrevo a partir de um sistema.</h1>
+        <p style="margin:0 0 36px; max-width:52ch; font-size:19px; line-height:1.65; color:#63625F; text-wrap:pretty;" data-en="Fifteen years of decisions turned into a working second brain: 194 notes, 847 links, a mandatory reading ritual before any commit. Every project below came out of it.">Quinze anos de decisões transformados em um segundo cérebro operante: 194 notas, 847 conexões e um ritual de leitura obrigatório antes de qualquer commit. Todo projeto abaixo saiu de lá.</p>
+        <div style="display:flex; flex-wrap:wrap; gap:12px;">
+          <button onClick="{{ goCase }}" style="appearance:none; border:none; background:#1F5F4E; color:#FFFFFF; font:inherit; font-size:15px; font-weight:600; padding:15px 26px; border-radius:100px; cursor:pointer;" style-hover="background:#14463A;" data-en="See the second brain">Ver o segundo cérebro</button>
+          <a href="#projetos" style="display:inline-flex; align-items:center; border:1px solid #DAD3C2; background:#FBFAF6; color:#1C1D1F; font-size:15px; font-weight:600; padding:15px 26px; border-radius:100px;" style-hover="border-color:#1F5F4E; color:#1F5F4E;" data-en="Projects">Projetos</a>
+        </div>
+      </div>
+      <div style="position:relative; border:1px solid #DAD3C2; border-radius:12px; background:#18191B; overflow:hidden;">
+        <div style="position:absolute; top:20px; left:24px; z-index:2; font-size:12px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:#9FD3C2;" data-en="Live vault graph">Grafo do vault</div>
+        <canvas ref="{{ graphRef }}" style="display:block; width:100%; height:520px;"></canvas>
+        <div style="position:absolute; bottom:0; left:0; right:0; padding:20px 24px; border-top:1px solid #2E2F31; display:flex; justify-content:space-between; font-size:13px; color:#A5A5A1; font-variant-numeric:tabular-nums;">
+          <span data-en="194 notes · 847 links">194 notas · 847 conexões</span>
+          <span data-en="5 broken · 4 orphans">5 quebrados · 4 órfãos</span>
+        </div>
+      </div>
+    </section>
+
+    <section style="border-top:1px solid #DAD3C2; border-bottom:1px solid #DAD3C2; background:#EAE5D8;">
+      <div style="max-width:1240px; margin:0 auto; padding:0 40px; display:grid; grid-template-columns:repeat(4,1fr);" data-r="c4">
+        <sc-for list="{{ heroStats }}" as="s" hint-placeholder-count="4">
+          <div data-rise style="padding:40px 32px 36px; border-right:1px solid #DAD3C2;">
+            <div style="font-size:clamp(34px,3.6vw,52px); font-weight:800; letter-spacing:-.03em; line-height:1; font-variant-numeric:tabular-nums; color:#1F5F4E;">{{ s.value }}</div>
+            <div style="margin-top:10px; font-size:14px; font-weight:600; color:#1C1D1F;">{{ s.label }}</div>
+            <div style="margin-top:4px; font-size:13px; color:#63625F;">{{ s.note }}</div>
+          </div>
+        </sc-for>
+      </div>
+      <div style="max-width:1240px; margin:0 auto; padding:16px 40px 20px; font-size:13px; color:#63625F;">{{ sourceLine }}</div>
+    </section>
+
+    <section style="max-width:1240px; margin:0 auto; padding:96px 40px 0;">
+      <div style="display:flex; align-items:flex-end; justify-content:space-between; gap:40px; margin-bottom:40px;">
+        <div>
+          <div style="font-size:12px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:#1F5F4E; margin-bottom:16px;" data-en="Featured">Destaque</div>
+          <h2 style="margin:0; font-size:clamp(28px,3.6vw,44px); line-height:1.1; letter-spacing:-.03em; font-weight:800; max-width:24ch; text-wrap:pretty;" data-en="The second brain is the product, not the side note.">O segundo cérebro é o produto, não a nota de rodapé.</h2>
+        </div>
+        <button onClick="{{ goCase }}" style="appearance:none; border:1px solid #DAD3C2; background:#FBFAF6; color:#1C1D1F; font:inherit; font-size:14px; font-weight:600; padding:13px 22px; border-radius:100px; cursor:pointer; white-space:nowrap;" style-hover="border-color:#1F5F4E; color:#1F5F4E;" data-en="Full case study">Case study completo</button>
+      </div>
+      <div data-r="c2" style="background:#1F5F4E; border-radius:12px; padding:56px; display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:56px;">
+        <div>
+          <p style="margin:0 0 32px; font-size:22px; line-height:1.5; color:#FFFFFF; letter-spacing:-.01em; text-wrap:pretty;" data-en="A vault of 158,500 words governing how I build: layered folders, one MOC per domain, and a rule that settles every argument — when theory and code diverge, the code wins.">Um vault de 158,5 mil palavras que governa como eu construo: pastas em camadas, um MOC por domínio e uma regra que encerra qualquer discussão — quando teoria e código divergem, o código vence.</p>
+          <div style="display:flex; flex-direction:column; gap:18px;">
+            <sc-for list="{{ vaultPoints }}" as="p" hint-placeholder-count="4">
+              <div style="display:flex; gap:16px; align-items:flex-start;">
+                <span style="flex:0 0 auto; width:22px; height:22px; border-radius:50%; border:2px solid #7FA697; margin-top:2px;"></span>
+                <span style="font-size:16px; line-height:1.55; color:#B9DDD1;">{{ p.text }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+        <div style="border:1px solid #2C7361; border-radius:12px; overflow:hidden;">
+          <div style="padding:18px 24px; border-bottom:1px solid #2C7361; font-size:12px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:#9FD3C2;" data-en="Mandatory ritual before any code">Ritual obrigatório antes de qualquer código</div>
+          <sc-for list="{{ ritual }}" as="r" hint-placeholder-count="5">
+            <div style="display:flex; gap:18px; padding:18px 24px; border-bottom:1px solid #2C7361;">
+              <span style="font-size:13px; font-weight:700; color:#9FD3C2; font-variant-numeric:tabular-nums; min-width:18px;">{{ r.n }}</span>
+              <span style="font-size:15px; line-height:1.5; color:#FFFFFF;">{{ r.text }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </section>
+
+    <section id="projetos" style="max-width:1240px; margin:0 auto; padding:96px 40px 0;">
+      <div style="font-size:12px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:#1F5F4E; margin-bottom:16px;" data-en="Curation">Curadoria</div>
+      <h2 style="margin:0 0 12px; font-size:clamp(28px,3.6vw,44px); line-height:1.1; letter-spacing:-.03em; font-weight:800;" data-en="Three products, one architecture">Três produtos, uma arquitetura</h2>
+      <p style="margin:0 0 40px; max-width:60ch; font-size:17px; line-height:1.65; color:#63625F;" data-en="Fastify, strict TypeScript, Drizzle, use case as the unit of work. The reference implementation compiles before the note gets written.">Fastify, TypeScript strict, Drizzle, use case como unidade de trabalho. A implementação de referência compila antes de a nota ser escrita.</p>
+      <div data-r="c3" style="display:grid; grid-template-columns:repeat(3,1fr); gap:24px;">
+        <sc-for list="{{ featured }}" as="p" hint-placeholder-count="3">
+          <article data-rise style="border:1px solid #DAD3C2; border-radius:12px; background:#FBFAF6; padding:32px; display:flex; flex-direction:column; gap:20px;">
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:16px;">
+              <h3 style="margin:0; font-size:24px; font-weight:700; letter-spacing:-.02em;">{{ p.name }}</h3>
+              <span style="display:inline-flex; align-items:center; gap:8px; font-size:12px; font-weight:600; color:#63625F;">
+                <span style="width:10px; height:10px; border-radius:50%; background:{{ p.dot }};"></span>{{ p.status }}
+              </span>
+            </div>
+            <p style="margin:0; flex:1; font-size:16px; line-height:1.6; color:#63625F;">{{ p.desc }}</p>
+            <div style="display:flex; flex-wrap:wrap; gap:8px;">
+              <sc-for list="{{ p.stack }}" as="t" hint-placeholder-count="4">
+                <span style="font-size:12px; font-weight:600; padding:6px 12px; border-radius:100px; background:#DCE7DF; color:#1F5F4E;">{{ t }}</span>
+              </sc-for>
+            </div>
+            <div style="padding-top:20px; border-top:1px solid #DAD3C2; display:flex; justify-content:space-between; font-size:13px; color:#63625F; font-variant-numeric:tabular-nums;">
+              <span>{{ p.scale }}</span><span>{{ p.role }}</span>
+            </div>
+          </article>
+        </sc-for>
+      </div>
+    </section>
+
+    <section style="max-width:1240px; margin:0 auto; padding:64px 40px 0;">
+      <div style="border:1px solid #DAD3C2; border-radius:12px; overflow:hidden; background:#FBFAF6;">
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:24px; padding:24px 32px; border-bottom:1px solid #DAD3C2;">
+          <span style="font-size:12px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:#63625F;" data-en="Everything else — synced from GitHub">Todo o resto — sincronizado do GitHub</span>
+          <span style="font-size:13px; color:#63625F;" data-en="Public repositories, no fork">Repositórios públicos, sem fork</span>
+        </div>
+        <sc-for list="{{ repos }}" as="r" hint-placeholder-count="6">
+          <div data-r="row" style="display:grid; grid-template-columns:220px minmax(0,1fr) 160px 120px; gap:24px; align-items:center; padding:20px 32px; border-bottom:1px solid #DAD3C2;" style-hover="background:#F4F1E8;">
+            <span style="font-size:16px; font-weight:600;">{{ r.name }}</span>
+            <span style="font-size:15px; color:#63625F;">{{ r.desc }}</span>
+            <span style="display:inline-flex; align-items:center; gap:10px; font-size:13px; color:#63625F;">
+              <span style="width:10px; height:10px; border-radius:2px; background:{{ r.langColor }};"></span>{{ r.lang }}
+            </span>
+            <span style="font-size:13px; color:#63625F; text-align:right;">{{ r.status }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <section style="max-width:1240px; margin:0 auto; padding:96px 40px 0;">
+      <div style="font-size:12px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:#1F5F4E; margin-bottom:16px;" data-en="Stack">Stack</div>
+      <h2 style="margin:0 0 40px; font-size:clamp(28px,3.6vw,44px); line-height:1.1; letter-spacing:-.03em; font-weight:800;" data-en="What is compiling today">O que está compilando hoje</h2>
+      <div data-r="stack4" style="display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:#DAD3C2; border:1px solid #DAD3C2; border-radius:12px; overflow:hidden;">
+        <sc-for list="{{ stackGroups }}" as="g" hint-placeholder-count="4">
+          <div style="background:#FBFAF6; padding:32px;">
+            <div style="font-size:13px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:#1F5F4E; margin-bottom:20px;">{{ g.title }}</div>
+            <div style="display:flex; flex-direction:column; gap:14px;">
+              <sc-for list="{{ g.items }}" as="i" hint-placeholder-count="5">
+                <div style="display:flex; gap:12px; align-items:flex-start;">
+                  <span style="flex:0 0 auto; width:18px; height:18px; border-radius:50%; border:2px solid #1F5F4E; margin-top:2px;"></span>
+                  <span style="font-size:15px; line-height:1.5; color:#1C1D1F;">{{ i }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <section style="max-width:1240px; margin:0 auto; padding:96px 40px 0;">
+      <div data-r="c2" style="display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:24px;">
+        <div style="border:1px solid #DAD3C2; border-radius:12px; background:#DCE7DF; padding:48px;">
+          <div style="font-size:12px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:#1F5F4E; margin-bottom:20px;" data-en="Writing">Escrita</div>
+          <h3 style="margin:0 0 20px; font-size:clamp(23px,2.2vw,30px); line-height:1.18; letter-spacing:-.025em; font-weight:800;" data-en="Thirteen domains documented in the open">Treze domínios documentados em aberto</h3>
+          <p style="margin:0 0 28px; font-size:16px; line-height:1.6; color:#1C1D1F;" data-en="From clean architecture to LGPD, each domain has a hub note and a production checklist at the end.">De clean architecture a LGPD, cada domínio tem uma nota-hub e um checklist de produção ao final.</p>
+          <div style="display:flex; flex-wrap:wrap; gap:8px;">
+            <sc-for list="{{ domains }}" as="d" hint-placeholder-count="13">
+              <span style="font-size:13px; font-weight:600; padding:7px 14px; border-radius:100px; background:#FBFAF6; color:#1F5F4E; border:1px solid #DAD3C2;">{{ d }}</span>
+            </sc-for>
+          </div>
+        </div>
+        <div style="border:1px solid #DAD3C2; border-radius:12px; background:#FBFAF6; padding:48px; display:flex; flex-direction:column;">
+          <div style="font-size:12px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:#1F5F4E; margin-bottom:20px;" data-en="GitHub prospecting">Garimpo GitHub</div>
+          <h3 style="margin:0 0 20px; font-size:clamp(23px,2.2vw,30px); line-height:1.18; letter-spacing:-.025em; font-weight:800;" data-en="Thirteen catalogues, seven technique briefs, one verdict each">Treze catálogos, sete fichas de técnica, um veredito cada</h3>
+          <p style="margin:0 0 28px; font-size:16px; line-height:1.6; color:#63625F;" data-en="Public-repository curation organised by axis, with a prioritised shortlist — not a starred list.">Curadoria do GitHub público organizada por eixo, com shortlist priorizada — não uma lista de favoritos.</p>
+          <div style="margin-top:auto; display:grid; grid-template-columns:repeat(3,1fr); gap:24px; padding-top:28px; border-top:1px solid #DAD3C2;">
+            <sc-for list="{{ garimpo }}" as="g" hint-placeholder-count="3">
+              <div>
+                <div style="font-size:34px; font-weight:800; letter-spacing:-.03em; color:#1F5F4E; font-variant-numeric:tabular-nums;">{{ g.value }}</div>
+                <div style="margin-top:6px; font-size:13px; color:#63625F;">{{ g.label }}</div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section style="max-width:1240px; margin:0 auto; padding:96px 40px 120px;">
+      <div data-r="pad" style="background:#18191B; border-radius:12px; padding:80px; text-align:center;">
+        <h2 style="margin:0 auto 24px; max-width:22ch; font-size:clamp(30px,4.2vw,52px); line-height:1.08; letter-spacing:-.03em; font-weight:800; color:#FFFFFF; text-wrap:pretty;" data-en="If the system interests you, the conversation is short.">Se o sistema te interessa, a conversa é curta.</h2>
+        <p style="margin:0 auto 40px; max-width:56ch; font-size:18px; line-height:1.6; color:#A5A5A1;" data-en="Available for architecture, platform engineering and AI-agent governance.">Disponível para arquitetura, engenharia de plataforma e governança de agentes de IA.</p>
+        <div style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap;">
+          <a href="mailto:gabriel@origamilab.com.br" style="display:inline-flex; align-items:center; background:#2EE8A8; color:#18191B; font-size:15px; font-weight:700; padding:16px 28px; border-radius:100px;" style-hover="background:#9FD3C2;">gabriel@origamilab.com.br</a>
+          <a href="https://github.com/Gabri" style="display:inline-flex; align-items:center; border:1px solid #2E2F31; color:#FFFFFF; font-size:15px; font-weight:600; padding:16px 28px; border-radius:100px;" style-hover="border-color:#9FD3C2; color:#9FD3C2;">GitHub</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ══════════ CASE STUDY ══════════ -->
+  <main style="display:{{ scrCase }};">
+    <section style="max-width:1240px; margin:0 auto; padding:96px 40px 0;">
+      <div style="font-size:12px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:#1F5F4E; margin-bottom:20px;" data-en="Case study · Second brain">Case study · Segundo cérebro</div>
+      <h1 style="margin:0 0 28px; max-width:26ch; font-size:clamp(34px,5vw,64px); line-height:1.05; letter-spacing:-.035em; font-weight:800; text-wrap:pretty;" data-en="A vault only earns its keep when it blocks the editor from opening.">Um vault só se paga quando ele impede o editor de abrir.</h1>
+      <p style="margin:0; max-width:64ch; font-size:20px; line-height:1.6; color:#63625F; text-wrap:pretty;" data-en="Most knowledge bases are archives: they receive and never return. This one sits in the critical path of every commit — five notes read in a fixed order before any code is written.">A maioria das bases de conhecimento é arquivo morto: recebe e nunca devolve. Esta fica no caminho crítico de todo commit — cinco notas lidas em ordem fixa antes de qualquer código ser escrito.</p>
+    </section>
+
+    <section style="max-width:1240px; margin:0 auto; padding:64px 40px 0;">
+      <div data-r="c3" style="display:grid; grid-template-columns:repeat(3,1fr); gap:24px;">
+        <sc-for list="{{ caseProblem }}" as="c" hint-placeholder-count="3">
+          <div data-rise style="border:1px solid #DAD3C2; border-radius:12px; background:#FBFAF6; padding:36px;">
+            <div style="font-size:12px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:#8A5A4C; margin-bottom:18px;">{{ c.tag }}</div>
+            <h3 style="margin:0 0 14px; font-size:22px; line-height:1.25; font-weight:700; letter-spacing:-.02em;">{{ c.title }}</h3>
+            <p style="margin:0; font-size:16px; line-height:1.6; color:#63625F;">{{ c.text }}</p>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <section style="max-width:1240px; margin:0 auto; padding:96px 40px 0;">
+      <div style="font-size:12px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:#1F5F4E; margin-bottom:16px;" data-en="Architecture">Arquitetura</div>
+      <h2 style="margin:0 0 40px; font-size:clamp(28px,3.6vw,44px); line-height:1.1; letter-spacing:-.03em; font-weight:800;" data-en="Numbered folders, single entry point">Pastas numeradas, entrada única</h2>
+      <div style="border:1px solid #DAD3C2; border-radius:12px; overflow:hidden; background:#FBFAF6;">
+        <div data-r="thead" style="display:grid; grid-template-columns:200px minmax(0,1fr) 120px; gap:24px; padding:18px 32px; background:#EAE5D8; border-bottom:1px solid #DAD3C2; font-size:12px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:#63625F;">
+          <span data-en="Layer">Camada</span><span data-en="Role">Papel</span><span style="text-align:right;" data-en="Notes">Notas</span>
+        </div>
+        <sc-for list="{{ folders }}" as="f" hint-placeholder-count="8">
+          <div data-r="f3" style="display:grid; grid-template-columns:200px minmax(0,1fr) 120px; gap:24px; align-items:center; padding:20px 32px; border-bottom:1px solid #DAD3C2;">
+            <span style="font-size:15px; font-weight:600; font-variant-numeric:tabular-nums;">{{ f.path }}</span>
+            <span style="font-size:15px; color:#63625F;">{{ f.role }}</span>
+            <span style="font-size:15px; text-align:right; font-variant-numeric:tabular-nums; color:#1F5F4E; font-weight:600;">{{ f.count }}</span>
+          </div>
+        </sc-for>
+      </div>
+      <p style="margin:20px 0 0; font-size:13px; color:#63625F;">{{ sourceLine }}</p>
+    </section>
+
+    <section style="max-width:1240px; margin:0 auto; padding:96px 40px 0;">
+      <div data-r="c2" style="background:#1F5F4E; border-radius:12px; padding:64px; display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:64px; align-items:center;">
+        <div>
+          <div style="font-size:12px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:#9FD3C2; margin-bottom:20px;" data-en="Golden rule">Regra de ouro</div>
+          <p style="margin:0; font-size:clamp(24px,2.6vw,34px); line-height:1.32; letter-spacing:-.02em; font-weight:700; color:#FFFFFF; text-wrap:pretty;" data-en="A pattern is not what is written here. It is what is compiling in the reference repo.">Padrão não é o que está escrito aqui. É o que está compilando no repo de referência.</p>
+          <p style="margin:24px 0 0; font-size:16px; line-height:1.6; color:#B9DDD1;" data-en="When theory and code diverge, the code wins. KAMI-CODE/Paper-Backend and Paper-Front-End are the reference implementations.">Quando teoria e código divergem, o código vence. KAMI-CODE/Paper-Backend e Paper-Front-End são as implementações de referência.</p>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:1px; background:#2C7361; border:1px solid #2C7361; border-radius:12px; overflow:hidden;">
+          <sc-for list="{{ caseMetrics }}" as="m" hint-placeholder-count="4">
+            <div style="background:#1F5F4E; padding:24px 28px; display:flex; align-items:baseline; justify-content:space-between; gap:20px;">
+              <span style="font-size:15px; color:#B9DDD1;">{{ m.label }}</span>
+              <span style="font-size:32px; font-weight:800; letter-spacing:-.03em; color:#FFFFFF; font-variant-numeric:tabular-nums;">{{ m.value }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </section>
+
+    <section style="max-width:1240px; margin:0 auto; padding:96px 40px 120px;">
+      <div style="font-size:12px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:#1F5F4E; margin-bottom:16px;" data-en="What it changed">O que mudou</div>
+      <h2 style="margin:0 0 40px; font-size:clamp(28px,3.6vw,44px); line-height:1.1; letter-spacing:-.03em; font-weight:800;" data-en="Three effects, measured in delivery">Três efeitos, medidos na entrega</h2>
+      <div data-r="c3" style="display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:#DAD3C2; border:1px solid #DAD3C2; border-radius:12px; overflow:hidden;">
+        <sc-for list="{{ caseOutcomes }}" as="o" hint-placeholder-count="3">
+          <div style="background:#FBFAF6; padding:40px;">
+            <div style="width:96px; height:3px; background:#1F5F4E; margin-bottom:28px;"></div>
+            <h3 style="margin:0 0 14px; font-size:22px; line-height:1.25; font-weight:700; letter-spacing:-.02em;">{{ o.title }}</h3>
+            <p style="margin:0; font-size:16px; line-height:1.6; color:#63625F;">{{ o.text }}</p>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+  </main>
+
+  <!-- ══════════ CONSOLE (área logada) ══════════ -->
+  <main style="display:{{ scrPanel }};">
+    <section style="max-width:1240px; margin:0 auto; padding:56px 40px 0;">
+      <div style="display:flex; align-items:flex-end; justify-content:space-between; gap:40px; margin-bottom:32px;">
+        <div>
+          <div style="font-size:12px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:#63625F; margin-bottom:14px;" data-en="Console · private area">Console · área privada</div>
+          <h1 style="margin:0; font-size:clamp(28px,3.2vw,40px); line-height:1.12; letter-spacing:-.03em; font-weight:800;" data-en="Portfolio management">Gestão do portfólio</h1>
+        </div>
+        <div style="display:flex; gap:12px;">
+          <button style="appearance:none; border:1px solid #DAD3C2; background:#FBFAF6; color:#1C1D1F; font:inherit; font-size:14px; font-weight:600; padding:12px 20px; border-radius:100px; cursor:pointer;" style-hover="border-color:#1F5F4E; color:#1F5F4E;" data-en="Sync GitHub">Sincronizar GitHub</button>
+          <button style="appearance:none; border:none; background:#1F5F4E; color:#FFFFFF; font:inherit; font-size:14px; font-weight:600; padding:12px 20px; border-radius:100px; cursor:pointer;" style-hover="background:#14463A;" data-en="Publish">Publicar</button>
+        </div>
+      </div>
+      <div data-r="c4" style="display:grid; grid-template-columns:repeat(4,1fr); background:#DAD3C2; border:1px solid #DAD3C2; border-radius:12px; overflow:hidden;">
+        <sc-for list="{{ panelStats }}" as="s" hint-placeholder-count="4">
+          <div style="background:#FBFAF6; padding:28px 32px; border-right:1px solid #DAD3C2;">
+            <div style="font-size:13px; color:#63625F; margin-bottom:10px;">{{ s.label }}</div>
+            <div style="display:flex; align-items:baseline; gap:10px;">
+              <span style="font-size:36px; font-weight:800; letter-spacing:-.03em; font-variant-numeric:tabular-nums;">{{ s.value }}</span>
+              <span style="font-size:13px; font-weight:600; color:{{ s.deltaColor }};">{{ s.delta }}</span>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <section style="max-width:1240px; margin:0 auto; padding:32px 40px 0;">
+      <div style="border:1px solid #DAD3C2; border-radius:12px; overflow:hidden; background:#FBFAF6;">
+        <div style="display:flex; align-items:center; gap:8px; padding:20px 32px; border-bottom:1px solid #DAD3C2;">
+          <sc-for list="{{ panelFilters }}" as="f" hint-placeholder-count="4">
+            <span style="font-size:13px; font-weight:600; padding:8px 16px; border-radius:100px; background:{{ f.bg }}; color:{{ f.fg }}; border:1px solid {{ f.border }};">{{ f.label }}</span>
+          </sc-for>
+        </div>
+        <div data-r="thead" style="display:grid; grid-template-columns:1.4fr 1fr .8fr .8fr .9fr 40px; gap:20px; padding:16px 32px; background:#EAE5D8; border-bottom:1px solid #DAD3C2; font-size:12px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:#63625F;">
+          <span data-en="Project">Projeto</span><span data-en="Vault note">Nota no vault</span><span data-en="Source">Fonte</span><span data-en="Visibility">Visibilidade</span><span data-en="Status">Status</span><span></span>
+        </div>
+        <sc-for list="{{ panelRows }}" as="r" hint-placeholder-count="10">
+          <div data-r="row" style="display:grid; grid-template-columns:1.4fr minmax(0,1fr) .8fr .8fr .9fr 40px; gap:20px; align-items:center; padding:18px 32px; border-bottom:1px solid #DAD3C2;" style-hover="background:#F4F1E8;">
+            <span style="font-size:16px; font-weight:600;">{{ r.name }}</span>
+            <span style="font-size:14px; color:#63625F;">{{ r.note }}</span>
+            <span style="font-size:14px; color:#63625F;">{{ r.source }}</span>
+            <span style="font-size:13px; font-weight:600; color:{{ r.visColor }};">{{ r.visibility }}</span>
+            <span style="display:inline-flex; align-items:center; gap:10px; font-size:14px; color:#1C1D1F;">
+              <span style="width:12px; height:12px; border-radius:50%; background:{{ r.dot }};"></span>{{ r.status }}
+            </span>
+            <span style="font-size:18px; color:#63625F; text-align:right; cursor:pointer;">·</span>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <section style="max-width:1240px; margin:0 auto; padding:32px 40px 120px;">
+      <div data-r="side" style="display:grid; grid-template-columns:minmax(0,1fr) 380px; gap:24px;">
+        <div style="border:1px solid #DAD3C2; border-radius:12px; background:#FBFAF6; padding:36px;">
+          <div style="font-size:12px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:#63625F; margin-bottom:24px;" data-en="Publishing queue">Fila de publicação</div>
+          <div style="display:flex; flex-direction:column; gap:16px;">
+            <sc-for list="{{ queue }}" as="q" hint-placeholder-count="4">
+              <div data-r="row" style="display:grid; grid-template-columns:minmax(0,1fr) 120px 90px; gap:20px; align-items:center; padding-bottom:16px; border-bottom:1px solid #DAD3C2;">
+                <span style="font-size:15px; font-weight:600;">{{ q.title }}</span>
+                <span style="font-size:13px; color:#63625F;">{{ q.kind }}</span>
+                <span style="font-size:13px; text-align:right; color:#63625F; font-variant-numeric:tabular-nums;">{{ q.when }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+        <div style="border:1px solid #DAD3C2; border-radius:12px; background:#DCE7DF; padding:36px;">
+          <div style="font-size:12px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:#1F5F4E; margin-bottom:20px;" data-en="Vault health">Saúde do vault</div>
+          <div style="display:flex; flex-direction:column; gap:22px;">
+            <sc-for list="{{ health }}" as="h" hint-placeholder-count="3">
+              <div>
+                <div style="display:flex; justify-content:space-between; font-size:14px; margin-bottom:10px;">
+                  <span style="color:#1C1D1F;">{{ h.label }}</span>
+                  <span style="font-weight:700; font-variant-numeric:tabular-nums; color:#1F5F4E;">{{ h.value }}</span>
+                </div>
+                <div style="height:6px; border-radius:100px; background:#FBFAF6; overflow:hidden;">
+                  <div style="height:100%; width:{{ h.pct }}; background:#1F5F4E;"></div>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer style="border-top:1px solid #DAD3C2; background:#EAE5D8;">
+    <div style="max-width:1240px; margin:0 auto; padding:40px; display:flex; align-items:center; justify-content:space-between; gap:24px; font-size:14px; color:#63625F;">
+      <span>Gabriel Arantes · gabriel@origamilab.com.br</span>
+      <span data-en="Built from the vault, not from memory.">Construído a partir do vault, não da memória.</span>
+    </div>
+  </footer>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440}}">
+const C = {
+  ok: '#1F5F4E', warn: '#C9A227', risk: '#B4523F', mut: '#63625F',
+};
+
+const DATA = {
+  heroStats: [
+    { value: '194', pt: 'Notas conectadas', en: 'Linked notes', npt: 'em 24 pastas', nen: 'across 24 folders' },
+    { value: '847', pt: 'Conexões', en: 'Links', npt: '4 notas órfãs', nen: '4 orphan notes' },
+    { value: '158,5 mil', pt: 'Palavras', en: 'Words', npt: 'documentação própria', nen: 'first-party docs' },
+    { value: '16', pt: 'Projetos rastreados', en: 'Tracked projects', npt: 'uma nota por projeto', nen: 'one note each' },
+  ],
+  vaultPoints: [
+    { pt: 'Cinco notas lidas em ordem fixa antes de abrir o editor.', en: 'Five notes read in fixed order before the editor opens.' },
+    { pt: 'Um MOC por domínio: treze hubs, nenhuma nota solta.', en: 'One MOC per domain: thirteen hubs, no loose notes.' },
+    { pt: 'Checklist de produção ao final de cada nota de stack.', en: 'A production checklist ends every stack note.' },
+    { pt: 'Índice gerado por script — links quebrados são bug, não detalhe.', en: 'Script-generated index — broken links are bugs, not details.' },
+  ],
+  ritual: [
+    { n: '01', pt: 'MOC-Desenvolvimento — mapa do conhecimento acumulado', en: 'MOC-Desenvolvimento — map of accumulated knowledge' },
+    { n: '02', pt: 'Use-Case-Architecture-Patterns — a arquitetura backend real', en: 'Use-Case-Architecture-Patterns — the real backend architecture' },
+    { n: '03', pt: 'HTTP-Client-Frontend-Patterns — a contraparte no cliente', en: 'HTTP-Client-Frontend-Patterns — the client-side counterpart' },
+    { n: '04', pt: 'Implementacao-Referencia-KAMI — onde está o código real', en: 'Implementacao-Referencia-KAMI — where the real code lives' },
+    { n: '05', pt: 'ADRs do Paper-Backend, se mexer em stack ou estrutura', en: 'Paper-Backend ADRs, if stack or structure changes' },
+  ],
+  featured: [
+    { name: 'Volt', dot: C.ok, spt: 'Ativo', sen: 'Active', dpt: 'Banco digital híbrido: contas por moeda, transferência atômica com Decimal, ledger auditável. Monorepo Fastify + React.', den: 'Hybrid digital bank: per-currency accounts, atomic Decimal transfers, auditable ledger. Fastify + React monorepo.', stack: ['Fastify', 'Drizzle', 'PostgreSQL', 'React 19'], scalept: 'Três módulos', scaleen: 'Three modules', rolept: 'Arquitetura + dev', roleen: 'Architecture + dev' },
+    { name: 'Harness-Core', dot: C.warn, spt: 'Em construção', sen: 'In progress', dpt: 'Runtime de governança de IA: limites de autonomia de agente, trilha de auditoria e validação antes da execução.', den: 'AI governance runtime: agent autonomy limits, audit trail and validation before execution.', stack: ['TypeScript', 'tsyringe', 'TypeBox'], scalept: 'Produto Origami Lab', scaleen: 'Origami Lab product', rolept: 'Concepção', roleen: 'Conception' },
+    { name: 'Prumo-Obras', dot: C.ok, spt: 'Ativo', sen: 'Active', dpt: 'Gestão de ordens de serviço ferroviárias para MRS, VLI, RUMO e VALE. Multi-repo Next.js + Expo + Express.', den: 'Railway work-order management for MRS, VLI, RUMO and VALE. Next.js + Expo + Express multi-repo.', stack: ['Next.js 15', 'Expo', 'Express'], scalept: 'Quatro operadoras', scaleen: 'Four operators', rolept: 'Lead técnico', roleen: 'Tech lead' },
+  ],
+  repos: [
+    { name: 'ChamaTenis', lang: 'TypeScript', dpt: 'Agendamento de partidas, placar e histórico. Split api/web.', den: 'Match scheduling, scoring and history. api/web split.', spt: 'Ativo', sen: 'Active' },
+    { name: 'Bot-Vendas-Telegram', lang: 'TypeScript', dpt: 'Vendas no Telegram com Pix dinâmico e entrega de acesso.', den: 'Telegram sales with dynamic Pix and access delivery.', spt: 'Ativo', sen: 'Active' },
+    { name: 'EnemzaMVP', lang: 'TypeScript', dpt: 'Preparação para o ENEM com curadoria de vídeos do YouTube.', den: 'ENEM prep with a YouTube curation pipeline.', spt: 'MVP', sen: 'MVP' },
+    { name: 'Vila-Imperial', lang: 'TypeScript', dpt: 'Site imobiliário com Google Maps e QR Code.', den: 'Real-estate site with Google Maps and QR codes.', spt: 'Entregue', sen: 'Shipped' },
+    { name: 'VPN-Rede', lang: 'TypeScript', dpt: 'Gestão de infraestrutura de VPN sobre OpenVPN.', den: 'VPN infrastructure management over OpenVPN.', spt: 'Validação', sen: 'Validating' },
+    { name: 'Analise-Freebuff', lang: 'Python', dpt: 'Agente de código via terminal usando a API da Groq.', den: 'Terminal coding agent on the Groq API.', spt: 'Estudo', sen: 'Study' },
+    { name: 'DEV-Junior', lang: 'TypeScript', dpt: 'Scaffold full-stack genérico Express + Prisma / Vite.', den: 'Generic full-stack scaffold, Express + Prisma / Vite.', spt: 'Pausado', sen: 'Paused' },
+  ],
+  stackGroups: [
+    { tpt: 'Backend', ten: 'Backend', items: ['Fastify', 'TypeScript strict', 'Drizzle ORM', 'PostgreSQL', 'TypeBox nativo'] },
+    { tpt: 'Arquitetura', ten: 'Architecture', items: ['Use case como unidade', 'DI por Symbol (tsyringe)', 'Rota como dado', 'Erro tipado em catálogo', 'Envelope { process, body }'] },
+    { tpt: 'Frontend', ten: 'Frontend', items: ['React 19', 'Next 15 App Router', 'TanStack Start', 'TanStack Query', 'Axios + interceptors'] },
+    { tpt: 'Qualidade', ten: 'Quality', items: ['Vitest', 'vitest-mock-extended', 'Testcontainers', 'GitHub Actions', 'DORA metrics'] },
+  ],
+  domains: ['clean-architecture', 'arquitetura', 'typescript', 'padroes', 'seguranca', 'infra', 'agile', 'dev-inteligente', 'ia', 'design', 'pm', 'qa', 'redes'],
+  garimpo: [
+    { value: '13', pt: 'catálogos por eixo', en: 'catalogues by axis' },
+    { value: '7', pt: 'fichas de técnica', en: 'technique briefs' },
+    { value: '1', pt: 'veredito por item', en: 'verdict per item' },
+  ],
+  caseProblem: [
+    { tagpt: 'Problema', tagen: 'Problem', tpt: 'Conhecimento que não volta', ten: 'Knowledge that never returns', ppt: 'Anotar é fácil. O custo aparece seis meses depois, quando a decisão precisa ser refeita do zero porque ninguém encontra o porquê.', pen: 'Taking notes is easy. The cost shows six months later, when a decision has to be remade because nobody can find the why.' },
+    { tagpt: 'Problema', tagen: 'Problem', tpt: 'Teoria que divergiu do código', ten: 'Theory that drifted from code', ppt: 'Nota de padrão envelhece em silêncio. Sem um repo de referência apontado, ela vira ficção documentada.', pen: 'Pattern notes age silently. With no reference repo pinned, they become documented fiction.' },
+    { tagpt: 'Problema', tagen: 'Problem', tpt: 'Agente de IA sem contexto', ten: 'AI agents without context', ppt: 'Agente sem base de conhecimento inventa arquitetura. Sem ritual de leitura, cada sessão recomeça de zero.', pen: 'An agent with no knowledge base invents architecture. Without a reading ritual every session starts over.' },
+  ],
+  caseMetrics: [
+    { pt: 'Notas', en: 'Notes', value: '194' },
+    { pt: 'Conexões entre notas', en: 'Note-to-note links', value: '847' },
+    { pt: 'Palavras escritas', en: 'Words written', value: '158.513' },
+    { pt: 'Links quebrados', en: 'Broken links', value: '5' },
+  ],
+  folders: [
+    { path: '00_inbox', rpt: 'Captura livre, esvaziada periodicamente', ren: 'Free capture, emptied periodically', count: '0' },
+    { path: '05_ideias', rpt: 'Ideias brutas pendentes de triagem', ren: 'Raw ideas awaiting triage', count: '12' },
+    { path: '10_sources', rpt: 'Leituras, playlists, garimpo do GitHub', ren: 'Readings, playlists, GitHub prospecting', count: '7' },
+    { path: '20_concepts', rpt: 'Treze domínios, um MOC-hub cada', ren: 'Thirteen domains, one MOC hub each', count: '13' },
+    { path: '30_entities', rpt: 'Frameworks, bancos, linguagens, ferramentas', ren: 'Frameworks, databases, languages, tools', count: '4' },
+    { path: '40_notes', rpt: 'Notas fleeting e diárias', ren: 'Fleeting and daily notes', count: '2' },
+    { path: '50_projects', rpt: 'Uma nota por projeto de código ativo', ren: 'One note per active code project', count: '16' },
+    { path: '99_archive', rpt: 'Descontinuado ou superado', ren: 'Discontinued or superseded', count: '0' },
+  ],
+  caseOutcomes: [
+    { tpt: 'Decisão não se repete', ten: 'Decisions stop repeating', ppt: 'ADRs no repo de referência encerram a discussão. O que foi decidido tem data, contexto e alternativa descartada.', pen: 'ADRs in the reference repo close the argument. Every decision carries date, context and the discarded option.' },
+    { tpt: 'Onboarding de agente em minutos', ten: 'Agent onboarding in minutes', ppt: 'O ritual de cinco notas é o prompt de sistema. O agente entra sabendo qual arquitetura é a real.', pen: 'The five-note ritual is the system prompt. The agent arrives knowing which architecture is real.' },
+    { tpt: 'Stack única, não coleção', ten: 'One stack, not a collection', ppt: 'Fastify + Drizzle em tudo novo; NestJS + Prisma marcado como legado. A escolha é registrada, não relembrada.', pen: 'Fastify + Drizzle for anything new; NestJS + Prisma flagged as legacy. The choice is recorded, not recalled.' },
+  ],
+  panelStats: [
+    { pt: 'Projetos publicados', en: 'Published projects', value: '9', delta: '+2', dc: C.ok },
+    { pt: 'Rascunhos', en: 'Drafts', value: '4', delta: '2 travados', den: '2 stalled', dc: C.warn },
+    { pt: 'Notas sem projeto', en: 'Notes without project', value: '12', delta: '05_ideias', den: '05_ideias', dc: C.mut },
+    { pt: 'Links quebrados', en: 'Broken links', value: '5', delta: 'corrigir', den: 'to fix', dc: C.risk },
+  ],
+  panelFilters: [
+    { pt: 'Todos', en: 'All', active: true },
+    { pt: 'Publicados', en: 'Published' },
+    { pt: 'Rascunho', en: 'Draft' },
+    { pt: 'Só GitHub', en: 'GitHub only' },
+  ],
+  panelRows: [
+    { name: 'Volt', note: '50_projects/Volt.md', spt: 'Curadoria', sen: 'Curated', vpt: 'Público', ven: 'Public', pub: true, stpt: 'Ativo', sten: 'Active', dot: C.ok },
+    { name: 'Harness-Core', note: '50_projects/Harness-Core.md', spt: 'Curadoria', sen: 'Curated', vpt: 'Rascunho', ven: 'Draft', pub: false, stpt: 'Em construção', sten: 'In progress', dot: C.warn },
+    { name: 'Prumo-Obras', note: '50_projects/Prumo-Obras.md', spt: 'Curadoria', sen: 'Curated', vpt: 'Público', ven: 'Public', pub: true, stpt: 'Ativo', sten: 'Active', dot: C.ok },
+    { name: 'ChamaTenis', note: '50_projects/ChamaTenis.md', spt: 'GitHub', sen: 'GitHub', vpt: 'Público', ven: 'Public', pub: true, stpt: 'Ativo', sten: 'Active', dot: C.ok },
+    { name: 'Bot-Vendas-Telegram', note: '50_projects/Bot-Vendas-Telegram.md', spt: 'GitHub', sen: 'GitHub', vpt: 'Público', ven: 'Public', pub: true, stpt: 'Ativo', sten: 'Active', dot: C.ok },
+    { name: 'EnemzaMVP', note: '50_projects/EnemzaMVP.md', spt: 'GitHub', sen: 'GitHub', vpt: 'Público', ven: 'Public', pub: true, stpt: 'MVP', sten: 'MVP', dot: C.warn },
+    { name: 'Vila-Imperial', note: '50_projects/Vila-Imperial.md', spt: 'Curadoria', sen: 'Curated', vpt: 'Público', ven: 'Public', pub: true, stpt: 'Entregue', sten: 'Shipped', dot: C.ok },
+    { name: 'VPN-Rede', note: '50_projects/VPN-Rede.md', spt: 'GitHub', sen: 'GitHub', vpt: 'Rascunho', ven: 'Draft', pub: false, stpt: 'Validação', sten: 'Validating', dot: C.warn },
+    { name: 'Analise-Freebuff', note: '50_projects/Analise-Freebuff.md', spt: 'GitHub', sen: 'GitHub', vpt: 'Rascunho', ven: 'Draft', pub: false, stpt: 'Estudo', sten: 'Study', dot: C.mut },
+    { name: 'DEV-Junior', note: '50_projects/DEV-Junior.md', spt: 'GitHub', sen: 'GitHub', vpt: 'Oculto', ven: 'Hidden', pub: false, stpt: 'Pausado', sten: 'Paused', dot: C.risk },
+  ],
+  queue: [
+    { tpt: 'Case study — Segundo cérebro', ten: 'Case study — Second brain', kpt: 'Case study', ken: 'Case study', wpt: 'pronto', wen: 'ready' },
+    { tpt: 'Volt — ledger auditável', ten: 'Volt — auditable ledger', kpt: 'Nota técnica', ken: 'Tech note', wpt: '2 dias', wen: '2 days' },
+    { tpt: 'Garimpo GitHub 2026', ten: 'GitHub prospecting 2026', kpt: 'Curadoria', ken: 'Curation', wpt: '1 semana', wen: '1 week' },
+    { tpt: 'Harness-Core — limites de autonomia', ten: 'Harness-Core — autonomy limits', kpt: 'Ensaio', ken: 'Essay', wpt: 'rascunho', wen: 'draft' },
+  ],
+  health: [
+    { pt: 'Notas com frontmatter', en: 'Notes with frontmatter', value: '97%', pct: '97%' },
+    { pt: 'Notas conectadas', en: 'Linked notes', value: '190 / 194', pct: '98%' },
+    { pt: 'Domínios com MOC-hub', en: 'Domains with a MOC hub', value: '13 / 13', pct: '100%' },
+  ],
+};
+
+class Component extends DCLogic {
+  state = { screen: 'vitrine', lang: 'pt' };
+  rootRef = React.createRef();
+  graphRef = React.createRef();
+
+  componentDidMount() {
+    this.applyLang();
+    this.reveal();
+    this.startGraph();
+  }
+
+  go(screen) {
+    this.setState({ screen }, () => {
+      this.applyLang();
+      window.scrollTo({ top: 0, behavior: 'auto' });
+      this.reveal();
+    });
+  }
+
+  componentWillUnmount() { cancelAnimationFrame(this._raf); }
+
+  get reduced() {
+    return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  }
+
+  applyLang() {
+    const root = this.rootRef.current;
+    if (!root) return;
+    const en = this.state.lang === 'en';
+    root.querySelectorAll('[data-en]').forEach(el => {
+      if (!el.dataset.pt) el.dataset.pt = el.textContent;
+      el.textContent = en ? el.dataset.en : el.dataset.pt;
+    });
+  }
+
+  reveal() {
+    const root = this.rootRef.current;
+    if (!root || this.reduced) return;
+    const els = Array.from(root.querySelectorAll('[data-rise]'));
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (!e.isIntersecting) return;
+        const i = els.indexOf(e.target);
+        e.target.style.animation = 'ol-rise .52s cubic-bezier(.2,.8,.2,1) both';
+        e.target.style.animationDelay = ((i % 4) * 0.08) + 's';
+        io.unobserve(e.target);
+      });
+    }, { rootMargin: '-40px' });
+    els.forEach(el => { el.style.opacity = '0'; io.observe(el); });
+  }
+
+  startGraph() {
+    const cv = this.graphRef.current;
+    if (!cv) return;
+    const ctx = cv.getContext('2d');
+    const hubs = 8, perHub = 5;
+    const nodes = [];
+    for (let h = 0; h < hubs; h++) {
+      const a = (h / hubs) * Math.PI * 2;
+      nodes.push({ hub: true, a, r: 0.30, ph: Math.random() * 6.3, size: 4.6, parent: -1 });
+      for (let k = 0; k < perHub; k++) {
+        nodes.push({ hub: false, a: a + (k - (perHub - 1) / 2) * 0.16, r: 0.44 + Math.random() * 0.24, ph: Math.random() * 6.3, size: 2.1, parent: h * (perHub + 1) });
+      }
+    }
+    const draw = (t) => {
+      const w = cv.clientWidth, hgt = cv.clientHeight, dpr = Math.min(devicePixelRatio || 1, 2);
+      if (cv.width !== w * dpr) { cv.width = w * dpr; cv.height = hgt * dpr; }
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, w, hgt);
+      const cx = w / 2, cy = hgt / 2, R = Math.min(w, hgt) * 0.42;
+      const pos = nodes.map(n => {
+        const drift = this.reduced ? 0 : Math.sin(t / 2600 + n.ph) * 0.035;
+        const rr = (n.r + drift) * R * 2;
+        return { x: cx + Math.cos(n.a) * rr, y: cy + Math.sin(n.a) * rr * 0.86, n };
+      });
+      ctx.lineWidth = 1;
+      pos.forEach((p, i) => {
+        const n = p.n;
+        if (n.hub) {
+          ctx.strokeStyle = 'rgba(159,211,194,.34)';
+          ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(p.x, p.y); ctx.stroke();
+        } else {
+          const q = pos[n.parent];
+          if (!q) return;
+          ctx.strokeStyle = 'rgba(127,166,151,.22)';
+          ctx.beginPath(); ctx.moveTo(q.x, q.y); ctx.lineTo(p.x, p.y); ctx.stroke();
+        }
+      });
+      pos.forEach(p => {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.n.size, 0, Math.PI * 2);
+        if (p.n.hub) { ctx.strokeStyle = '#9FD3C2'; ctx.lineWidth = 1.6; ctx.stroke(); }
+        else { ctx.fillStyle = 'rgba(244,241,232,.72)'; ctx.fill(); }
+      });
+      ctx.beginPath(); ctx.arc(cx, cy, 9, 0, Math.PI * 2); ctx.fillStyle = '#2EE8A8'; ctx.fill();
+      this._raf = requestAnimationFrame(draw);
+    };
+    this._raf = requestAnimationFrame(draw);
+  }
+
+  pick(o, base) {
+    const en = this.state.lang === 'en';
+    return en ? (o[base + 'en'] !== undefined ? o[base + 'en'] : o[base + 'pt']) : o[base + 'pt'];
+  }
+
+  renderVals() {
+    const en = this.state.lang === 'en';
+    const L = (o, a, b) => (en ? (o[b] !== undefined ? o[b] : o[a]) : o[a]);
+    const s = this.state.screen;
+    const on = { background: '#1F5F4E', fg: '#FFFFFF' }, off = { background: 'transparent', fg: '#63625F' };
+    const nav = k => (s === k ? on : off);
+
+    return {
+      rootRef: this.rootRef,
+      graphRef: this.graphRef,
+      goVitrine: () => this.go('vitrine'),
+      goCase: () => this.go('case'),
+      goPanel: () => this.go('panel'),
+      toggleLang: () => this.setState({ lang: en ? 'pt' : 'en' }, () => this.applyLang()),
+      langLabel: en ? 'EN · PT' : 'PT · EN',
+      scrVitrine: s === 'vitrine' ? 'block' : 'none',
+      scrCase: s === 'case' ? 'block' : 'none',
+      scrPanel: s === 'panel' ? 'block' : 'none',
+      navBg1: nav('vitrine').background, navFg1: nav('vitrine').fg,
+      navBg2: nav('case').background, navFg2: nav('case').fg,
+      navBg3: nav('panel').background, navFg3: nav('panel').fg,
+      sourceLine: en
+        ? 'Source: vault index, generated 17 Aug 2026 — 194 notes, 847 links, 24 folders.'
+        : 'Fonte: índice do vault, gerado em 17 ago 2026 — 194 notas, 847 conexões, 24 pastas.',
+      heroStats: DATA.heroStats.map(x => ({ value: x.value, label: L(x, 'pt', 'en'), note: L(x, 'npt', 'nen') })),
+      vaultPoints: DATA.vaultPoints.map(x => ({ text: L(x, 'pt', 'en') })),
+      ritual: DATA.ritual.map(x => ({ n: x.n, text: L(x, 'pt', 'en') })),
+      featured: DATA.featured.map(x => ({
+        name: x.name, dot: x.dot, status: L(x, 'spt', 'sen'), desc: L(x, 'dpt', 'den'),
+        stack: x.stack, scale: L(x, 'scalept', 'scaleen'), role: L(x, 'rolept', 'roleen'),
+      })),
+      repos: DATA.repos.map(x => ({
+        name: x.name, desc: L(x, 'dpt', 'den'), lang: x.lang, status: L(x, 'spt', 'sen'),
+        langColor: x.lang === 'Python' ? '#7FA697' : '#1F5F4E',
+      })),
+      stackGroups: DATA.stackGroups.map(g => ({ title: L(g, 'tpt', 'ten'), items: g.items })),
+      domains: DATA.domains,
+      garimpo: DATA.garimpo.map(x => ({ value: x.value, label: L(x, 'pt', 'en') })),
+      caseProblem: DATA.caseProblem.map(x => ({ tag: L(x, 'tagpt', 'tagen'), title: L(x, 'tpt', 'ten'), text: L(x, 'ppt', 'pen') })),
+      caseMetrics: DATA.caseMetrics.map(x => ({ label: L(x, 'pt', 'en'), value: x.value })),
+      folders: DATA.folders.map(x => ({ path: x.path, role: L(x, 'rpt', 'ren'), count: x.count })),
+      caseOutcomes: DATA.caseOutcomes.map(x => ({ title: L(x, 'tpt', 'ten'), text: L(x, 'ppt', 'pen') })),
+      panelStats: DATA.panelStats.map(x => ({ label: L(x, 'pt', 'en'), value: x.value, delta: x.den ? L(x, 'delta', 'den') : x.delta, deltaColor: x.dc })),
+      panelFilters: DATA.panelFilters.map(x => ({
+        label: L(x, 'pt', 'en'),
+        bg: x.active ? '#1F5F4E' : '#FBFAF6',
+        fg: x.active ? '#FFFFFF' : '#63625F',
+        border: x.active ? '#1F5F4E' : '#DAD3C2',
+      })),
+      panelRows: DATA.panelRows.map(x => ({
+        name: x.name, note: x.note, source: L(x, 'spt', 'sen'),
+        visibility: L(x, 'vpt', 'ven'), visColor: x.pub ? '#1F5F4E' : '#63625F',
+        status: L(x, 'stpt', 'sten'), dot: x.dot,
+      })),
+      queue: DATA.queue.map(x => ({ title: L(x, 'tpt', 'ten'), kind: L(x, 'kpt', 'ken'), when: L(x, 'wpt', 'wen') })),
+      health: DATA.health.map(x => ({ label: L(x, 'pt', 'en'), value: x.value, pct: x.pct })),
+    };
+  }
+}
+
+</script>
+</body>
+</html>

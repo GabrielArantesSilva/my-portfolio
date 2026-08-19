@@ -1,0 +1,9 @@
+ter uma especia de intranet minha kkkk
+fazer postes de vídeos sobre mim (não validei essa ideia)
+
+mas imagino que por ser um portifólio meu pode ter tudo que envolve a minha pessoa
+so não sei ainda como fazer isso de uma forma dinâmica e com um ui/ux diferenciado
+
+queria usar e abusar de animações efeitos estilização e componentes com estilização primium
+
+no meu obsidian tem algumas ferramentas e documentações sobre design que eu acho que pode ajudar 

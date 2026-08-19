@@ -1,0 +1,55 @@
+:root{
+/* ── Neutros — a base marfim ─────────────────────────────── */
+--ol-ivory:#F4F1E8;        /* Marfim · fundo padrão do slide */
+--ol-paper:#FBFAF6;        /* Papel · cards e tabelas */
+--ol-sand:#EAE5D8;         /* Areia · blocos e faixas */
+--ol-line:#DAD3C2;         /* Linha · bordas e réguas */
+--ol-ink-soft:#63625F;     /* Tinta suave · texto auxiliar */
+--ol-ink:#1C1D1F;          /* Tinta · títulos e corpo */
+--ol-black:#18191B;        /* Preto · capa e divisores */
+--ol-ink-dim:#A5A5A1;      /* Texto auxiliar sobre escuro */
+--ol-line-dark:#2E2F31;    /* Régua e borda sobre escuro */
+
+/* ── Verde da marca, em intensidades foscas ──────────────── */
+--ol-green-deep:#1F5F4E;   /* Verde profundo · áreas grandes */
+--ol-green-press:#14463A;  /* Estado pressionado / link hover */
+--ol-green-line:#2C7361;   /* Régua dentro de bloco verde */
+--ol-sage:#7FA697;         /* Sálvia · séries secundárias */
+--ol-mist:#DCE7DF;         /* Névoa · tags e linhas de tabela */
+--ol-mist-ink:#B9DDD1;     /* Texto auxiliar sobre verde profundo */
+--ol-green-light:#9FD3C2;  /* Verde claro · acento sobre escuro */
+--ol-sage-ink:#26433A;     /* Texto sobre sálvia */
+
+/* ── Digital only — proibido em apresentação ─────────────── */
+--ol-green-neon:#2EE8A8;   /* Neon da marca digital · nunca em slide */
+
+/* ── Dados e semântica ───────────────────────────────────── */
+--ol-wheat:#C9BFA6;        /* Série de contexto / meta */
+--ol-status-ok:#1F5F4E;    /* No prazo */
+--ol-status-warn:#C9A227;  /* Atenção */
+--ol-status-risk:#B4523F;  /* Risco */
+--ol-clay:#8A5A4C;         /* Rótulo de "evitar" */
+
+/* ── Aliases semânticos ──────────────────────────────────── */
+--ol-surface:var(--ol-ivory);
+--ol-surface-card:var(--ol-paper);
+--ol-surface-block:var(--ol-sand);
+--ol-surface-fill:var(--ol-mist);
+--ol-surface-strong:var(--ol-green-deep);
+--ol-surface-dark:var(--ol-black);
+--ol-text:var(--ol-ink);
+--ol-text-muted:var(--ol-ink-soft);
+--ol-text-on-dark:#FFFFFF;
+--ol-text-on-dark-muted:var(--ol-ink-dim);
+--ol-text-on-strong:#FFFFFF;
+--ol-text-on-strong-muted:var(--ol-mist-ink);
+--ol-accent:var(--ol-green-deep);
+--ol-accent-on-dark:var(--ol-green-light);
+--ol-border:var(--ol-line);
+--ol-border-dark:var(--ol-line-dark);
+--ol-border-on-strong:var(--ol-green-line);
+
+/* ── Véus de proteção sobre imagem ───────────────────────── */
+--ol-scrim-left:linear-gradient(to right,rgba(24,25,27,.92) 42%,rgba(24,25,27,.25) 85%,rgba(24,25,27,.1)); /* @kind other */
+--ol-scrim-right:linear-gradient(to right,#18191B 0%,rgba(24,25,27,.55) 14%,rgba(24,25,27,.08) 45%,rgba(24,25,27,0) 100%); /* @kind other */
+}

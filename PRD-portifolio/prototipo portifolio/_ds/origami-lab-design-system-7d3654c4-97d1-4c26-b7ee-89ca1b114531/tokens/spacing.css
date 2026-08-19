@@ -1,0 +1,30 @@
+:root{
+/* Margem de slide. O respiro faz parte do argumento. */
+--ol-slide-w:1920px; /* @kind other */
+--ol-slide-h:1080px; /* @kind other */
+--ol-margin-x:120px;       /* margem lateral, mínimo absoluto */
+--ol-margin-top:88px;      /* topo de slide de conteúdo */
+--ol-margin-top-hero:96px; /* capa, divisor e encerramento */
+--ol-gutter:24px;          /* calha da grade de 12 colunas */
+--ol-columns:12; /* @kind other */
+
+--ol-space-1:6px;
+--ol-space-2:10px;
+--ol-space-3:14px;
+--ol-space-4:20px;
+--ol-space-5:24px;
+--ol-space-6:28px;
+--ol-space-7:32px;
+--ol-space-8:40px;
+--ol-space-9:44px;
+--ol-space-10:52px;
+--ol-space-11:56px;
+--ol-space-12:64px;
+--ol-space-14:80px;
+--ol-space-16:96px;
+
+--ol-pad-card:36px;
+--ol-pad-card-lg:48px;
+--ol-pad-block:40px;
+--ol-pad-table-cell:26px 28px;
+}
