@@ -16,11 +16,16 @@ const hueOf = (domain: string) => {
   return HUES[h % HUES.length];
 };
 
-export function Brain() {
+export function Brain({
+  selected,
+  onSelect,
+}: {
+  selected: string | null;
+  onSelect: (id: string | null) => void;
+}) {
   const { t } = useLang();
   const still = useReducedMotion() ?? false;
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [selected, setSelected] = useState<string | null>(null);
   const [query, setQuery] = useState('');
 
   const nodes = useMemo(
@@ -135,7 +140,7 @@ export function Brain() {
         best = node.id;
       }
     }
-    setSelected(best);
+    onSelect(best);
   };
 
   return (
@@ -178,6 +183,26 @@ export function Brain() {
         aria-label={t(UI.search)}
         className="numeric w-full rounded-lg border border-hairline bg-canvas px-3 py-2 text-xs text-body outline-none transition-colors placeholder:text-ink-600 focus:border-accent"
       />
+
+      <ul className="flex flex-wrap gap-1.5" aria-label={t(UI.topTags)}>
+        {vault.topTags.map((tag) => (
+          <li key={tag.tag}>
+            <button
+              type="button"
+              onClick={() => setQuery(query === tag.tag ? '' : tag.tag)}
+              aria-pressed={query === tag.tag}
+              className={`numeric rounded-full border px-2 py-0.5 text-[0.62rem] transition-colors ${
+                query === tag.tag
+                  ? 'border-accent bg-accent/15 text-heading'
+                  : 'border-hairline text-muted hover:border-accent/50 hover:text-body'
+              }`}
+            >
+              {tag.tag}
+              <span className="ml-1 text-ink-600">{tag.count}</span>
+            </button>
+          </li>
+        ))}
+      </ul>
 
       {detail ? (
         <article className="rounded-xl border border-accent/30 bg-surface p-4">

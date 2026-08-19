@@ -175,6 +175,7 @@ export const APPS = {
   sobre: { pt: 'sobre', en: 'about' } satisfies Txt,
   trabalho: { pt: 'trabalho', en: 'work' } satisfies Txt,
   cerebro: { pt: 'cérebro', en: 'brain' } satisfies Txt,
+  curriculo: { pt: 'currículo', en: 'résumé' } satisfies Txt,
   contato: { pt: 'contato', en: 'contact' } satisfies Txt,
 } as const;
 
@@ -206,6 +207,21 @@ export const UI = {
     pt: 'Clique num nó do grafo para abrir a nota',
     en: 'Click a node in the graph to open the note',
   } satisfies Txt,
+  summary: { pt: 'Resumo', en: 'Summary' } satisfies Txt,
+  experience: { pt: 'Experiência', en: 'Experience' } satisfies Txt,
+  downloadPdf: { pt: 'Baixar PDF', en: 'Download PDF' } satisfies Txt,
+  resumeHint: {
+    pt: 'Gerado do mesmo conteúdo do site — nunca desatualiza',
+    en: 'Generated from the same content as the site — never goes stale',
+  } satisfies Txt,
+  topTags: { pt: 'Tags mais usadas', en: 'Most used tags' } satisfies Txt,
+  commands: { pt: 'comandos', en: 'commands' } satisfies Txt,
+  commandHint: {
+    pt: 'buscar app, nota, domínio ou tag…',
+    en: 'search app, note, domain or tag…',
+  } satisfies Txt,
+  openApp: { pt: 'abrir', en: 'open' } satisfies Txt,
+  noResults: { pt: 'nada encontrado', en: 'nothing found' } satisfies Txt,
   graphAria: {
     pt: 'Grafo de notas e ligações do vault',
     en: 'Graph of vault notes and links',

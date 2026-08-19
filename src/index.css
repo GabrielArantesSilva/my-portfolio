@@ -205,3 +205,50 @@
   font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
 }
+
+/* ── Impressão ──────────────────────────────────────────────────
+   O PDF do currículo sai daqui. Some com o OS inteiro e promove o
+   [data-print] a documento A4 — sem biblioteca de PDF no bundle.
+   ──────────────────────────────────────────────────────────── */
+@media print {
+  @page {
+    size: A4;
+    margin: 16mm 14mm;
+  }
+
+  html,
+  body {
+    background: #fff !important;
+    color: #111 !important;
+  }
+
+  /* visibility herda: os ancestrais somem, a subárvore do documento reaparece.
+     Funciona com a janela aninhada fundo no desktop, onde display:none nos
+     irmãos não funcionaria. */
+  body * {
+    visibility: hidden !important;
+    box-shadow: none !important;
+  }
+
+  [data-print],
+  [data-print] * {
+    visibility: visible !important;
+    color: #111 !important;
+    background: transparent !important;
+    border-color: #d4d4d4 !important;
+  }
+
+  [data-print] {
+    position: absolute !important;
+    inset: 0 auto auto 0;
+    width: 100%;
+    max-height: none !important;
+    overflow: visible !important;
+    padding: 0 !important;
+    border: 0 !important;
+  }
+
+  canvas {
+    display: none !important;
+  }
+}

@@ -15,6 +15,8 @@ export interface WindowChrome {
   width: number;
   focused: boolean;
   compact: boolean;
+  /** X do ícone que abriu a janela, em px relativos à borda esquerda DELA. */
+  originX: number | null;
   onFocus: () => void;
   onClose: () => void;
   onMinimize: () => void;
@@ -88,12 +90,14 @@ export function Window(props: WindowChrome) {
       dragElastic={0}
       dragConstraints={{ left: -320, right: 320, top: -120, bottom: 220 }}
       onDragEnd={(_, info) => props.onMove(info.offset.x, info.offset.y)}
-      initial={still ? false : { opacity: 0, scale: 0.96, y: 18 }}
+      initial={still ? false : { opacity: 0, scale: 0.55, y: 90 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
-      exit={{ opacity: 0, scale: 0.97, y: 10 }}
-      transition={{ duration: 0.34, ease: [0.22, 1, 0.36, 1] }}
+      exit={{ opacity: 0, scale: 0.6, y: 70 }}
+      transition={{ type: 'spring', stiffness: 260, damping: 26, mass: 0.7 }}
       style={{
         zIndex: props.z,
+        // Cresce a partir do ícone que a abriu, não do centro genérico.
+        transformOrigin: props.originX == null ? 'bottom center' : `${props.originX}px bottom`,
         left: `${props.restX}%`,
         top: `${props.restY}%`,
         width: `min(${props.width}px, calc(100vw - 3rem))`,
