@@ -1,6 +1,5 @@
 import { useLang } from '../i18n/lang';
-import { CONTACT, IDENTITY, SECTION_LABELS } from '../content/site';
-import { Eyebrow, Reveal, Section } from './ui/primitives';
+import { CONTACT, IDENTITY } from '../content/site';
 
 const LINKS = [
   { href: `mailto:${IDENTITY.email}`, label: IDENTITY.email, external: false },
@@ -12,25 +11,27 @@ export function Contact() {
   const { t } = useLang();
 
   return (
-    <Section id="contato">
-      <Eyebrow>{t(SECTION_LABELS.contato)}</Eyebrow>
-
-      <Reveal>
-        <h2 className="mt-4 max-w-3xl text-3xl font-semibold leading-[1.12] sm:text-4xl md:text-[2.75rem]">
+    <div className="space-y-7">
+      <header>
+        <p className="inline-flex items-center gap-2 rounded-full border border-hairline px-3 py-1 text-[0.7rem] text-muted">
+          <span className="h-1.5 w-1.5 rounded-full bg-ok" />
+          {t(CONTACT.available)}
+        </p>
+        <h1 className="mt-4 text-xl font-semibold leading-snug text-heading">
           {t(CONTACT.headline)}
-        </h2>
-        <p className="mt-5 max-w-xl text-lg text-muted">{t(CONTACT.lede)}</p>
-      </Reveal>
+        </h1>
+        <p className="mt-2 text-sm text-muted">{t(CONTACT.lede)}</p>
+      </header>
 
-      <ul className="mt-12 border-t border-hairline">
+      <ul className="border-t border-hairline">
         {LINKS.map((link) => (
           <li key={link.href} className="border-b border-hairline">
             <a
               href={link.href}
               {...(link.external ? { target: '_blank', rel: 'noreferrer noopener' } : {})}
-              className="group flex items-center gap-4 py-5 transition-colors duration-200"
+              className="group flex items-center gap-3 py-3.5"
             >
-              <span className="numeric flex-1 text-base text-body transition-colors duration-200 group-hover:text-accent">
+              <span className="numeric flex-1 truncate text-sm text-body transition-colors group-hover:text-accent">
                 {link.label}
               </span>
               <span
@@ -43,13 +44,6 @@ export function Contact() {
           </li>
         ))}
       </ul>
-
-      <footer className="mt-16 flex flex-wrap items-center justify-between gap-3 text-xs text-muted">
-        <p className="numeric">
-          {IDENTITY.name} · {t(IDENTITY.location)}
-        </p>
-        <p className="numeric">{t(IDENTITY.role)}</p>
-      </footer>
-    </Section>
+    </div>
   );
 }

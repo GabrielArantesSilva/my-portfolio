@@ -1,30 +1,34 @@
+import { AnimatePresence } from 'framer-motion';
+import { useState } from 'react';
 import { LangProvider } from './i18n/LangProvider';
-import { Nav } from './components/Nav';
-import { Hero } from './components/Hero';
-import { Now } from './components/Now';
-import { Projects } from './components/Projects';
-import { Code } from './components/Code';
-import { Brain } from './components/Brain';
-import { Method } from './components/Method';
-import { Writing } from './components/Writing';
-import { Contact } from './components/Contact';
+import { Boot } from './os/Boot';
+import { Desktop } from './os/Desktop';
 
-function App() {
+const BOOT_KEY = 'ga.booted';
+
+function Shell() {
+  // Boot só na primeira visita da sessão: quem volta não repete a animação.
+  const [booted, setBooted] = useState(
+    () => typeof window !== 'undefined' && window.sessionStorage.getItem(BOOT_KEY) === '1'
+  );
+
+  const finish = () => {
+    window.sessionStorage.setItem(BOOT_KEY, '1');
+    setBooted(true);
+  };
+
   return (
-    <LangProvider>
-      <Nav />
-      <main id="conteudo">
-        <Hero />
-        <Now />
-        <Projects />
-        <Code />
-        <Brain />
-        <Method />
-        <Writing />
-        <Contact />
-      </main>
-    </LangProvider>
+    <>
+      <AnimatePresence>{!booted && <Boot key="boot" onDone={finish} />}</AnimatePresence>
+      <Desktop />
+    </>
   );
 }
 
-export default App;
+export default function App() {
+  return (
+    <LangProvider>
+      <Shell />
+    </LangProvider>
+  );
+}
