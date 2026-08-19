@@ -15,6 +15,8 @@ import { Brain } from '../apps/Brain';
 import { Contact } from '../apps/Contact';
 import { Resume } from '../apps/Resume';
 import { Now } from '../apps/Now';
+import { Stack } from '../apps/Stack';
+import { useRoute } from './useRoute';
 
 interface AppDef {
   id: string;
@@ -39,6 +41,7 @@ const APP_LIST: readonly AppDef[] = [
     width: 560,
     render: (ctx) => <Brain selected={ctx.note} onSelect={ctx.onNote} />,
   },
+  { id: 'stack', label: APPS.stack, glyph: '◇', restX: 30, restY: 56, width: 460, render: () => <Stack /> },
   { id: 'curriculo', label: APPS.curriculo, glyph: '▤', restX: 46, restY: 10, width: 540, render: () => <Resume /> },
   { id: 'contato', label: APPS.contato, glyph: '✉', restX: 62, restY: 52, width: 400, render: () => <Contact /> },
 ];
@@ -46,6 +49,8 @@ const APP_LIST: readonly AppDef[] = [
 const INITIAL = ['sobre', 'trabalho'];
 
 const KEY = { palette: 'k', escape: 'Escape' } as const;
+
+const APP_IDS = APP_LIST.map((a) => a.id);
 
 function useCompact() {
   const [compact, setCompact] = useState(
@@ -69,6 +74,7 @@ export function Desktop() {
   const [origins, setOrigins] = useState<Record<string, number>>({});
   const [palette, setPalette] = useState(false);
   const [note, setNote] = useState<string | null>(null);
+  const { route, navigate } = useRoute(APP_IDS, 'sobre');
 
   useEffect(() => {
     const timer = setInterval(() => setClock(new Date()), 30_000);
@@ -110,6 +116,17 @@ export function Desktop() {
     },
     [wm]
   );
+
+  // Rota da URL abre o app correspondente uma vez, na carga.
+  useEffect(() => {
+    if (route) wm.open(route);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [route]);
+
+  // O app em foco vira a URL, então a barra sempre reflete o que se vê.
+  useEffect(() => {
+    navigate(wm.topmost, true);
+  }, [wm.topmost, navigate]);
 
   const open = APP_LIST.filter((app) => wm.isOpen(app.id) && !wm.isMinimized(app.id));
   const ctx = { note, onNote: setNote };

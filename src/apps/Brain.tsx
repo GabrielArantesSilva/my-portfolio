@@ -33,7 +33,14 @@ export function Brain({
     []
   );
 
-  const positions = useForceGraph({ nodes, edges: vault.edges, width: W, height: H, still });
+  const { nodes: positions, pin } = useForceGraph({
+    nodes,
+    edges: vault.edges,
+    width: W,
+    height: H,
+    still,
+  });
+  const dragging = useRef<string | null>(null);
 
   const matches = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -126,11 +133,15 @@ export function Brain({
     drawNodes();
   });
 
-  const pick = (event: React.MouseEvent<HTMLCanvasElement>) => {
+  const toCanvas = (event: React.PointerEvent<HTMLCanvasElement>) => {
     const rect = event.currentTarget.getBoundingClientRect();
-    const x = ((event.clientX - rect.left) / rect.width) * W;
-    const y = ((event.clientY - rect.top) / rect.height) * H;
+    return {
+      x: ((event.clientX - rect.left) / rect.width) * W,
+      y: ((event.clientY - rect.top) / rect.height) * H,
+    };
+  };
 
+  const nearest = (x: number, y: number) => {
     let best: string | null = null;
     let bestDist = 14;
     for (const node of positions.current) {
@@ -140,7 +151,30 @@ export function Brain({
         best = node.id;
       }
     }
-    onSelect(best);
+    return best;
+  };
+
+  const onDown = (event: React.PointerEvent<HTMLCanvasElement>) => {
+    const { x, y } = toCanvas(event);
+    const hit = nearest(x, y);
+    onSelect(hit);
+    if (!hit || still) return;
+    dragging.current = hit;
+    pin(hit, x, y);
+    event.currentTarget.setPointerCapture(event.pointerId);
+  };
+
+  const onMove = (event: React.PointerEvent<HTMLCanvasElement>) => {
+    if (!dragging.current) return;
+    const { x, y } = toCanvas(event);
+    pin(dragging.current, x, y);
+  };
+
+  const onUp = (event: React.PointerEvent<HTMLCanvasElement>) => {
+    if (!dragging.current) return;
+    dragging.current = null;
+    pin(null);
+    event.currentTarget.releasePointerCapture(event.pointerId);
   };
 
   return (
@@ -167,10 +201,13 @@ export function Brain({
       <div className="overflow-hidden rounded-xl border border-hairline bg-ink-950">
         <canvas
           ref={canvasRef}
-          onClick={pick}
+          onPointerDown={onDown}
+          onPointerMove={onMove}
+          onPointerUp={onUp}
+          onPointerCancel={onUp}
           role="img"
           aria-label={t(UI.graphAria)}
-          className="block w-full cursor-crosshair"
+          className="block w-full touch-none cursor-grab active:cursor-grabbing"
           style={{ aspectRatio: `${W} / ${H}` }}
         />
       </div>

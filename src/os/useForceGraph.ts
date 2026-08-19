@@ -39,6 +39,17 @@ export function useForceGraph({ nodes, edges, width, height, still }: Options) {
   const nodesRef = useRef<GraphNode[]>([]);
   const [, setTick] = useState(0);
   const alphaRef = useRef(1);
+  const pinnedRef = useRef<{ id: string | null; x: number; y: number }>({
+    id: null,
+    x: 0,
+    y: 0,
+  });
+
+  /** Prende um nó na posição do cursor e reaquece a simulação. */
+  const pin = (id: string | null, x = 0, y = 0) => {
+    pinnedRef.current = { id, x, y };
+    if (id) alphaRef.current = Math.max(alphaRef.current, 0.55);
+  };
 
   // Semente determinística: o grafo abre igual toda vez, sem Math.random.
   useEffect(() => {
@@ -105,6 +116,14 @@ export function useForceGraph({ nodes, edges, width, height, still }: Options) {
       const cx = width / 2;
       const cy = height / 2;
       for (const n of list) {
+        // Nó preso pelo cursor não obedece à física: o usuário manda.
+        if (n.id === pinnedRef.current.id) {
+          n.x = pinnedRef.current.x;
+          n.y = pinnedRef.current.y;
+          n.vx = 0;
+          n.vy = 0;
+          continue;
+        }
         n.vx = (n.vx + (cx - n.x) * CENTER_PULL * alpha) * DAMPING;
         n.vy = (n.vy + (cy - n.y) * CENTER_PULL * alpha) * DAMPING;
         n.x += n.vx;
@@ -143,5 +162,5 @@ export function useForceGraph({ nodes, edges, width, height, still }: Options) {
     return () => cancelAnimationFrame(raf);
   }, [nodes, edges, width, height, still]);
 
-  return nodesRef;
+  return { nodes: nodesRef, pin };
 }
