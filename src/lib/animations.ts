@@ -303,12 +303,16 @@ export const themeTransition: Variants = {
 };
 
 export function createStaggerVariants(baseVariants: Variants, staggerDelay = 0.06): Variants {
+  // `Variant` também pode ser um TargetResolver (função), que não tem
+  // .transition — só dá para espalhar quando for objeto.
+  const visible = typeof baseVariants.visible === 'object' ? baseVariants.visible : {};
+
   return {
     hidden: baseVariants.hidden,
     visible: {
-      ...baseVariants.visible,
+      ...visible,
       transition: {
-        ...baseVariants.visible?.transition,
+        ...visible.transition,
         staggerChildren: staggerDelay,
       },
     },

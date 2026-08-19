@@ -24,7 +24,7 @@ export function useScrollReveal(options: ScrollRevealOptions = {}) {
 
   const [isVisible, setIsVisible] = useState(false);
   const elementRef = useRef<HTMLElement | null>(null);
-  const timeoutRef = useRef<ReturnType<typeof setTimeout>>();
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   const setRef = useCallback((node: HTMLElement | null) => {
     elementRef.current = node;
@@ -167,7 +167,7 @@ export function useSpringValue(initialValue = 0, stiffness = 100, damping = 10) 
   const [value, setValue] = useState(initialValue);
   const targetRef = useRef(initialValue);
   const velocityRef = useRef(0);
-  const frameRef = useRef<number>();
+  const frameRef = useRef<number | undefined>(undefined);
 
   const animate = useCallback((target: number) => {
     targetRef.current = target;
