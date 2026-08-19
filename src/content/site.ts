@@ -253,6 +253,67 @@ export const CONTACT = {
   } satisfies Txt,
 } as const;
 
+export const STATUS_LABELS = {
+  ativo: { pt: 'Ativo', en: 'Active' } satisfies Txt,
+  pausado: { pt: 'Pausado', en: 'Paused' } satisfies Txt,
+  concluido: { pt: 'Concluído', en: 'Shipped' } satisfies Txt,
+} as const;
+
+export const UI = {
+  projectsTitle: {
+    pt: 'Oito projetos pessoais, um jeito de trabalhar',
+    en: 'Eight personal projects, one way of working',
+  } satisfies Txt,
+  projectsHint: { pt: 'Abra uma linha para o detalhe', en: 'Open a row for detail' } satisfies Txt,
+  stack: { pt: 'Stack', en: 'Stack' } satisfies Txt,
+  role: { pt: 'Papel', en: 'Role' } satisfies Txt,
+  privateRepo: { pt: 'Repo privado', en: 'Private repo' } satisfies Txt,
+  codeTitle: {
+    pt: 'Dez dobras, três protocolos, três fórmulas — tudo tipado.',
+    en: 'Ten skinfolds, three protocols, three formulas — all typed.',
+  } satisfies Txt,
+  codeLede: {
+    pt: 'O Dobra SaaS transforma literatura de composição corporal em domínio tipado: tabelas por protocolo, coeficientes por idade, faixas de classificação e testes unitários. A fórmula sem fonte primária verificada carrega um aviso no próprio código.',
+    en: 'Dobra SaaS turns body-composition literature into a typed domain: per-protocol tables, per-age coefficients, classification bands and unit tests. The formula without a verified primary source carries a warning in the code itself.',
+  } satisfies Txt,
+  brainTitle: {
+    pt: 'Um vault de 194 notas no caminho crítico de todo commit.',
+    en: 'A 194-note vault on the critical path of every commit.',
+  } satisfies Txt,
+  brainLede: {
+    pt: 'Não é arquivo morto. Cinco notas em ordem fixa antes de o editor abrir, uma nota-hub por domínio, um checklist de produção ao final de cada nota de stack.',
+    en: 'Not dead storage. Five notes in a fixed order before the editor opens, one hub note per domain, a production checklist at the end of every stack note.',
+  } satisfies Txt,
+  ritualTitle: {
+    pt: 'Cinco notas, ordem fixa, antes do editor',
+    en: 'Five notes, fixed order, before the editor',
+  } satisfies Txt,
+  methodTitle: {
+    pt: 'Quatro regras que eu não negocio',
+    en: "Four rules I don't negotiate",
+  } satisfies Txt,
+  methodLede: {
+    pt: 'Elas vêm do vault e de todo projeto em que pular uma delas custou uma reescrita.',
+    en: 'They come from the vault, and from every project where skipping one cost a rewrite.',
+  } satisfies Txt,
+  writingTitle: {
+    pt: 'Treze domínios, uma nota-hub cada',
+    en: 'Thirteen domains, one hub note each',
+  } satisfies Txt,
+  writingLede: {
+    pt: 'De clean architecture a redes. O número é quantas notas ficam sob aquele domínio.',
+    en: 'From clean architecture to networking. The number is how many notes sit under that domain.',
+  } satisfies Txt,
+  health: { pt: 'Saúde do vault', en: 'Vault health' } satisfies Txt,
+  healthOrphans: { pt: 'Notas órfãs', en: 'Orphan notes' } satisfies Txt,
+  healthBroken: { pt: 'Links quebrados', en: 'Broken links' } satisfies Txt,
+  healthFolders: { pt: 'Pastas', en: 'Folders' } satisfies Txt,
+  healthNote: {
+    pt: 'Um script indexa o vault: link quebrado é bug, nota órfã é código morto.',
+    en: 'A script indexes the vault: a broken link is a bug, an orphan note is dead code.',
+  } satisfies Txt,
+} as const;
+
 export const SECTION_LABELS = {
   agora: { pt: 'Agora', en: 'Now' } satisfies Txt,
   projetos: { pt: 'Trabalho selecionado', en: 'Selected work' } satisfies Txt,

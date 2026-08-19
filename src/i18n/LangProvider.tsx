@@ -1,19 +1,12 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { ReactNode } from 'react';
 import { LANG, isLang } from './lang.const';
 import type { Lang } from './lang.const';
-import type { Txt } from '../content/types';
+import { LangContext } from './lang.context';
+import type { LangValue } from './lang.context';
 
 const STORAGE_KEY = 'ga.lang';
 const HTML_LANG: Readonly<Record<Lang, string>> = { pt: 'pt-BR', en: 'en' };
-
-interface LangValue {
-  lang: Lang;
-  setLang: (next: Lang) => void;
-  t: (txt: Txt) => string;
-}
-
-const LangContext = createContext<LangValue | null>(null);
 
 function detect(): Lang {
   if (typeof window === 'undefined') return LANG.pt;
@@ -40,10 +33,4 @@ export function LangProvider({ children }: { children: ReactNode }) {
   );
 
   return <LangContext.Provider value={value}>{children}</LangContext.Provider>;
-}
-
-export function useLang(): LangValue {
-  const ctx = useContext(LangContext);
-  if (!ctx) throw new Error('useLang precisa estar dentro de <LangProvider>');
-  return ctx;
 }
