@@ -1,15 +1,13 @@
 /**
- * Extrai métricas e estrutura do vault-index.json para src/content/vault-stats.json.
+ * Extrai o subconjunto PÚBLICO do vault para src/content/vault.json.
  *
- * Só números e nomes de pasta saem daqui — nenhum título ou conteúdo de nota,
- * porque o vault tem 00_inbox e 05_ideias que não são públicos (SPEC.md).
- *
- * O JSON gerado é versionado de propósito: o build precisa rodar sem o vault
- * presente (CI, deploy). Rode este script antes de publicar, senão o site
- * envelhece com números de uma data que passou.
+ * Filtro de publicação (PRD): só entra conhecimento técnico. Ficam de fora
+ * 05_ideias (planos comerciais não lançados, alguns sobre ativos da Origami),
+ * 50_projects (tem nome de cliente), 00_inbox, 40_notes, Clippings e a raiz.
+ * O que sai daqui vai para a internet — na dúvida, não entra.
  *
  *   node scripts/sync-vault.mjs
- *   VAULT_INDEX="D:/outro/caminho/vault-index.json" node scripts/sync-vault.mjs
+ *   VAULT_INDEX="D:/caminho/vault-index.json" node scripts/sync-vault.mjs
  */
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { dirname, resolve, join } from 'node:path';
@@ -21,7 +19,12 @@ const indexPath =
   process.env.VAULT_INDEX ??
   resolve(root, '..', 'Obsidian Vault', '_tooling', 'vault-index.json');
 
-const outPath = join(root, 'src', 'content', 'vault-stats.json');
+const outPath = join(root, 'src', 'content', 'vault.json');
+
+/** Prefixos de pasta liberados. Qualquer outro caminho é descartado. */
+const PUBLIC_ROOTS = ['20_concepts/', '30_entities/', '10_sources/'];
+
+const isPublic = (path) => PUBLIC_ROOTS.some((root) => path.startsWith(root));
 
 let raw;
 try {
@@ -29,76 +32,86 @@ try {
 } catch (err) {
   console.error(`\n  Não consegui ler o índice do vault em:\n    ${indexPath}\n`);
   console.error(`  ${err.message}\n`);
-  console.error('  Regenere o índice no vault, ou aponte VAULT_INDEX para o caminho certo.');
-  console.error('  O src/content/vault-stats.json existente foi mantido.\n');
+  console.error('  Regenere o índice (_tooling/extract-vault.mjs) ou aponte VAULT_INDEX.');
+  console.error('  O src/content/vault.json existente foi mantido.\n');
   process.exit(1);
 }
 
-const stats = raw.stats ?? {};
-for (const key of ['notes', 'edges', 'orphans', 'brokenLinks', 'words', 'folders']) {
-  if (typeof stats[key] !== 'number') {
-    console.error(`\n  Índice sem a métrica "${key}". Formato mudou?\n`);
-    process.exit(1);
-  }
+const allNotes = raw.notes ?? [];
+const publicNotes = allNotes.filter((n) => isPublic(String(n.path ?? '')));
+const allowed = new Set(publicNotes.map((n) => n.id));
+
+const notes = publicNotes.map((n) => ({
+  id: String(n.id),
+  folder: String(n.folder ?? ''),
+  domain: String(n.folder ?? '').split('/')[1] ?? String(n.folder ?? ''),
+  title: String(n.title ?? n.id),
+  tags: Array.isArray(n.tags) ? n.tags.slice(0, 8) : [],
+  excerpt: String(n.excerpt ?? '').slice(0, 260),
+  words: Number(n.words ?? 0),
+  in: Number(n.inDegree ?? 0),
+  out: Number(n.outDegree ?? 0),
+}));
+
+// Aresta só sobrevive se as duas pontas forem públicas.
+const rawEdges = raw.edges ?? [];
+
+function normalizeEdge(edge) {
+  if (Array.isArray(edge)) return { source: String(edge[0]), target: String(edge[1]) };
+  return { source: String(edge.from ?? edge.source), target: String(edge.to ?? edge.target) };
 }
 
-// Nome de pasta é estrutura; título de nota não sai daqui.
-const CONCEPTS = '20_concepts/';
+const bothPublic = (e) => allowed.has(e.source) && allowed.has(e.target) && e.source !== e.target;
 
-function tally(predicate, keyOf) {
-  const counts = new Map();
-  for (const note of raw.notes ?? []) {
-    const path = String(note.path ?? '');
-    if (!predicate(path)) continue;
-    const key = keyOf(path);
-    if (key) counts.set(key, (counts.get(key) ?? 0) + 1);
-  }
-  return [...counts.entries()]
-    .map(([slug, count]) => ({ slug, count }))
-    .sort((a, b) => b.count - a.count || a.slug.localeCompare(b.slug));
+const edges = rawEdges.map(normalizeEdge).filter(bothPublic);
+
+const tally = new Map();
+for (const note of notes) {
+  for (const tag of note.tags) tally.set(tag, (tally.get(tag) ?? 0) + 1);
 }
+const topTags = [...tally.entries()]
+  .map(([tag, count]) => ({ tag, count }))
+  .sort((a, b) => b.count - a.count || a.tag.localeCompare(b.tag))
+  .slice(0, 18);
 
-// Pastas de topo — a arquitetura numerada do vault.
-const areas = tally(
-  () => true,
-  (p) => (p.includes('/') ? p.slice(0, p.indexOf('/')) : '(raiz)')
-);
-
-// Domínios de conhecimento: as subpastas de 20_concepts, uma nota-hub cada.
-const domains = tally(
-  (p) => p.startsWith(CONCEPTS) && p.slice(CONCEPTS.length).includes('/'),
-  (p) => {
-    const rest = p.slice(CONCEPTS.length);
-    return rest.slice(0, rest.indexOf('/'));
-  }
-);
+const byDomain = new Map();
+for (const note of notes) {
+  if (!note.domain) continue;
+  byDomain.set(note.domain, (byDomain.get(note.domain) ?? 0) + 1);
+}
+const domains = [...byDomain.entries()]
+  .map(([slug, count]) => ({ slug, count }))
+  .sort((a, b) => b.count - a.count || a.slug.localeCompare(b.slug));
 
 const payload = {
   generatedAt: raw.generatedAt ?? null,
   syncedAt: new Date().toISOString(),
+  /** Escopo público. O vault inteiro é maior; isto é o que pode ir ao ar. */
   stats: {
-    notes: stats.notes,
-    edges: stats.edges,
-    orphans: stats.orphans,
-    brokenLinks: stats.brokenLinks,
-    words: stats.words,
-    folders: stats.folders,
+    notes: notes.length,
+    edges: edges.length,
+    words: notes.reduce((sum, n) => sum + n.words, 0),
+    domains: domains.length,
   },
-  areas,
+  vaultTotal: { notes: allNotes.length, edges: rawEdges.length },
   domains,
+  topTags,
+  notes,
+  edges,
 };
 
 mkdirSync(dirname(outPath), { recursive: true });
-writeFileSync(outPath, `${JSON.stringify(payload, null, 2)}\n`, 'utf8');
+writeFileSync(outPath, `${JSON.stringify(payload)}\n`, 'utf8');
+
+const held = allNotes.length - notes.length;
+console.log(
+  `✓ vault.json — ${notes.length} notas públicas, ${edges.length} arestas, ${domains.length} domínios`
+);
+console.log(`  ${held} notas retidas pelo filtro de publicação (não vão ao ar)`);
 
 const age = raw.generatedAt
   ? Math.floor((Date.now() - Date.parse(raw.generatedAt)) / 86_400_000)
   : null;
-
-console.log(
-  `✓ vault-stats.json atualizado — ${stats.notes} notas, ${stats.edges} conexões, ` +
-    `${areas.length} áreas, ${domains.length} domínios`
-);
 if (age !== null && age > 7) {
-  console.warn(`⚠ o índice do vault tem ${age} dias. Regenere-o no Obsidian antes de publicar.`);
+  console.warn(`⚠ o índice tem ${age} dias. Rode _tooling/extract-vault.mjs antes de publicar.`);
 }

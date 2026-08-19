@@ -193,6 +193,21 @@ export const UI = {
     pt: 'Cinco notas em ordem fixa antes de o editor abrir, uma nota-hub por domínio. Não é arquivo morto — é o que impede o editor de abrir cedo demais.',
     en: 'Five notes in a fixed order before the editor opens, one hub note per domain. Not dead storage — it is what stops the editor from opening too early.',
   } satisfies Txt,
-  domains: { pt: 'Domínios', en: 'Domains' } satisfies Txt,
+  domains: { pt: 'domínios', en: 'domains' } satisfies Txt,
   notes: { pt: 'notas', en: 'notes' } satisfies Txt,
+  links: { pt: 'ligações', en: 'links' } satisfies Txt,
+  kwords: { pt: 'mil palavras', en: 'k words' } satisfies Txt,
+  words: { pt: 'palavras', en: 'words' } satisfies Txt,
+  search: {
+    pt: 'buscar por nota, domínio ou tag…',
+    en: 'search by note, domain or tag…',
+  } satisfies Txt,
+  graphHint: {
+    pt: 'Clique num nó do grafo para abrir a nota',
+    en: 'Click a node in the graph to open the note',
+  } satisfies Txt,
+  graphAria: {
+    pt: 'Grafo de notas e ligações do vault',
+    en: 'Graph of vault notes and links',
+  } satisfies Txt,
 } as const;
