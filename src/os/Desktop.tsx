@@ -1,10 +1,12 @@
 import { AnimatePresence } from 'framer-motion';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 import { useLang } from '../i18n/lang';
-import { APPS, IDENTITY, UI } from '../content/site';
-import type { Txt } from '../content/types';
+import { IDENTITY, UI } from '../content/site';
 import { useWindows } from './useWindows';
+import { useViewport } from './useViewport';
+import { useRoute } from './useRoute';
+import { APP_IDS, INITIAL_APPS, LAYOUT, byId } from './layout';
 import { Window } from './Window';
 import { Dock } from './Dock';
 import { Wallpaper } from './Wallpaper';
@@ -16,41 +18,23 @@ import { Contact } from '../apps/Contact';
 import { Resume } from '../apps/Resume';
 import { Now } from '../apps/Now';
 import { Stack } from '../apps/Stack';
-import { useRoute } from './useRoute';
-
-interface AppDef {
-  id: string;
-  label: Txt;
-  glyph: string;
-  restX: number;
-  restY: number;
-  width: number;
-  render: (ctx: { note: string | null; onNote: (id: string | null) => void }) => ReactNode;
-}
-
-const APP_LIST: readonly AppDef[] = [
-  { id: 'sobre', label: APPS.sobre, glyph: '◈', restX: 5, restY: 13, width: 440, render: () => <About /> },
-  { id: 'trabalho', label: APPS.trabalho, glyph: '▣', restX: 37, restY: 22, width: 560, render: () => <Work /> },
-  { id: 'agora', label: APPS.agora, glyph: '◔', restX: 64, restY: 40, width: 430, render: () => <Now /> },
-  {
-    id: 'cerebro',
-    label: APPS.cerebro,
-    glyph: '◐',
-    restX: 12,
-    restY: 44,
-    width: 560,
-    render: (ctx) => <Brain selected={ctx.note} onSelect={ctx.onNote} />,
-  },
-  { id: 'stack', label: APPS.stack, glyph: '◇', restX: 30, restY: 56, width: 460, render: () => <Stack /> },
-  { id: 'curriculo', label: APPS.curriculo, glyph: '▤', restX: 46, restY: 10, width: 540, render: () => <Resume /> },
-  { id: 'contato', label: APPS.contato, glyph: '✉', restX: 62, restY: 52, width: 400, render: () => <Contact /> },
-];
-
-const INITIAL = ['sobre', 'trabalho'];
+import { Requests } from '../apps/Requests';
 
 const KEY = { palette: 'k', escape: 'Escape' } as const;
+const CLOCK_LOCALE = { pt: 'pt-BR', en: 'en-US' } as const;
 
-const APP_IDS = APP_LIST.map((a) => a.id);
+type Ctx = { note: string | null; onNote: (id: string | null) => void };
+
+const RENDERERS: Readonly<Record<string, (ctx: Ctx) => ReactNode>> = {
+  sobre: () => <About />,
+  trabalho: () => <Work />,
+  agora: () => <Now />,
+  cerebro: (ctx) => <Brain selected={ctx.note} onSelect={ctx.onNote} />,
+  stack: () => <Stack />,
+  curriculo: () => <Resume />,
+  pedidos: () => <Requests />,
+  contato: () => <Contact />,
+};
 
 function useCompact() {
   const [compact, setCompact] = useState(
@@ -67,84 +51,106 @@ function useCompact() {
 }
 
 export function Desktop() {
-  const { t } = useLang();
-  const wm = useWindows(INITIAL);
+  const { lang, t } = useLang();
+  const wm = useWindows(INITIAL_APPS);
   const compact = useCompact();
+  const camera = useViewport();
+  const { route, navigate } = useRoute(APP_IDS, 'sobre');
   const [clock, setClock] = useState(() => new Date());
-  const [origins, setOrigins] = useState<Record<string, number>>({});
   const [palette, setPalette] = useState(false);
   const [note, setNote] = useState<string | null>(null);
-  const { route, navigate } = useRoute(APP_IDS, 'sobre');
 
   useEffect(() => {
     const timer = setInterval(() => setClock(new Date()), 30_000);
     return () => clearInterval(timer);
   }, []);
 
+  /** Traz a janela ao centro da viewport — o dock nunca abre no vazio. */
+  const bring = useCallback(
+    (id: string) => {
+      const app = byId(id);
+      if (!app || compact) return;
+      camera.panTo({
+        x: Math.round(window.innerWidth / 2 - (app.x + app.width / 2)),
+        y: Math.round(window.innerHeight / 2 - (app.y + 180)),
+      });
+    },
+    [camera, compact]
+  );
+
+  const openAndBring = useCallback(
+    (id: string) => {
+      wm.open(id);
+      bring(id);
+    },
+    [wm, bring]
+  );
+
+  // Cada rota é atendida uma vez. O ref evita reabrir a janela toda vez que
+  // openAndBring troca de identidade, sem precisar mentir na lista de deps.
+  const handledRoute = useRef<string | null>(null);
+  useEffect(() => {
+    if (route && route !== handledRoute.current) {
+      handledRoute.current = route;
+      openAndBring(route);
+    }
+  }, [route, openAndBring]);
+
+  useEffect(() => {
+    navigate(wm.topmost, true);
+  }, [wm.topmost, navigate]);
+
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      const key = e.key.toLowerCase();
-      if ((e.metaKey || e.ctrlKey) && key === KEY.palette) {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === KEY.palette) {
         e.preventDefault();
         setPalette((p) => !p);
         return;
       }
-      // Esc fecha a janela do topo — só quando o palette não está aberto,
-      // porque lá ele já significa "fechar o palette".
-      if (e.key === KEY.escape && !palette && wm.topmost) {
-        wm.close(wm.topmost);
-      }
+      if (e.key === KEY.escape && !palette && wm.topmost) wm.close(wm.topmost);
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
   }, [palette, wm]);
 
   const toggleFrom = useCallback(
-    (id: string, centerX: number) => {
-      setOrigins((o) => ({ ...o, [id]: centerX }));
+    (id: string) => {
+      const wasHidden = !wm.isOpen(id) || wm.isMinimized(id);
       wm.toggle(id);
+      if (wasHidden) bring(id);
     },
-    [wm]
+    [wm, bring]
   );
-
-  const openApp = useCallback((id: string) => wm.open(id), [wm]);
 
   const selectNote = useCallback(
     (id: string) => {
       setNote(id);
-      wm.open('cerebro');
+      openAndBring('cerebro');
     },
-    [wm]
+    [openAndBring]
   );
 
-  // Rota da URL abre o app correspondente uma vez, na carga.
-  useEffect(() => {
-    if (route) wm.open(route);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [route]);
-
-  // O app em foco vira a URL, então a barra sempre reflete o que se vê.
-  useEffect(() => {
-    navigate(wm.topmost, true);
-  }, [wm.topmost, navigate]);
-
-  const open = APP_LIST.filter((app) => wm.isOpen(app.id) && !wm.isMinimized(app.id));
-  const ctx = { note, onNote: setNote };
-
-  /** transform-origin precisa ser relativo à janela, não à viewport. */
-  const localOrigin = (app: AppDef) => {
-    const dockX = origins[app.id];
-    if (dockX == null || typeof window === 'undefined') return null;
-    const left = (app.restX / 100) * window.innerWidth;
-    return Math.max(0, Math.min(app.width, dockX - left));
-  };
+  const ctx: Ctx = { note, onNote: setNote };
+  const open = LAYOUT.filter((app) => wm.isOpen(app.id) && !wm.isMinimized(app.id));
+  const away = Math.hypot(camera.pan.x, camera.pan.y) > 180;
 
   return (
-    <div className="relative min-h-dvh overflow-hidden">
+    <div className="relative h-dvh overflow-hidden">
       <Wallpaper />
 
       <header className="fixed inset-x-0 top-0 z-30 flex items-center gap-3 border-b border-hairline/60 bg-canvas/60 px-4 py-2 backdrop-blur-xl">
         <span className="numeric text-xs font-semibold text-heading">{IDENTITY.handle}.os</span>
+
+        {!compact && away && (
+          <button
+            type="button"
+            onClick={camera.reset}
+            className="numeric rounded-full border border-accent/40 px-2.5 py-1 text-[0.65rem] text-accent transition-colors hover:bg-accent/10"
+          >
+            ⌖ {t(UI.recenter)}
+          </button>
+        )}
+
         <button
           type="button"
           onClick={() => setPalette(true)}
@@ -153,12 +159,12 @@ export function Desktop() {
           {t(UI.commands)} ⌘K
         </button>
         <span className="numeric text-xs text-muted">
-          {clock.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
+          {clock.toLocaleTimeString(CLOCK_LOCALE[lang], { hour: '2-digit', minute: '2-digit' })}
         </span>
       </header>
 
       {compact ? (
-        <div className="relative z-10 space-y-4 px-3 pb-32 pt-16">
+        <div className="relative z-10 h-dvh space-y-4 overflow-y-auto px-3 pb-32 pt-16">
           <AnimatePresence initial={false}>
             {open.map((app) => (
               <Window
@@ -179,45 +185,65 @@ export function Desktop() {
                 onMinimize={() => wm.minimize(app.id)}
                 onMove={() => {}}
               >
-                {app.render(ctx)}
+                {RENDERERS[app.id]?.(ctx)}
               </Window>
             ))}
           </AnimatePresence>
         </div>
       ) : (
-        <div className="relative z-10 h-dvh pt-10">
-          <AnimatePresence>
-            {open.map((app) => {
-              const win = wm.windows.find((w) => w.id === app.id);
-              return (
-                <Window
-                  key={app.id}
-                  id={app.id}
-                  title={t(app.label)}
-                  z={wm.zOf(app.id)}
-                  dx={win?.dx ?? 0}
-                  dy={win?.dy ?? 0}
-                  restX={app.restX}
-                  restY={app.restY}
-                  width={app.width}
-                  focused={wm.topmost === app.id}
-                  compact={false}
-                  originX={localOrigin(app)}
-                  onFocus={() => wm.focus(app.id)}
-                  onClose={() => wm.close(app.id)}
-                  onMinimize={() => wm.minimize(app.id)}
-                  onMove={(dx, dy) => wm.moveBy(app.id, dx, dy)}
-                >
-                  {app.render(ctx)}
-                </Window>
-              );
-            })}
-          </AnimatePresence>
+        <div
+          onPointerDown={camera.onPointerDown}
+          onPointerMove={camera.onPointerMove}
+          onPointerUp={camera.onPointerUp}
+          onPointerCancel={camera.onPointerUp}
+          className={`relative z-10 h-dvh ${camera.dragging ? 'cursor-grabbing' : 'cursor-grab'}`}
+        >
+          <div
+            className="pointer-events-none absolute inset-0"
+            style={{
+              transform: `translate3d(${camera.pan.x}px, ${camera.pan.y}px, 0)`,
+              willChange: 'transform',
+            }}
+          >
+            <AnimatePresence>
+              {open.map((app) => {
+                const win = wm.windows.find((w) => w.id === app.id);
+                return (
+                  <Window
+                    key={app.id}
+                    id={app.id}
+                    title={t(app.label)}
+                    z={wm.zOf(app.id)}
+                    dx={win?.dx ?? 0}
+                    dy={win?.dy ?? 0}
+                    restX={app.x}
+                    restY={app.y}
+                    width={app.width}
+                    focused={wm.topmost === app.id}
+                    compact={false}
+                    originX={null}
+                    onFocus={() => wm.focus(app.id)}
+                    onClose={() => wm.close(app.id)}
+                    onMinimize={() => wm.minimize(app.id)}
+                    onMove={(dx, dy) => wm.moveBy(app.id, dx, dy)}
+                  >
+                    {RENDERERS[app.id]?.(ctx)}
+                  </Window>
+                );
+              })}
+            </AnimatePresence>
+          </div>
+
+          {!away && (
+            <p className="numeric pointer-events-none absolute bottom-24 left-1/2 -translate-x-1/2 text-[0.62rem] text-ink-600">
+              {t(UI.panHint)}
+            </p>
+          )}
         </div>
       )}
 
       <Dock
-        items={APP_LIST.map(({ id, label, glyph }) => ({ id, label, glyph }))}
+        items={LAYOUT.map(({ id, label, glyph }) => ({ id, label, glyph }))}
         isOpen={wm.isOpen}
         isMinimized={wm.isMinimized}
         onToggle={toggleFrom}
@@ -226,8 +252,8 @@ export function Desktop() {
       <CommandPalette
         open={palette}
         onClose={() => setPalette(false)}
-        apps={APP_LIST.map(({ id, label }) => ({ id, label }))}
-        onOpenApp={openApp}
+        apps={LAYOUT.map(({ id, label }) => ({ id, label }))}
+        onOpenApp={openAndBring}
         onSelectNote={selectNote}
       />
     </div>

@@ -29,6 +29,43 @@ export const IDENTITY = {
   } satisfies Txt,
 } as const;
 
+/** Preencha o WhatsApp com DDI+DDD+numero, só dígitos: 5537999999999 */
+export const CONTACT_CHANNELS = {
+  whatsapp: '',
+} as const;
+
+export const REQUEST_KINDS = [
+  {
+    id: 'projeto',
+    label: { pt: 'Proposta de projeto', en: 'Project proposal' } satisfies Txt,
+    prompt: {
+      pt: 'O que você precisa construir, e qual o prazo?',
+      en: 'What do you need built, and by when?',
+    } satisfies Txt,
+  },
+  {
+    id: 'vaga',
+    label: { pt: 'Oportunidade', en: 'Opportunity' } satisfies Txt,
+    prompt: {
+      pt: 'Sobre a vaga: time, stack e modelo de trabalho',
+      en: 'About the role: team, stack and work model',
+    } satisfies Txt,
+  },
+  {
+    id: 'ideia',
+    label: { pt: 'Ideia', en: 'Idea' } satisfies Txt,
+    prompt: {
+      pt: 'Me conta a ideia — mesmo crua',
+      en: 'Tell me the idea — even raw',
+    } satisfies Txt,
+  },
+  {
+    id: 'outro',
+    label: { pt: 'Outro', en: 'Other' } satisfies Txt,
+    prompt: { pt: 'Manda aí', en: 'Go ahead' } satisfies Txt,
+  },
+] as const;
+
 export const BOOT = {
   /** As três perguntas do recrutador, respondidas antes do desktop existir. */
   lines: [
@@ -178,6 +215,7 @@ export const APPS = {
   stack: { pt: 'stack', en: 'stack' } satisfies Txt,
   cerebro: { pt: 'cérebro', en: 'brain' } satisfies Txt,
   curriculo: { pt: 'currículo', en: 'résumé' } satisfies Txt,
+  pedidos: { pt: 'pedidos', en: 'requests' } satisfies Txt,
   contato: { pt: 'contato', en: 'contact' } satisfies Txt,
 } as const;
 
@@ -230,6 +268,29 @@ export const UI = {
   } satisfies Txt,
   stackHint: { pt: 'Clique numa ferramenta', en: 'Click a tool' } satisfies Txt,
   referencedBy: { pt: 'citada por', en: 'referenced by' } satisfies Txt,
+  requestsTitle: {
+    pt: 'Me manda o que você precisa',
+    en: 'Send me what you need',
+  } satisfies Txt,
+  requestsLede: {
+    pt: 'Proposta de projeto, oportunidade ou uma ideia crua. Não há formulário mágico aqui: o texto vai direto para o meu WhatsApp ou e-mail, como mensagem normal.',
+    en: 'A project proposal, an opportunity or a raw idea. No magic form here: the text goes straight to my WhatsApp or email, as a normal message.',
+  } satisfies Txt,
+  requestKind: { pt: 'Tipo', en: 'Kind' } satisfies Txt,
+  yourName: { pt: 'Seu nome', en: 'Your name' } satisfies Txt,
+  sendWhatsapp: { pt: 'Enviar no WhatsApp', en: 'Send on WhatsApp' } satisfies Txt,
+  sendEmail: { pt: 'Enviar por e-mail', en: 'Send by email' } satisfies Txt,
+  requestsFooter: {
+    pt: 'Nada é armazenado neste site — a mensagem abre no seu app.',
+    en: 'Nothing is stored on this site — the message opens in your own app.',
+  } satisfies Txt,
+  shipping: { pt: 'uso em produção', en: 'in production' } satisfies Txt,
+  studied: { pt: 'estudei', en: 'studied' } satisfies Txt,
+  recenter: { pt: 'recentrar', en: 'recenter' } satisfies Txt,
+  panHint: {
+    pt: 'arraste o fundo para navegar',
+    en: 'drag the background to navigate',
+  } satisfies Txt,
   summary: { pt: 'Resumo', en: 'Summary' } satisfies Txt,
   experience: { pt: 'Experiência', en: 'Experience' } satisfies Txt,
   downloadPdf: { pt: 'Baixar PDF', en: 'Download PDF' } satisfies Txt,

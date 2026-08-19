@@ -9,7 +9,7 @@ export interface WindowChrome {
   z: number;
   dx: number;
   dy: number;
-  /** Posição de repouso em desktop, em porcentagem da área útil. */
+  /** Posição de repouso em coordenadas de mundo, em px. */
   restX: number;
   restY: number;
   width: number;
@@ -98,13 +98,13 @@ export function Window(props: WindowChrome) {
         zIndex: props.z,
         // Cresce a partir do ícone que a abriu, não do centro genérico.
         transformOrigin: props.originX == null ? 'bottom center' : `${props.originX}px bottom`,
-        left: `${props.restX}%`,
-        top: `${props.restY}%`,
-        width: `min(${props.width}px, calc(100vw - 3rem))`,
+        left: props.restX,
+        top: props.restY,
+        width: props.width,
         x: props.dx,
         y: props.dy,
       }}
-      className={`absolute flex max-h-[70vh] flex-col overflow-hidden rounded-2xl border bg-surface/95 backdrop-blur-xl transition-shadow duration-300 ${
+      className={`pointer-events-auto absolute flex max-h-[70vh] flex-col overflow-hidden rounded-2xl border bg-surface/95 backdrop-blur-xl transition-shadow duration-300 ${
         props.focused
           ? 'border-accent/40 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.75)]'
           : 'border-hairline shadow-2xl'
