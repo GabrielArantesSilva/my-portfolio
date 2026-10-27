@@ -298,6 +298,18 @@ export const UI = {
   workTitle: { pt: 'Trabalho e projetos', en: 'Work and projects' } satisfies Txt,
   cleanScreen: { pt: 'Tela limpa', en: 'Clean screen' } satisfies Txt,
   backTo: { pt: 'voltar para', en: 'back to' } satisfies Txt,
+  requestEmpty: {
+    pt: 'Escreve a mensagem antes de enviar.',
+    en: 'Write the message before sending.',
+  } satisfies Txt,
+  requestHello: { pt: 'Olá, Gabriel!', en: 'Hi, Gabriel!' } satisfies Txt,
+  requestIAm: { pt: 'Sou', en: 'I am' } satisfies Txt,
+  emailFallback: {
+    pt: 'Se nenhum app de e-mail abriu, copia o endereço:',
+    en: 'If no email app opened, copy the address:',
+  } satisfies Txt,
+  copy: { pt: 'copiar', en: 'copy' } satisfies Txt,
+  copied: { pt: 'copiado', en: 'copied' } satisfies Txt,
   stack: { pt: 'Stack', en: 'Stack' } satisfies Txt,
   close: { pt: 'Fechar', en: 'Close' } satisfies Txt,
   minimize: { pt: 'Minimizar', en: 'Minimize' } satisfies Txt,

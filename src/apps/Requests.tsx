@@ -1,17 +1,18 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { Send, MessageSquare } from 'lucide-react';
 import { useLang } from '../i18n/lang';
 import { CONTACT_CHANNELS, IDENTITY, REQUEST_KINDS, UI } from '../content/site';
 
+// Os botões ficam sempre clicáveis: desabilitar sem aviso parecia quebrado.
 const primaryCls = (ready: boolean) =>
   ready
     ? 'bg-ok text-ink-950 hover:-translate-y-0.5 shadow-sm'
-    : 'cursor-not-allowed bg-ink-850 text-ink-600';
+    : 'bg-ok/40 text-ink-950/70';
 
 const secondaryCls = (ready: boolean) =>
   ready
     ? 'border-hairline text-body hover:border-accent hover:text-heading'
-    : 'cursor-not-allowed border-hairline/50 text-ink-600';
+    : 'border-hairline/60 text-muted';
 
 const chipCls = (on: boolean) =>
   on
@@ -23,16 +24,36 @@ export function Requests() {
   const [kind, setKind] = useState<string>(REQUEST_KINDS[0].id);
   const [name, setName] = useState('');
   const [message, setMessage] = useState('');
+  const [warn, setWarn] = useState(false);
+  const [mailTried, setMailTried] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const field = useRef<HTMLTextAreaElement>(null);
 
   const chosen = REQUEST_KINDS.find((k) => k.id === kind) ?? REQUEST_KINDS[0];
-  const ready = message.trim().length > 8;
+  const ready = message.trim().length > 0;
 
   const composed = useMemo(() => {
-    const who = name.trim() ? `${name.trim()}` : '';
-    return [`[${t(chosen.label)}]`, who && `- ${who}`, '\n\n', message.trim()]
-      .filter(Boolean)
-      .join(' ');
+    const who = name.trim();
+    const greeting = who ? `${t(UI.requestHello)} ${t(UI.requestIAm)} ${who}.` : t(UI.requestHello);
+    return `${greeting}\n\n*${t(chosen.label)}*\n${message.trim()}`;
   }, [chosen, name, message, t]);
+
+  /** Sem mensagem, avisa e leva o foco ao campo em vez de não fazer nada. */
+  const guard = (e: React.MouseEvent) => {
+    if (ready) return true;
+    e.preventDefault();
+    setWarn(true);
+    field.current?.focus();
+    return false;
+  };
+
+  const copyEmail = async () => {
+    try {
+      await navigator.clipboard.writeText(IDENTITY.email);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {}
+  };
 
   const whatsapp = CONTACT_CHANNELS.whatsapp
     ? `https://wa.me/${CONTACT_CHANNELS.whatsapp}?text=${encodeURIComponent(composed)}`
@@ -40,7 +61,7 @@ export function Requests() {
 
   const mail = `mailto:${IDENTITY.email}?subject=${encodeURIComponent(
     `${t(chosen.label)}${name.trim() ? ` - ${name.trim()}` : ''}`
-  )}&body=${encodeURIComponent(message.trim())}`;
+  )}&body=${encodeURIComponent(composed.replace(/\*/g, ''))}`;
 
   return (
     <div className="space-y-3.5">
@@ -87,21 +108,31 @@ export function Requests() {
             {t(chosen.prompt)}
           </span>
           <textarea
+            ref={field}
             value={message}
-            onChange={(e) => setMessage(e.target.value)}
+            onChange={(e) => {
+              setMessage(e.target.value);
+              if (e.target.value.trim()) setWarn(false);
+            }}
+            aria-invalid={warn}
             rows={3}
-            className="mt-1 w-full resize-y rounded-lg border border-hairline bg-canvas px-3 py-1.5 text-xs leading-relaxed text-body outline-none transition-colors focus:border-accent"
+            className={`mt-1 w-full resize-y rounded-lg border ${warn ? 'border-danger' : 'border-hairline'} bg-canvas px-3 py-1.5 text-xs leading-relaxed text-body outline-none transition-colors focus:border-accent`}
           />
+          {warn && (
+            <span role="alert" className="mt-1 block font-mono text-[0.68rem] text-danger">
+              {t(UI.requestEmpty)}
+            </span>
+          )}
         </label>
       </div>
 
       <div className="flex flex-wrap items-center gap-2 pt-1">
         {whatsapp && (
           <a
-            href={ready ? whatsapp : undefined}
+            href={whatsapp}
             target="_blank"
             rel="noreferrer noopener"
-            aria-disabled={!ready}
+            onClick={guard}
             className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 font-mono text-xs font-semibold transition-all ${primaryCls(
               ready
             )}`}
@@ -112,8 +143,10 @@ export function Requests() {
         )}
 
         <a
-          href={ready ? mail : undefined}
-          aria-disabled={!ready}
+          href={mail}
+          onClick={(e) => {
+            if (guard(e)) setMailTried(true);
+          }}
           className={`inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 font-mono text-xs transition-all ${secondaryCls(
             ready
           )}`}
@@ -122,6 +155,20 @@ export function Requests() {
           <span>{t(UI.sendEmail)}</span>
         </a>
       </div>
+
+      {mailTried && (
+        <p className="flex flex-wrap items-center gap-1.5 font-mono text-[0.68rem] text-muted">
+          <span>{t(UI.emailFallback)}</span>
+          <span className="text-heading">{IDENTITY.email}</span>
+          <button
+            type="button"
+            onClick={copyEmail}
+            className="rounded border border-hairline px-1.5 py-0.5 text-[0.62rem] hover:border-accent hover:text-heading"
+          >
+            {t(copied ? UI.copied : UI.copy)}
+          </button>
+        </p>
+      )}
 
       <p className="font-mono text-[0.6rem] text-ink-500">{t(UI.requestsFooter)}</p>
     </div>
