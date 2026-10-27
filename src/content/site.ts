@@ -174,7 +174,6 @@ export const WORK: readonly WorkItem[] = [
       en: 'System for tracking work orders and daily field construction reports in the rail industry, featuring digital signature, review, and inspection workflows. Worked as a full stack developer on the backend API, admin dashboard, mobile field app (React Native/Expo), and tracking portal.',
     },
     highlights: [
-      { pt: 'Quatro aplicações em produção, uma base de domínio compartilhada', en: 'Four applications in production sharing a unified domain core' },
       { pt: 'Web e mobile nativo compartilhando o mesmo contrato de API', en: 'Web and native mobile sharing the same unified API contract' },
       { pt: 'Fluxo de assinatura digital e fiscalização ponta a ponta', en: 'End-to-end digital signature and inspection workflows' },
     ],
