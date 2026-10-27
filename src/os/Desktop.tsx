@@ -8,10 +8,12 @@ import {
   FileText,
   Layers,
   Mail,
+  Minus,
   Send,
   User,
   X,
 } from 'lucide-react';
+import { UI } from '../content/site';
 import { useLang } from '../i18n/lang';
 import { useRoute } from './useRoute';
 import { APP_IDS, LAYOUT, byId } from './layout';
@@ -70,6 +72,8 @@ export function Desktop() {
   const [palette, setPalette] = useState(false);
   const [mobileMenu, setMobileMenu] = useState(false);
   const [note, setNote] = useState<string | null>(null);
+  // Tela limpa: esconde o painel e deixa só o wallpaper interativo
+  const [minimized, setMinimized] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
     try {
       return localStorage.getItem('sidebar_collapsed') === 'true';
@@ -98,6 +102,7 @@ export function Desktop() {
     (id: string) => {
       setTabs((prev) => (prev.includes(id) ? prev : [...prev, id]));
       setActiveTab(id);
+      setMinimized(false);
       navigate(id, true);
     },
     [navigate]
@@ -145,7 +150,9 @@ export function Desktop() {
       }
       if (e.key === KEY.escape && palette) {
         setPalette(false);
+        return;
       }
+      if (e.key === KEY.escape) setMinimized(false);
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
@@ -164,6 +171,7 @@ export function Desktop() {
     setTabs(['sobre', 'trabalho']);
     setActiveTab('sobre');
     setNote(null);
+    setMinimized(false);
     navigate('sobre', true);
   }, [navigate]);
 
@@ -252,11 +260,12 @@ export function Desktop() {
         <div className="relative z-10 flex-1 overflow-y-auto px-2.5 sm:px-4 lg:px-6 pt-3.5 pb-24 lg:pb-6">
           <div className="mx-auto max-w-4xl">
             <AnimatePresence mode="wait">
+              {!minimized && (
               <motion.section
                 key={activeTab}
                 initial={{ opacity: 0, y: 4 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -4 }}
+                exit={{ opacity: 0, y: 12, scale: 0.98 }}
                 transition={{ duration: 0.15, ease: [0.16, 1, 0.3, 1] }}
                 className="overflow-hidden rounded-xl border border-hairline/80 bg-surface/90 p-3.5 sm:p-5 md:p-6 shadow-xl backdrop-blur-xl"
               >
@@ -273,6 +282,15 @@ export function Desktop() {
                     <span className="font-mono text-[0.62rem] text-ink-500 hidden sm:inline">
                       {tabs.length} {tabs.length === 1 ? 'aba' : 'abas'}
                     </span>
+                    <button
+                      type="button"
+                      onClick={() => setMinimized(true)}
+                      title={t(UI.cleanScreen)}
+                      aria-label={t(UI.cleanScreen)}
+                      className="-my-1.5 -mr-1.5 flex h-8 w-8 items-center justify-center rounded-md text-muted transition-colors hover:bg-ink-850 hover:text-heading"
+                    >
+                      <Minus className="h-3.5 w-3.5" />
+                    </button>
                   </div>
                 </div>
 
@@ -281,9 +299,33 @@ export function Desktop() {
                   {RENDERERS[activeTab]?.(ctx)}
                 </div>
               </motion.section>
+              )}
             </AnimatePresence>
           </div>
         </div>
+
+        {/* Tela limpa: atalho para trazer o painel de volta */}
+        <AnimatePresence>
+          {minimized && (
+            <motion.button
+              type="button"
+              onClick={() => setMinimized(false)}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 8 }}
+              transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
+              className="fixed bottom-4 left-4 z-30 flex items-center gap-2 rounded-full border border-hairline/80 bg-surface/90 px-3.5 py-2.5 text-xs font-medium text-heading shadow-2xl backdrop-blur-xl transition-colors hover:border-accent active:scale-95 lg:bottom-6 lg:left-1/2 lg:-translate-x-1/2 print:hidden"
+            >
+              {(() => {
+                const Icon = TAB_ICONS[activeTab] ?? User;
+                return <Icon className="h-3.5 w-3.5 text-accent" />;
+              })()}
+              <span>
+                {t(UI.backTo)} {t(currentApp.label)}
+              </span>
+            </motion.button>
+          )}
+        </AnimatePresence>
       </main>
 
       {/* Paleta de Comandos ⌘K */}

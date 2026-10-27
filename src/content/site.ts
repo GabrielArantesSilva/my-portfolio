@@ -289,6 +289,8 @@ export const UI = {
   today: { pt: 'Hoje', en: 'Today' } satisfies Txt,
   howIWork: { pt: 'Como trabalho', en: 'How I work' } satisfies Txt,
   workTitle: { pt: 'Trabalho e projetos', en: 'Work and projects' } satisfies Txt,
+  cleanScreen: { pt: 'Tela limpa', en: 'Clean screen' } satisfies Txt,
+  backTo: { pt: 'voltar para', en: 'back to' } satisfies Txt,
   stack: { pt: 'Stack', en: 'Stack' } satisfies Txt,
   close: { pt: 'Fechar', en: 'Close' } satisfies Txt,
   minimize: { pt: 'Minimizar', en: 'Minimize' } satisfies Txt,
