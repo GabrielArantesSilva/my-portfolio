@@ -9,20 +9,41 @@
  *   node scripts/sync-vault.mjs
  *   VAULT_INDEX="D:/caminho/vault-index.json" node scripts/sync-vault.mjs
  */
-import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { dirname, resolve, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 
+const defaultIndexPath = resolve(
+  root,
+  '..',
+  '..',
+  'AGENTS',
+  'My-obsidian-brain',
+  '_tooling',
+  'vault-index.json'
+);
+
 const indexPath =
   process.env.VAULT_INDEX ??
-  resolve(root, '..', 'Obsidian Vault', '_tooling', 'vault-index.json');
+  (existsSync(defaultIndexPath)
+    ? defaultIndexPath
+    : resolve(root, '..', 'Obsidian Vault', '_tooling', 'vault-index.json'));
 
 const outPath = join(root, 'src', 'content', 'vault.json');
 
 /** Prefixos de pasta liberados. Qualquer outro caminho é descartado. */
-const PUBLIC_ROOTS = ['20_concepts/', '30_entities/', '10_sources/'];
+const PUBLIC_ROOTS = [
+  '20_concepts/',
+  '30_entities/',
+  '10_sources/',
+  '04_Resources/Concepts/',
+  '04_Resources/Entities/',
+  '04_Resources/Sources/',
+];
+
+const IGNORED_DOMAINS = new Set(['Clippings', 'Threejs-Documentation', 'Sources']);
 
 const isPublic = (path) => PUBLIC_ROOTS.some((root) => path.startsWith(root));
 
@@ -37,14 +58,25 @@ try {
   process.exit(1);
 }
 
+function resolveDomain(folder) {
+  const parts = String(folder ?? '')
+    .split('/')
+    .filter(Boolean);
+  if (parts.length >= 3) return parts[2];
+  if (parts.length === 2 && parts[0] === '04_Resources') return parts[1];
+  return parts[1] ?? parts[0] ?? '';
+}
+
 const allNotes = raw.notes ?? [];
-const publicNotes = allNotes.filter((n) => isPublic(String(n.path ?? '')));
+const publicNotes = allNotes
+  .filter((n) => isPublic(String(n.path ?? '')))
+  .filter((n) => !IGNORED_DOMAINS.has(resolveDomain(n.folder)));
 const allowed = new Set(publicNotes.map((n) => n.id));
 
 const notes = publicNotes.map((n) => ({
   id: String(n.id),
   folder: String(n.folder ?? ''),
-  domain: String(n.folder ?? '').split('/')[1] ?? String(n.folder ?? ''),
+  domain: resolveDomain(n.folder),
   title: String(n.title ?? n.id),
   tags: Array.isArray(n.tags) ? n.tags.slice(0, 8) : [],
   excerpt: String(n.excerpt ?? '').slice(0, 260),
