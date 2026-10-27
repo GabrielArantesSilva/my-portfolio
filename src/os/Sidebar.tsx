@@ -1,0 +1,256 @@
+import {
+  Activity,
+  Brain,
+  Briefcase,
+  Command,
+  FileText,
+  Layers,
+  Mail,
+  RotateCcw,
+  Send,
+  User,
+  X,
+  Menu,
+} from 'lucide-react';
+import type { ComponentType } from 'react';
+import { useLang } from '../i18n/lang';
+import { LANG } from '../i18n/lang.const';
+import { IDENTITY, UI } from '../content/site';
+import type { AppLayout } from './layout';
+
+const ICONS: Record<string, ComponentType<{ className?: string }>> = {
+  sobre: User,
+  trabalho: Briefcase,
+  agora: Activity,
+  cerebro: Brain,
+  stack: Layers,
+  curriculo: FileText,
+  pedidos: Send,
+  contato: Mail,
+};
+
+interface SidebarProps {
+  apps: readonly AppLayout[];
+  isOpen: (id: string) => boolean;
+  isMinimized: (id: string) => boolean;
+  activeId: string | null;
+  onSelect: (id: string) => void;
+  onRestore: () => void;
+  onOpenPalette: () => void;
+  clock: Date;
+  mobileOpen: boolean;
+  onToggleMobile: () => void;
+}
+
+export function Sidebar({
+  apps,
+  isOpen,
+  isMinimized,
+  activeId,
+  onSelect,
+  onRestore,
+  onOpenPalette,
+  clock,
+  mobileOpen,
+  onToggleMobile,
+}: SidebarProps) {
+  const { lang, setLang, t } = useLang();
+
+  const clockLocale = lang === 'pt' ? 'pt-BR' : 'en-US';
+  const timeStr = clock.toLocaleTimeString(clockLocale, {
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+
+  return (
+    <>
+      {/* Barra superior Mobile */}
+      <header className="fixed inset-x-0 top-0 z-40 flex h-14 items-center justify-between border-b border-hairline/60 bg-canvas/90 px-4 backdrop-blur-xl lg:hidden">
+        <div className="flex items-center gap-2.5">
+          <div className="flex h-7 w-7 items-center justify-center rounded-lg border border-accent/40 bg-iris-950 font-mono text-xs font-bold text-accent">
+            ga
+          </div>
+          <span className="font-mono text-xs font-semibold text-heading">
+            {IDENTITY.handle}.os
+          </span>
+          <span className="inline-flex items-center gap-1 rounded-full border border-ok/30 bg-ok/10 px-2 py-0.5 text-[0.62rem] text-ok">
+            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-ok" />
+            online
+          </span>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={onOpenPalette}
+            aria-label="Command Palette"
+            className="flex h-8 w-8 items-center justify-center rounded-lg border border-hairline text-muted hover:border-accent hover:text-heading"
+          >
+            <Command className="h-3.5 w-3.5" />
+          </button>
+          <button
+            type="button"
+            onClick={onToggleMobile}
+            aria-label="Menu"
+            className="flex h-8 w-8 items-center justify-center rounded-lg border border-hairline text-muted hover:border-accent hover:text-heading"
+          >
+            {mobileOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+          </button>
+        </div>
+      </header>
+
+      {/* Backdrop Mobile */}
+      {mobileOpen && (
+        <div
+          onClick={onToggleMobile}
+          className="fixed inset-0 z-40 bg-ink-950/70 backdrop-blur-sm lg:hidden"
+        />
+      )}
+
+      {/* Sidebar Principal (Desktop fixa à esquerda, Mobile como drawer) */}
+      <aside
+        className={`fixed inset-y-0 left-0 z-50 flex w-64 flex-col border-r border-hairline/70 bg-surface/95 backdrop-blur-2xl transition-transform duration-300 ease-in-out lg:translate-x-0 ${
+          mobileOpen ? 'translate-x-0' : '-translate-x-full'
+        }`}
+      >
+        {/* Topo da Sidebar: Perfil e Status */}
+        <div className="border-b border-hairline/60 p-4">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-accent/50 bg-gradient-to-br from-iris-900 to-ink-950 shadow-inner">
+              <span className="font-mono text-sm font-bold text-accent">GA</span>
+            </div>
+            <div className="min-w-0 flex-1">
+              <h2 className="truncate text-sm font-semibold text-heading">
+                {IDENTITY.short}
+              </h2>
+              <p className="flex items-center gap-1.5 text-[0.68rem] text-muted">
+                <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-ok" />
+                <span className="truncate">{t(IDENTITY.role)}</span>
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-3 flex items-center justify-between rounded-lg border border-hairline/60 bg-ink-900/40 px-2.5 py-1 text-[0.68rem]">
+            <span className="font-mono text-ink-500">{IDENTITY.handle}.os</span>
+            <span className="font-mono font-medium text-muted">{timeStr}</span>
+          </div>
+        </div>
+
+        {/* Lista de Navegação dos Apps */}
+        <nav
+          className="flex-1 space-y-1 overflow-y-auto px-3 py-3 [scrollbar-width:thin]"
+          aria-label="Aplicativos"
+        >
+          <div className="px-2 pb-1.5 pt-0.5 text-[0.62rem] font-semibold uppercase tracking-wider text-ink-500">
+            {lang === 'pt' ? 'Aplicativos' : 'Applications'}
+          </div>
+
+          {apps.map((app) => {
+            const Icon = ICONS[app.id] ?? User;
+            const open = isOpen(app.id);
+            const minimized = isMinimized(app.id);
+            const isActive = activeId === app.id && open && !minimized;
+
+            return (
+              <button
+                key={app.id}
+                type="button"
+                onClick={() => {
+                  onSelect(app.id);
+                  if (mobileOpen) onToggleMobile();
+                }}
+                className={`group flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left text-xs transition-all duration-150 ${
+                  isActive
+                    ? 'border border-accent/30 bg-accent/15 font-semibold text-heading shadow-sm'
+                    : open && !minimized
+                      ? 'bg-ink-850/60 text-heading hover:bg-ink-850'
+                      : 'text-muted hover:bg-ink-850/40 hover:text-body'
+                }`}
+              >
+                <span
+                  className={`flex h-7 w-7 items-center justify-center rounded-lg transition-colors ${
+                    isActive
+                      ? 'bg-accent/20 text-accent'
+                      : 'bg-ink-850 text-muted group-hover:text-heading'
+                  }`}
+                >
+                  <Icon className="h-3.5 w-3.5" />
+                </span>
+
+                <span className="min-w-0 flex-1 truncate font-medium">
+                  {t(app.label)}
+                </span>
+
+                {/* Indicador de Status */}
+                {open && (
+                  <span
+                    className={`h-1.5 w-1.5 rounded-full transition-all ${
+                      isActive
+                        ? 'bg-accent ring-2 ring-accent/30'
+                        : minimized
+                          ? 'bg-ink-600'
+                          : 'bg-accent/60'
+                    }`}
+                    title={minimized ? 'Minimizado' : 'Aberto'}
+                  />
+                )}
+              </button>
+            );
+          })}
+        </nav>
+
+        {/* Rodapé da Sidebar: Idioma, Ações e Comandos */}
+        <div className="border-t border-hairline/60 p-3 space-y-2">
+          {/* Seletor de Idioma e Restaurar */}
+          <div className="flex items-center justify-between gap-2">
+            <div
+              className="flex items-center rounded-lg border border-hairline p-0.5"
+              role="group"
+              aria-label="Idioma"
+            >
+              {[LANG.pt, LANG.en].map((opt) => (
+                <button
+                  key={opt}
+                  type="button"
+                  onClick={() => setLang(opt)}
+                  className={`rounded-md px-2 py-0.5 font-mono text-[0.65rem] uppercase transition-colors ${
+                    lang === opt
+                      ? 'bg-accent font-semibold text-on-accent'
+                      : 'text-muted hover:text-body'
+                  }`}
+                >
+                  {opt}
+                </button>
+              ))}
+            </div>
+
+            <button
+              type="button"
+              onClick={onRestore}
+              title={t(UI.restoreHint)}
+              className="flex items-center gap-1.5 rounded-lg border border-hairline px-2.5 py-1 text-[0.68rem] text-muted transition-colors hover:border-accent hover:text-heading"
+            >
+              <RotateCcw className="h-3 w-3" />
+              <span>{t(UI.restore)}</span>
+            </button>
+          </div>
+
+          {/* Botão Command Palette */}
+          <button
+            type="button"
+            onClick={onOpenPalette}
+            className="flex w-full items-center justify-between rounded-lg border border-hairline/70 bg-ink-900/50 px-3 py-1.5 text-xs text-muted transition-colors hover:border-accent hover:text-heading"
+          >
+            <span className="flex items-center gap-2">
+              <Command className="h-3.5 w-3.5 text-accent" />
+              <span>{t(UI.commands)}</span>
+            </span>
+            <kbd className="rounded border border-hairline bg-ink-850 px-1.5 py-0.5 font-mono text-[0.62rem] text-muted">
+              ⌘K
+            </kbd>
+          </button>
+        </div>
+      </aside>
+    </>
+  );
+}

@@ -2,13 +2,11 @@ import { AnimatePresence } from 'framer-motion';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 import { useLang } from '../i18n/lang';
-import { IDENTITY, UI } from '../content/site';
 import { useWindows } from './useWindows';
-import { useViewport } from './useViewport';
 import { useRoute } from './useRoute';
-import { APP_IDS, INITIAL_APPS, LAYOUT, byId } from './layout';
+import { APP_IDS, INITIAL_APPS, LAYOUT } from './layout';
 import { Window } from './Window';
-import { Dock } from './Dock';
+import { Sidebar } from './Sidebar';
 import { Wallpaper } from './Wallpaper';
 import { CommandPalette } from './CommandPalette';
 import { About } from '../apps/About';
@@ -21,7 +19,6 @@ import { Stack } from '../apps/Stack';
 import { Requests } from '../apps/Requests';
 
 const KEY = { palette: 'k', escape: 'Escape' } as const;
-const CLOCK_LOCALE = { pt: 'pt-BR', en: 'en-US' } as const;
 
 type Ctx = { note: string | null; onNote: (id: string | null) => void };
 
@@ -38,10 +35,10 @@ const RENDERERS: Readonly<Record<string, (ctx: Ctx) => ReactNode>> = {
 
 function useCompact() {
   const [compact, setCompact] = useState(
-    () => typeof window !== 'undefined' && window.innerWidth < 900
+    () => typeof window !== 'undefined' && window.innerWidth < 1024
   );
   useEffect(() => {
-    const mq = window.matchMedia('(max-width: 899px)');
+    const mq = window.matchMedia('(max-width: 1023px)');
     const onChange = () => setCompact(mq.matches);
     onChange();
     mq.addEventListener('change', onChange);
@@ -51,16 +48,14 @@ function useCompact() {
 }
 
 export function Desktop() {
-  const { lang, t } = useLang();
+  const { t } = useLang();
   const wm = useWindows(INITIAL_APPS);
   const compact = useCompact();
-  const camera = useViewport();
   const { route, navigate } = useRoute(APP_IDS, 'sobre');
   const [clock, setClock] = useState(() => new Date());
   const [palette, setPalette] = useState(false);
+  const [mobileMenu, setMobileMenu] = useState(false);
   const [note, setNote] = useState<string | null>(null);
-  // Incrementar remonta o conteúdo dos apps, o que zera busca, seleção e
-  // acordeão de uma vez — sem cada tela precisar expor um clearFilters.
   const [resetKey, setResetKey] = useState(0);
 
   useEffect(() => {
@@ -68,41 +63,38 @@ export function Desktop() {
     return () => clearInterval(timer);
   }, []);
 
-  /** Traz a janela ao centro da viewport — o dock nunca abre no vazio. */
-  const bring = useCallback(
+  // Abre e foca o app diretamente sem saltos de câmera
+  const handleSelectApp = useCallback(
     (id: string) => {
-      const app = byId(id);
-      if (!app || compact) return;
-      camera.panTo({
-        x: Math.round(window.innerWidth / 2 - (app.x + app.width / 2)),
-        y: Math.round(window.innerHeight / 2 - (app.y + 180)),
-      });
+      if (!wm.isOpen(id)) {
+        wm.open(id);
+      } else if (wm.isMinimized(id)) {
+        wm.open(id); // restaura
+      } else {
+        wm.focus(id);
+      }
+      navigate(id, true);
     },
-    [camera, compact]
+    [wm, navigate]
   );
 
-  const openAndBring = useCallback(
-    (id: string) => {
-      wm.open(id);
-      bring(id);
-    },
-    [wm, bring]
-  );
-
-  // Cada rota é atendida uma vez. O ref evita reabrir a janela toda vez que
-  // openAndBring troca de identidade, sem precisar mentir na lista de deps.
-  const handledRoute = useRef<string | null>(null);
+  // Atende a rota inicial na primeira montagem da página
+  const handledInitial = useRef(false);
   useEffect(() => {
-    if (route && route !== handledRoute.current) {
-      handledRoute.current = route;
-      openAndBring(route);
+    if (!handledInitial.current && route) {
+      handledInitial.current = true;
+      wm.open(route);
     }
-  }, [route, openAndBring]);
+  }, [route, wm]);
 
+  // Sincroniza a URL quando o app em foco muda
   useEffect(() => {
-    navigate(wm.topmost, true);
+    if (wm.topmost) {
+      navigate(wm.topmost, true);
+    }
   }, [wm.topmost, navigate]);
 
+  // Atalhos de teclado: ⌘K e Esc
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === KEY.palette) {
@@ -110,123 +102,86 @@ export function Desktop() {
         setPalette((p) => !p);
         return;
       }
-      if (e.key === KEY.escape && !palette && wm.topmost) wm.close(wm.topmost);
+      if (e.key === KEY.escape && !palette && wm.topmost) {
+        wm.close(wm.topmost);
+      }
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
   }, [palette, wm]);
 
-  const toggleFrom = useCallback(
-    (id: string) => {
-      const wasHidden = !wm.isOpen(id) || wm.isMinimized(id);
-      wm.toggle(id);
-      if (wasHidden) bring(id);
-    },
-    [wm, bring]
-  );
-
   const selectNote = useCallback(
     (id: string) => {
       setNote(id);
-      openAndBring('cerebro');
+      handleSelectApp('cerebro');
     },
-    [openAndBring]
+    [handleSelectApp]
   );
 
-  /** Volta tudo ao estado de entrada: janelas, posições, câmera e filtros. */
+  // Restaura todas as janelas às posições e estado de fábrica
   const restore = useCallback(() => {
     wm.reset();
     setNote(null);
     setResetKey((k) => k + 1);
-    camera.reset();
-  }, [wm, camera]);
+  }, [wm]);
 
   const ctx: Ctx = { note, onNote: setNote };
-  const open = LAYOUT.filter((app) => wm.isOpen(app.id) && !wm.isMinimized(app.id));
-  const away = Math.hypot(camera.pan.x, camera.pan.y) > 180;
+  const openWindows = LAYOUT.filter((app) => wm.isOpen(app.id) && !wm.isMinimized(app.id));
 
   return (
-    <div className="relative h-dvh overflow-hidden">
-      <Wallpaper />
+    <div className="relative flex h-dvh w-screen overflow-hidden bg-canvas">
+      {/* Sidebar de Navegação */}
+      <Sidebar
+        apps={LAYOUT}
+        isOpen={wm.isOpen}
+        isMinimized={wm.isMinimized}
+        activeId={wm.topmost}
+        onSelect={handleSelectApp}
+        onRestore={restore}
+        onOpenPalette={() => setPalette(true)}
+        clock={clock}
+        mobileOpen={mobileMenu}
+        onToggleMobile={() => setMobileMenu((m) => !m)}
+      />
 
-      <header className="fixed inset-x-0 top-0 z-30 flex items-center gap-3 border-b border-hairline/60 bg-canvas/60 px-4 py-2 backdrop-blur-xl">
-        <span className="numeric text-xs font-semibold text-heading">{IDENTITY.handle}.os</span>
+      {/* Área de Trabalho Principal (Desktop Workspace) */}
+      <main className="relative flex-1 h-dvh overflow-hidden lg:pl-64">
+        {/* Fundo dinâmico com partículas */}
+        <Wallpaper />
 
-        {!compact && away && (
-          <button
-            type="button"
-            onClick={camera.reset}
-            className="numeric rounded-full border border-accent/40 px-2.5 py-1 text-[0.65rem] text-accent transition-colors hover:bg-accent/10"
-          >
-            ⌖ {t(UI.recenter)}
-          </button>
-        )}
-
-        <button
-          type="button"
-          onClick={restore}
-          title={t(UI.restoreHint)}
-          className="numeric rounded-full border border-hairline px-2.5 py-1 text-[0.65rem] text-muted transition-colors hover:border-accent hover:text-body"
-        >
-          ⟲ {t(UI.restore)}
-        </button>
-
-        <button
-          type="button"
-          onClick={() => setPalette(true)}
-          className="numeric ml-auto rounded-full border border-hairline px-2.5 py-1 text-[0.65rem] text-muted transition-colors hover:border-accent hover:text-body"
-        >
-          {t(UI.commands)} ⌘K
-        </button>
-        <span className="numeric text-xs text-muted">
-          {clock.toLocaleTimeString(CLOCK_LOCALE[lang], { hour: '2-digit', minute: '2-digit' })}
-        </span>
-      </header>
-
-      {compact ? (
-        <div className="relative z-10 h-dvh space-y-4 overflow-y-auto px-3 pb-32 pt-16">
-          <AnimatePresence initial={false}>
-            {open.map((app) => (
-              <Window
-                key={app.id}
-                id={app.id}
-                title={t(app.label)}
-                z={wm.zOf(app.id)}
-                dx={0}
-                dy={0}
-                restX={0}
-                restY={0}
-                width={app.width}
-                focused={wm.topmost === app.id}
-                compact
-                originX={null}
-                onFocus={() => wm.focus(app.id)}
-                onClose={() => wm.close(app.id)}
-                onMinimize={() => wm.minimize(app.id)}
-                onMove={() => {}}
-              >
-                <div key={resetKey}>{RENDERERS[app.id]?.(ctx)}</div>
-              </Window>
-            ))}
-          </AnimatePresence>
-        </div>
-      ) : (
-        <div
-          onPointerDown={camera.onPointerDown}
-          onPointerMove={camera.onPointerMove}
-          onPointerUp={camera.onPointerUp}
-          onPointerCancel={camera.onPointerUp}
-          className={`relative z-10 h-dvh ${camera.dragging ? 'cursor-grabbing' : 'cursor-grab'}`}
-        >
-          <div
-            className="pointer-events-none absolute inset-0"
-            style={{
-              transform: `translate3d(${camera.pan.x}px, ${camera.pan.y}px, 0)`,
-              willChange: 'transform',
-            }}
-          >
+        {/* Layout Mobile: Lista empilhada de janelas */}
+        {compact ? (
+          <div className="relative z-10 h-dvh space-y-4 overflow-y-auto px-3 pb-24 pt-16">
+            <AnimatePresence initial={false}>
+              {openWindows.map((app) => (
+                <Window
+                  key={app.id}
+                  id={app.id}
+                  title={t(app.label)}
+                  z={wm.zOf(app.id)}
+                  dx={0}
+                  dy={0}
+                  restX={0}
+                  restY={0}
+                  width={app.width}
+                  focused={wm.topmost === app.id}
+                  compact
+                  originX={null}
+                  onFocus={() => wm.focus(app.id)}
+                  onClose={() => wm.close(app.id)}
+                  onMinimize={() => wm.minimize(app.id)}
+                  onMove={() => {}}
+                >
+                  <div key={resetKey}>{RENDERERS[app.id]?.(ctx)}</div>
+                </Window>
+              ))}
+            </AnimatePresence>
+          </div>
+        ) : (
+          /* Layout Desktop: Janelas fluidas com foco e arrasto */
+          <div className="relative z-10 h-full w-full overflow-hidden p-6">
             <AnimatePresence>
-              {open.map((app) => {
+              {openWindows.map((app) => {
                 const win = wm.windows.find((w) => w.id === app.id);
                 return (
                   <Window
@@ -253,27 +208,15 @@ export function Desktop() {
               })}
             </AnimatePresence>
           </div>
+        )}
+      </main>
 
-          {!away && (
-            <p className="numeric pointer-events-none absolute bottom-24 left-1/2 -translate-x-1/2 text-[0.62rem] text-ink-600">
-              {t(UI.panHint)}
-            </p>
-          )}
-        </div>
-      )}
-
-      <Dock
-        items={LAYOUT.map(({ id, label, glyph }) => ({ id, label, glyph }))}
-        isOpen={wm.isOpen}
-        isMinimized={wm.isMinimized}
-        onToggle={toggleFrom}
-      />
-
+      {/* Paleta de Comandos ⌘K */}
       <CommandPalette
         open={palette}
         onClose={() => setPalette(false)}
         apps={LAYOUT.map(({ id, label }) => ({ id, label }))}
-        onOpenApp={openAndBring}
+        onOpenApp={handleSelectApp}
         onSelectNote={selectNote}
       />
     </div>

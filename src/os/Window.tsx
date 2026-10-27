@@ -88,26 +88,23 @@ export function Window(props: WindowChrome) {
       dragListener={false}
       dragMomentum={false}
       dragElastic={0}
-      dragConstraints={{ left: -320, right: 320, top: -120, bottom: 220 }}
       onDragEnd={(_, info) => props.onMove(info.offset.x, info.offset.y)}
-      initial={still ? false : { opacity: 0, scale: 0.55, y: 90 }}
+      initial={still ? false : { opacity: 0, scale: 0.96, y: 16 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
-      exit={{ opacity: 0, scale: 0.6, y: 70 }}
-      transition={{ type: 'spring', stiffness: 260, damping: 26, mass: 0.7 }}
+      exit={{ opacity: 0, scale: 0.96, y: 12 }}
+      transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
       style={{
         zIndex: props.z,
-        // Cresce a partir do ícone que a abriu, não do centro genérico.
-        transformOrigin: props.originX == null ? 'bottom center' : `${props.originX}px bottom`,
         left: props.restX,
         top: props.restY,
         width: props.width,
         x: props.dx,
         y: props.dy,
       }}
-      className={`pointer-events-auto absolute flex max-h-[70vh] flex-col overflow-hidden rounded-2xl border bg-surface/95 backdrop-blur-xl transition-shadow duration-300 ${
+      className={`pointer-events-auto absolute flex max-h-[82vh] flex-col overflow-hidden rounded-2xl border bg-surface/95 backdrop-blur-xl transition-shadow duration-200 ${
         props.focused
-          ? 'border-accent/40 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.75)]'
-          : 'border-hairline shadow-2xl'
+          ? 'border-accent/50 shadow-[0_24px_60px_-15px_rgba(0,0,0,0.85)] ring-1 ring-accent/20'
+          : 'border-hairline shadow-xl'
       }`}
     >
       {chrome}
