@@ -4,9 +4,8 @@ import { useLang } from '../i18n/lang';
 import { BOOT } from '../content/site';
 
 /**
- * O boot não é enfeite: é o caminho garantido de informação (PRD §4).
- * Um recrutador com pressa sai daqui sabendo quem, o quê e disponibilidade,
- * sem precisar descobrir como operar um desktop.
+ * Boot sequencial sóbrio e informativo.
+ * Sem gradientes neon ou fumaça artificial de IA.
  */
 export function Boot({ onDone }: { onDone: () => void }) {
   const { t } = useLang();
@@ -22,14 +21,14 @@ export function Boot({ onDone }: { onDone: () => void }) {
     }
     if (step > total) return;
 
-    const delay = step === 0 ? 380 : 620;
+    const delay = step === 0 ? 300 : 500;
     const timer = setTimeout(() => setStep((s) => s + 1), delay);
     return () => clearTimeout(timer);
   }, [step, total, still, onDone]);
 
   useEffect(() => {
     if (step > total) {
-      const timer = setTimeout(onDone, 520);
+      const timer = setTimeout(onDone, 400);
       return () => clearTimeout(timer);
     }
   }, [step, total, onDone]);
@@ -39,39 +38,32 @@ export function Boot({ onDone }: { onDone: () => void }) {
   return (
     <motion.div
       className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-canvas px-6"
-      exit={{ opacity: 0, filter: 'blur(6px)' }}
-      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
     >
-      <div
-        aria-hidden
-        className="pointer-events-none absolute left-1/2 top-1/2 h-[38rem] w-[38rem] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-20 blur-[130px]"
-        style={{ background: 'radial-gradient(circle, var(--color-iris-500), transparent 70%)' }}
-      />
-
-      <div className="relative w-full max-w-lg">
-        <motion.div
-          initial={{ scale: 0.9, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-          className="mx-auto mb-10 h-12 w-12 rounded-xl border border-iris-700 bg-iris-950"
-        >
-          <div className="flex h-full items-center justify-center">
-            <span className="numeric text-sm font-bold text-accent">ga</span>
+      <div className="relative w-full max-w-md rounded-2xl border border-hairline/80 bg-surface/90 p-8 shadow-2xl backdrop-blur-xl">
+        <div className="mb-6 flex items-center justify-between border-b border-hairline/60 pb-4">
+          <div className="flex items-center gap-2.5">
+            <div className="flex h-7 w-7 items-center justify-center rounded-lg border border-hairline bg-ink-850 font-mono text-xs font-semibold text-heading">
+              GA
+            </div>
+            <span className="font-mono text-xs font-medium text-heading">gabriel.os</span>
           </div>
-        </motion.div>
+          <span className="font-mono text-[0.65rem] text-muted">v2.4</span>
+        </div>
 
-        <ul className="space-y-2.5">
+        <ul className="space-y-3 font-mono">
           <AnimatePresence>
             {BOOT.lines.slice(0, step).map((line, i) => (
               <motion.li
                 key={i}
-                initial={{ opacity: 0, x: -8 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-                className="numeric flex items-baseline gap-3 text-sm"
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                className="flex items-baseline gap-3 text-xs"
               >
-                <span className="text-ok">✓</span>
-                <span className={i === 0 ? 'font-semibold text-heading' : 'text-muted'}>
+                <span className="text-ok font-bold">✓</span>
+                <span className={i === 0 ? 'font-medium text-heading' : 'text-muted'}>
                   {t(line)}
                 </span>
               </motion.li>
@@ -79,22 +71,24 @@ export function Boot({ onDone }: { onDone: () => void }) {
           </AnimatePresence>
         </ul>
 
-        <div className="mt-10 h-px w-full overflow-hidden bg-hairline">
+        <div className="mt-8 h-1 w-full overflow-hidden rounded-full bg-ink-850">
           <motion.div
             className="h-full bg-accent"
             initial={{ width: '0%' }}
             animate={{ width: `${Math.min(100, (step / (total + 1)) * 100)}%` }}
-            transition={{ duration: 0.5, ease: 'easeOut' }}
+            transition={{ duration: 0.4, ease: 'easeOut' }}
           />
         </div>
 
-        <button
-          type="button"
-          onClick={onDone}
-          className="numeric mt-8 w-full text-center text-xs text-muted underline-offset-4 transition-colors hover:text-body hover:underline"
-        >
-          {t(BOOT.skip)}
-        </button>
+        <div className="mt-5 flex justify-end">
+          <button
+            type="button"
+            onClick={onDone}
+            className="font-mono text-[0.68rem] text-muted transition-colors hover:text-heading"
+          >
+            [{t(BOOT.skip)}]
+          </button>
+        </div>
       </div>
     </motion.div>
   );

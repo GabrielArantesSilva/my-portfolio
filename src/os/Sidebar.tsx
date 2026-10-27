@@ -32,8 +32,7 @@ const ICONS: Record<string, ComponentType<{ className?: string }>> = {
 interface SidebarProps {
   apps: readonly AppLayout[];
   isOpen: (id: string) => boolean;
-  isMinimized: (id: string) => boolean;
-  activeId: string | null;
+  activeId: string;
   onSelect: (id: string) => void;
   onRestore: () => void;
   onOpenPalette: () => void;
@@ -45,7 +44,6 @@ interface SidebarProps {
 export function Sidebar({
   apps,
   isOpen,
-  isMinimized,
   activeId,
   onSelect,
   onRestore,
@@ -67,14 +65,14 @@ export function Sidebar({
       {/* Barra superior Mobile */}
       <header className="fixed inset-x-0 top-0 z-40 flex h-14 items-center justify-between border-b border-hairline/60 bg-canvas/90 px-4 backdrop-blur-xl lg:hidden">
         <div className="flex items-center gap-2.5">
-          <div className="flex h-7 w-7 items-center justify-center rounded-lg border border-accent/40 bg-iris-950 font-mono text-xs font-bold text-accent">
-            ga
+          <div className="flex h-7 w-7 items-center justify-center rounded-lg border border-hairline bg-ink-850 font-mono text-xs font-semibold text-heading">
+            GA
           </div>
           <span className="font-mono text-xs font-semibold text-heading">
             {IDENTITY.handle}.os
           </span>
-          <span className="inline-flex items-center gap-1 rounded-full border border-ok/30 bg-ok/10 px-2 py-0.5 text-[0.62rem] text-ok">
-            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-ok" />
+          <span className="inline-flex items-center gap-1 rounded-full border border-ok/25 bg-ok/10 px-2 py-0.5 text-[0.62rem] text-ok">
+            <span className="h-1.5 w-1.5 rounded-full bg-ok" />
             online
           </span>
         </div>
@@ -84,7 +82,7 @@ export function Sidebar({
             type="button"
             onClick={onOpenPalette}
             aria-label="Command Palette"
-            className="flex h-8 w-8 items-center justify-center rounded-lg border border-hairline text-muted hover:border-accent hover:text-heading"
+            className="flex h-8 w-8 items-center justify-center rounded-lg border border-hairline text-muted hover:border-accent hover:text-heading transition-colors"
           >
             <Command className="h-3.5 w-3.5" />
           </button>
@@ -92,7 +90,7 @@ export function Sidebar({
             type="button"
             onClick={onToggleMobile}
             aria-label="Menu"
-            className="flex h-8 w-8 items-center justify-center rounded-lg border border-hairline text-muted hover:border-accent hover:text-heading"
+            className="flex h-8 w-8 items-center justify-center rounded-lg border border-hairline text-muted hover:border-accent hover:text-heading transition-colors"
           >
             {mobileOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
           </button>
@@ -109,15 +107,15 @@ export function Sidebar({
 
       {/* Sidebar Principal (Desktop fixa à esquerda, Mobile como drawer) */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 flex w-64 flex-col border-r border-hairline/70 bg-surface/95 backdrop-blur-2xl transition-transform duration-300 ease-in-out lg:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-50 flex w-64 flex-col border-r border-hairline/70 bg-surface/95 backdrop-blur-2xl transition-transform duration-200 ease-out lg:translate-x-0 ${
           mobileOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
         {/* Topo da Sidebar: Perfil e Status */}
         <div className="border-b border-hairline/60 p-4">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-accent/50 bg-gradient-to-br from-iris-900 to-ink-950 shadow-inner">
-              <span className="font-mono text-sm font-bold text-accent">GA</span>
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-hairline bg-ink-850 shadow-sm">
+              <span className="font-mono text-sm font-semibold text-heading">GA</span>
             </div>
             <div className="min-w-0 flex-1">
               <h2 className="truncate text-sm font-semibold text-heading">
@@ -130,7 +128,7 @@ export function Sidebar({
             </div>
           </div>
 
-          <div className="mt-3 flex items-center justify-between rounded-lg border border-hairline/60 bg-ink-900/40 px-2.5 py-1 text-[0.68rem]">
+          <div className="mt-3 flex items-center justify-between rounded-lg border border-hairline/60 bg-ink-900/60 px-2.5 py-1 text-[0.68rem]">
             <span className="font-mono text-ink-500">{IDENTITY.handle}.os</span>
             <span className="font-mono font-medium text-muted">{timeStr}</span>
           </div>
@@ -142,14 +140,13 @@ export function Sidebar({
           aria-label="Aplicativos"
         >
           <div className="px-2 pb-1.5 pt-0.5 text-[0.62rem] font-semibold uppercase tracking-wider text-ink-500">
-            {lang === 'pt' ? 'Aplicativos' : 'Applications'}
+            {lang === 'pt' ? 'Navegação' : 'Navigation'}
           </div>
 
           {apps.map((app) => {
             const Icon = ICONS[app.id] ?? User;
-            const open = isOpen(app.id);
-            const minimized = isMinimized(app.id);
-            const isActive = activeId === app.id && open && !minimized;
+            const isOpened = isOpen(app.id);
+            const isActive = activeId === app.id;
 
             return (
               <button
@@ -159,19 +156,19 @@ export function Sidebar({
                   onSelect(app.id);
                   if (mobileOpen) onToggleMobile();
                 }}
-                className={`group flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left text-xs transition-all duration-150 ${
+                className={`group flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left text-xs transition-colors duration-150 ${
                   isActive
-                    ? 'border border-accent/30 bg-accent/15 font-semibold text-heading shadow-sm'
-                    : open && !minimized
-                      ? 'bg-ink-850/60 text-heading hover:bg-ink-850'
+                    ? 'border border-hairline/80 bg-ink-800/80 font-semibold text-heading shadow-sm'
+                    : isOpened
+                      ? 'text-heading hover:bg-ink-850/60'
                       : 'text-muted hover:bg-ink-850/40 hover:text-body'
                 }`}
               >
                 <span
                   className={`flex h-7 w-7 items-center justify-center rounded-lg transition-colors ${
                     isActive
-                      ? 'bg-accent/20 text-accent'
-                      : 'bg-ink-850 text-muted group-hover:text-heading'
+                      ? 'bg-ink-700 text-heading'
+                      : 'bg-ink-850/70 text-muted group-hover:text-heading'
                   }`}
                 >
                   <Icon className="h-3.5 w-3.5" />
@@ -181,17 +178,11 @@ export function Sidebar({
                   {t(app.label)}
                 </span>
 
-                {/* Indicador de Status */}
-                {open && (
+                {isOpened && (
                   <span
                     className={`h-1.5 w-1.5 rounded-full transition-all ${
-                      isActive
-                        ? 'bg-accent ring-2 ring-accent/30'
-                        : minimized
-                          ? 'bg-ink-600'
-                          : 'bg-accent/60'
+                      isActive ? 'bg-accent' : 'bg-ink-600'
                     }`}
-                    title={minimized ? 'Minimizado' : 'Aberto'}
                   />
                 )}
               </button>
@@ -201,7 +192,6 @@ export function Sidebar({
 
         {/* Rodapé da Sidebar: Idioma, Ações e Comandos */}
         <div className="border-t border-hairline/60 p-3 space-y-2">
-          {/* Seletor de Idioma e Restaurar */}
           <div className="flex items-center justify-between gap-2">
             <div
               className="flex items-center rounded-lg border border-hairline p-0.5"
@@ -215,7 +205,7 @@ export function Sidebar({
                   onClick={() => setLang(opt)}
                   className={`rounded-md px-2 py-0.5 font-mono text-[0.65rem] uppercase transition-colors ${
                     lang === opt
-                      ? 'bg-accent font-semibold text-on-accent'
+                      ? 'bg-ink-700 font-semibold text-heading'
                       : 'text-muted hover:text-body'
                   }`}
                 >
@@ -228,21 +218,20 @@ export function Sidebar({
               type="button"
               onClick={onRestore}
               title={t(UI.restoreHint)}
-              className="flex items-center gap-1.5 rounded-lg border border-hairline px-2.5 py-1 text-[0.68rem] text-muted transition-colors hover:border-accent hover:text-heading"
+              className="flex items-center gap-1.5 rounded-lg border border-hairline px-2.5 py-1 text-[0.68rem] text-muted transition-colors hover:border-ink-600 hover:text-heading"
             >
               <RotateCcw className="h-3 w-3" />
               <span>{t(UI.restore)}</span>
             </button>
           </div>
 
-          {/* Botão Command Palette */}
           <button
             type="button"
             onClick={onOpenPalette}
-            className="flex w-full items-center justify-between rounded-lg border border-hairline/70 bg-ink-900/50 px-3 py-1.5 text-xs text-muted transition-colors hover:border-accent hover:text-heading"
+            className="flex w-full items-center justify-between rounded-lg border border-hairline/70 bg-ink-900/60 px-3 py-1.5 text-xs text-muted transition-colors hover:border-ink-600 hover:text-heading"
           >
             <span className="flex items-center gap-2">
-              <Command className="h-3.5 w-3.5 text-accent" />
+              <Command className="h-3.5 w-3.5 text-ink-400" />
               <span>{t(UI.commands)}</span>
             </span>
             <kbd className="rounded border border-hairline bg-ink-850 px-1.5 py-0.5 font-mono text-[0.62rem] text-muted">

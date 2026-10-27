@@ -1,98 +1,55 @@
 @import "tailwindcss";
 
 /* ============================================================
-   Identidade — Gabriel Arantes
-   Primária: violeta. Pela tabela de significados em
-   20_concepts/design/Color-Theory-Paleta.md, roxo = criatividade,
-   premium, luxo. Amarelo/laranja está reservado a warning por regra
-   própria, e verde é a marca da Origami Lab (empregador) — as duas
-   ficam fora da disputa por primária.
-   Dark-first: o produto é um console de trabalho, não uma folha.
+   Identidade Visual — Gabriel Arantes
+   Estilo: Engenharia moderna, sóbria, limpa e funcional (estilo Linear/Vercel)
+   Paleta escura neutra (grafite / carvão), sem roxo neon espalhafatoso
+   Acento: azul céu técnico (sky) + esmeralda sutil para produção
    ============================================================ */
 
 @theme {
-  /* ── Primitivos: neutros (70% da interface) ───────────────── */
-  --color-ink-950: oklch(0.155 0.014 288);
-  --color-ink-900: oklch(0.205 0.017 288);
-  --color-ink-850: oklch(0.245 0.019 288);
-  --color-ink-800: oklch(0.285 0.021 288);
-  --color-ink-700: oklch(0.365 0.021 288);
-  --color-ink-600: oklch(0.475 0.019 288);
-  --color-ink-500: oklch(0.585 0.016 288);
-  --color-ink-400: oklch(0.685 0.013 288);
-  --color-ink-300: oklch(0.775 0.010 288);
-  --color-ink-200: oklch(0.865 0.007 288);
-  --color-ink-100: oklch(0.930 0.005 288);
-  --color-ink-50:  oklch(0.972 0.003 288);
+  /* ── Primitivos: Neutros Grafite / Slate Profissional ─────── */
+  --color-ink-950: oklch(0.12 0.005 260);     /* #0c0d10 - fundo principal */
+  --color-ink-900: oklch(0.16 0.006 260);     /* #14161b - superfícies de cards */
+  --color-ink-850: oklch(0.20 0.007 260);     /* #1b1e25 - hover e painéis elevados */
+  --color-ink-800: oklch(0.26 0.008 260);     /* #262a34 - bordas e divisórias */
+  --color-ink-700: oklch(0.34 0.009 260);     /* #373d4b - bordas ativas */
+  --color-ink-600: oklch(0.46 0.010 260);     /* #565e70 - texto terciário / ícones */
+  --color-ink-500: oklch(0.58 0.010 260);     /* #788299 - texto secundário */
+  --color-ink-400: oklch(0.68 0.008 260);     /* #9ca6be - texto muted */
+  --color-ink-300: oklch(0.78 0.006 260);     /* #c0c8db - texto body secundário */
+  --color-ink-200: oklch(0.88 0.004 260);     /* #e2e6f0 - texto body primário */
+  --color-ink-100: oklch(0.94 0.002 260);     /* #f2f4f8 - texto claro */
+  --color-ink-50:  oklch(0.98 0.001 260);     /* #fafbfc - títulos e realces */
 
-  /* ── Primitivos: íris, a primária ─────────────────────────── */
-  --color-iris-950: oklch(0.235 0.090 295);
-  --color-iris-900: oklch(0.315 0.130 295);
-  --color-iris-800: oklch(0.395 0.165 295);
-  --color-iris-700: oklch(0.485 0.195 295);
-  --color-iris-600: oklch(0.560 0.212 295);
-  --color-iris-500: oklch(0.645 0.205 295);
-  --color-iris-400: oklch(0.735 0.165 295);
-  --color-iris-300: oklch(0.815 0.115 295);
-  --color-iris-200: oklch(0.890 0.068 295);
-  --color-iris-100: oklch(0.940 0.035 295);
+  /* ── Primitivos: Acento Técnico (Azul Aço / Sky Refinado) ──── */
+  --color-iris-950: oklch(0.18 0.040 240);
+  --color-iris-900: oklch(0.25 0.060 240);
+  --color-iris-800: oklch(0.35 0.080 240);
+  --color-iris-700: oklch(0.46 0.100 240);
+  --color-iris-600: oklch(0.58 0.115 240);
+  --color-iris-500: oklch(0.68 0.120 240);    /* Sky balanceado */
+  --color-iris-400: oklch(0.76 0.110 240);    /* Destaques sutis */
+  --color-iris-300: oklch(0.84 0.080 240);
+  --color-iris-200: oklch(0.90 0.050 240);
+  --color-iris-100: oklch(0.95 0.025 240);
 
-  /* ── Semântica de estado — convenções que não se quebram ──── */
-  --color-ok: oklch(0.700 0.160 152);
-  --color-warn: oklch(0.780 0.150 82);
-  --color-danger: oklch(0.640 0.205 25);
+  /* ── Semântica de Estado — Sóbria e Funcional ─────────────── */
+  --color-ok: oklch(0.68 0.140 155);          /* Esmeralda discreto */
+  --color-warn: oklch(0.75 0.130 85);         /* Âmbar suave */
+  --color-danger: oklch(0.62 0.180 25);       /* Vermelho controlado */
 
   /* ── Tipografia ───────────────────────────────────────────── */
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
 
   /* ── Movimento ────────────────────────────────────────────── */
-  --ease-out-strong: cubic-bezier(0.22, 1, 0.36, 1);
-  --ease-in-out-strong: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-out-strong: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-strong: cubic-bezier(0.65, 0, 0.35, 1);
   --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
-
-  --animate-fade-in: fadeIn 0.6s var(--ease-out-strong) forwards;
-  --animate-slide-up: slideUp 0.6s var(--ease-out-strong) forwards;
-  --animate-scale-in: scaleIn 0.35s var(--ease-out-strong) forwards;
-  --animate-blur-in: blurIn 0.5s var(--ease-out-strong) forwards;
-  --animate-shimmer: shimmer 2.4s linear infinite;
-  --animate-float: float 6s ease-in-out infinite;
-  --animate-pulse-soft: pulseSoft 3s ease-in-out infinite;
-
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
-  @keyframes slideUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  @keyframes scaleIn {
-    from { opacity: 0; transform: scale(0.96); }
-    to { opacity: 1; transform: scale(1); }
-  }
-  @keyframes blurIn {
-    from { opacity: 0; filter: blur(8px); }
-    to { opacity: 1; filter: blur(0); }
-  }
-  @keyframes shimmer {
-    from { background-position: -200% 0; }
-    to { background-position: 200% 0; }
-  }
-  @keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
-  }
-  @keyframes pulseSoft {
-    0%, 100% { opacity: 0.55; }
-    50% { opacity: 1; }
-  }
 }
 
-/* ── Tokens semânticos ──────────────────────────────────────────
-   Os componentes consomem SÓ estes. Trocar a primária é reescrever
-   esta seção, não caçar hexadecimal em arquivo de tela.
-   ──────────────────────────────────────────────────────────── */
+/* ── Tokens Semânticos de Alto Contraste e Elegância ─────────── */
 @theme {
   --color-canvas: var(--color-ink-950);
   --color-surface: var(--color-ink-900);
