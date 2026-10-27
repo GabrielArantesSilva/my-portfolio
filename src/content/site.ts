@@ -1,3 +1,4 @@
+import profilePhoto from '../assets/perfil.jpg';
 import type { Txt, WorkItem } from './types';
 
 /**
@@ -24,6 +25,7 @@ export const IDENTITY = {
   linkedinLabel: 'linkedin.com/in/gabriel-arantes-silva',
   whatsapp: 'https://wa.me/5537999950605',
   whatsappLabel: '+55 (37) 99995-0605',
+  avatar: profilePhoto,
   location: { pt: 'Formiga, MG', en: 'Formiga, Brazil' } satisfies Txt,
   role: {
     pt: 'Engenheiro de software full stack',

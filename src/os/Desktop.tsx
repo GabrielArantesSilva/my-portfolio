@@ -70,6 +70,23 @@ export function Desktop() {
   const [palette, setPalette] = useState(false);
   const [mobileMenu, setMobileMenu] = useState(false);
   const [note, setNote] = useState<string | null>(null);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
+    try {
+      return localStorage.getItem('sidebar_collapsed') === 'true';
+    } catch {
+      return false;
+    }
+  });
+
+  const toggleSidebarCollapse = useCallback(() => {
+    setSidebarCollapsed((prev) => {
+      const next = !prev;
+      try {
+        localStorage.setItem('sidebar_collapsed', String(next));
+      } catch {}
+      return next;
+    });
+  }, []);
 
   useEffect(() => {
     const timer = setInterval(() => setClock(new Date()), 30_000);
@@ -155,7 +172,7 @@ export function Desktop() {
 
   return (
     <div className="relative flex h-dvh w-screen overflow-hidden bg-canvas">
-      {/* Sidebar Fixa à Esquerda no Desktop, Drawer no Mobile */}
+      {/* Sidebar Fixa à Esquerda no Desktop (Rebativel), Drawer no Mobile */}
       <Sidebar
         apps={LAYOUT}
         isOpen={(id) => tabs.includes(id)}
@@ -166,10 +183,16 @@ export function Desktop() {
         clock={clock}
         mobileOpen={mobileMenu}
         onToggleMobile={() => setMobileMenu((m) => !m)}
+        collapsed={sidebarCollapsed}
+        onToggleCollapse={toggleSidebarCollapse}
       />
 
       {/* Workspace Principal */}
-      <main className="relative flex-1 flex flex-col h-dvh overflow-hidden lg:pl-60">
+      <main
+        className={`relative flex-1 flex flex-col h-dvh overflow-hidden transition-all duration-200 ease-out ${
+          sidebarCollapsed ? 'lg:pl-16' : 'lg:pl-60'
+        }`}
+      >
         {/* Fundo sutil de console de engenharia */}
         <Wallpaper />
 
@@ -226,7 +249,7 @@ export function Desktop() {
         </header>
 
         {/* Área de Conteúdo Otimizada para Densidade e Mobile */}
-        <div className="relative z-10 flex-1 overflow-y-auto px-2.5 sm:px-4 lg:px-6 pt-14 lg:pt-3.5 pb-6">
+        <div className="relative z-10 flex-1 overflow-y-auto px-2.5 sm:px-4 lg:px-6 pt-3.5 pb-24 lg:pb-6">
           <div className="mx-auto max-w-4xl">
             <AnimatePresence mode="wait">
               <motion.section

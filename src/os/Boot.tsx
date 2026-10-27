@@ -1,7 +1,7 @@
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { useLang } from '../i18n/lang';
-import { BOOT } from '../content/site';
+import { BOOT, IDENTITY } from '../content/site';
 
 /**
  * Boot sequencial sóbrio e informativo estilo systemd/kernel.
@@ -42,10 +42,12 @@ export function Boot({ onDone }: { onDone: () => void }) {
     >
       <div className="relative w-full max-w-sm sm:max-w-md rounded-xl border border-hairline/80 bg-surface/95 p-5 sm:p-6 shadow-2xl backdrop-blur-xl">
         <div className="mb-4 flex items-center justify-between border-b border-hairline/60 pb-3">
-          <div className="flex items-center gap-2">
-            <div className="flex h-6 w-6 items-center justify-center rounded-md border border-hairline bg-ink-850 font-mono text-[0.68rem] font-semibold text-heading">
-              GA
-            </div>
+          <div className="flex items-center gap-2.5">
+            <img
+              src={IDENTITY.avatar}
+              alt={IDENTITY.name}
+              className="h-7 w-7 rounded-lg object-cover border border-hairline/80 shadow-xs"
+            />
             <span className="font-mono text-xs font-medium text-heading">gabriel.os</span>
           </div>
           <span className="font-mono text-[0.62rem] text-muted">v2.4</span>
