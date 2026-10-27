@@ -74,7 +74,7 @@ export const BOOT = {
   /** As três perguntas do recrutador, respondidas antes do desktop existir. */
   lines: [
     { pt: 'Gabriel Arantes Silva', en: 'Gabriel Arantes Silva' },
-    { pt: 'engenheiro de software full stack · Formiga, MG', en: 'full stack software engineer · Brazil' },
+    { pt: 'engenheiro de software full stack · Formiga, MG', en: 'full stack software engineer · Formiga, Brazil' },
     { pt: 'TypeScript · Node · Next.js · React · Supabase · Postgres', en: 'TypeScript · Node · Next.js · React · Supabase · Postgres' },
     { pt: 'disponível para novos projetos e contratos', en: 'available for new projects and contracts' },
   ] satisfies readonly Txt[],
@@ -88,8 +88,8 @@ export const ABOUT = {
     en: 'I came into tech out of curiosity and through family. Four years of studying before it became a job, and curiosity is still what makes me open the editor.',
   } satisfies Txt,
   now: {
-    pt: 'Atuei como desenvolvedor full stack na Origami Lab, onde fui o responsável técnico por todo o ecossistema ferroviário de ordens de serviço (API Node/Express/Prisma, painel administrativo Next.js, app móvel de campo com React Native/Expo e portal). Recentemente encerrei meu ciclo na empresa para me dedicar a produtos próprios e sistemas SaaS de alta densidade, como o VORTEX OS e o COLAÍ, além de estar aberto a novos projetos e contratos de engenharia de software.',
-    en: 'I previously worked as a full stack developer at Origami Lab, where I led technical development across the rail work-order ecosystem (Node/Express/Prisma API, Next.js admin dashboard, React Native/Expo mobile field app, and tracking portal). I recently completed my tenure there to focus on building high-density SaaS products like VORTEX OS and COLAÍ, and I am available for new software engineering contracts and full-time roles.',
+    pt: 'Atuei como desenvolvedor full stack na Origami Lab, onde fui o responsável técnico por todo o ecossistema ferroviário de ordens de serviço (API Node/Express/Prisma, painel administrativo Next.js, app móvel de campo com React Native/Expo e portal). Recentemente encerrei meu ciclo na empresa para me dedicar a produtos próprios, como o VORTEX OS e o Enemza, além de estar aberto a novos projetos e contratos de engenharia de software.',
+    en: 'I previously worked as a full stack developer at Origami Lab, where I led technical development across the rail work-order ecosystem (Node/Express/Prisma API, Next.js admin dashboard, React Native/Expo mobile field app, and tracking portal). I recently completed my tenure there to focus on building my own products, like VORTEX OS and Enemza, and I am available for new software engineering contracts and full-time roles.',
   } satisfies Txt,
   method: {
     pt: 'Trabalho a partir de um sistema, não de memória: a decisão é escrita antes do código, o domínio é tipado em vez de comentado, e quando teoria e código divergem, o código vence.',
@@ -104,21 +104,42 @@ export const WORK: readonly WorkItem[] = [
     period: '2026 — hoje',
     kind: 'produto',
     title: {
-      pt: 'VORTEX OS — Sistema de Gestão Contábil e Fiscal',
-      en: 'VORTEX OS — Accounting & Fiscal Operating System',
+      pt: 'VORTEX OS — ERP contábil (fiscal, folha e contabilidade)',
+      en: 'VORTEX OS — Accounting ERP (tax, payroll and bookkeeping)',
     },
     summary: {
-      pt: 'Sistema operacional web de alta densidade para gestão contábil e fiscal de escritórios e empresas. Arquitetura moderna com importação e processamento de XMLs de NF-e/NFC-e, SPED Fiscal, apuração de impostos, DRE, segregação multi-tenant por escritório via Row Level Security (RLS) no Supabase e auditoria de domínio.',
-      en: 'High-density web operating system for accounting and tax management. Modern architecture featuring NF-e/NFC-e XML and SPED Fiscal parsing, tax calculations, P&L generation, multi-tenant per-office segregation via Supabase Row Level Security (RLS), and domain auditing.',
+      pt: 'ERP web de alta densidade para escritórios de contabilidade: fiscal, folha e contabilidade no mesmo sistema. Arquitetura moderna com importação e processamento de XMLs de NF-e/NFC-e, SPED Fiscal, apuração de impostos, DRE, segregação multi-tenant por escritório via Row Level Security (RLS) no Supabase e auditoria de domínio.',
+      en: 'High-density web ERP for accounting firms: tax, payroll and bookkeeping in one system. Modern architecture featuring NF-e/NFC-e XML and SPED Fiscal parsing, tax calculations, P&L generation, multi-tenant per-office segregation via Supabase Row Level Security (RLS), and domain auditing.',
     },
     highlights: [
       { pt: 'Persistência no Supabase com isolamento RLS estrito por escritório', en: 'Supabase persistence with strict per-office RLS isolation' },
       { pt: 'Processamento e reconciliação automática de XMLs fiscais e SPED', en: 'Automated processing and reconciliation of fiscal XMLs and SPED' },
       { pt: 'Domínio tipado com testes automatizados via Vitest', en: 'Typed domain models with automated test suite in Vitest' },
     ],
-    stack: ['Next.js 15', 'TypeScript', 'Supabase', 'PostgreSQL', 'Tailwind CSS', 'Vitest'],
+    stack: ['Next.js', 'TypeScript', 'Supabase', 'PostgreSQL', 'Tailwind CSS', 'Vitest'],
     href: 'https://vortex-os-pi.vercel.app',
     hrefLabel: { pt: 'Ver no ar', en: 'Live demo' },
+  },
+  {
+    id: 'enemza',
+    org: { pt: 'Projeto próprio', en: 'Own project' },
+    period: '2026',
+    kind: 'produto',
+    title: {
+      pt: 'Enemza — PWA de estudo para o ENEM',
+      en: 'Enemza — study PWA for Brazil’s national exam (ENEM)',
+    },
+    summary: {
+      pt: 'Videoaulas curadas do YouTube organizadas por módulo, provas de fixação (questões do INEP + geradas por LLM com dupla checagem obrigatória) e anotações em markdown. Progresso por XP e nível pessoal, sem ranking. Checkout e webhook de pagamento integrados.',
+      en: 'Curated YouTube lessons organised by module, practice tests (official INEP questions + LLM-generated ones with a mandatory double-check) and markdown notes. Progress through personal XP and levels, no leaderboard. Integrated checkout and payment webhook.',
+    },
+    highlights: [
+      { pt: 'Decisões de arquitetura registradas em ADRs antes da implementação', en: 'Architecture decisions recorded as ADRs before implementation' },
+      { pt: 'Autenticação própria com scrypt e cookie assinado (HMAC)', en: 'Custom auth with scrypt and HMAC-signed cookies' },
+    ],
+    stack: ['Next.js 15', 'TypeScript', 'Prisma', 'PostgreSQL (Neon)', 'PWA', 'Gemini', 'Vitest'],
+    href: 'https://enemza.vercel.app',
+    hrefLabel: { pt: 'Ver no ar', en: 'Live' },
   },
   {
     id: 'colai',
@@ -126,19 +147,18 @@ export const WORK: readonly WorkItem[] = [
     period: '2026',
     kind: 'produto',
     title: {
-      pt: 'COLAÍ — Sistema Dedicado para a Comunidade',
-      en: 'COLAÍ — Dedicated Community System',
+      pt: 'COLAÍ — app para furar panelinhas (em construção)',
+      en: 'COLAÍ — an app to break into closed circles (in progress)',
     },
     summary: {
-      pt: 'Plataforma criada para conectar e fortalecer iniciativas comunitárias e pequenos negócios locais, com agendamentos, catálogo dinâmico de serviços e gestão simplificada.',
-      en: 'Platform built to connect and empower local community initiatives and small businesses with online booking, dynamic service catalogs, and streamlined management.',
+      pt: 'App mobile para jovens de Formiga e região: cada rolê declara quantas cadeiras abre para gente de fora, e quem está fora pede para colar sem passar vergonha. Mapa de rolês, pedido sozinho ou com +1, endereço liberado só depois do aceite do host.',
+      en: 'Mobile app for young people in Formiga and the surrounding region: each get-together declares how many seats it opens to outsiders, and outsiders can ask to join without the awkwardness. Map of events, solo or +1 requests, address unlocked only after the host accepts.',
     },
     highlights: [
-      { pt: 'Interface rápida e intuitiva focada em alta conversão e simplicidade', en: 'Fast, intuitive interface tailored for high conversion and ease of use' },
+      { pt: 'Em desenvolvimento — escopo da v0 definido antes do código', en: 'In development — v0 scope defined before the code' },
+      { pt: 'Isolamento de dados com RLS forçado e geolocalização via PostGIS', en: 'Data isolation with enforced RLS and geolocation via PostGIS' },
     ],
-    stack: ['React', 'TypeScript', 'Node.js', 'Tailwind CSS'],
-    href: 'https://github.com/GabrielArantesSilva/COLA-',
-    hrefLabel: { pt: 'Código', en: 'Source' },
+    stack: ['Expo', 'React Native', 'TypeScript', 'Supabase', 'PostGIS', 'MapLibre'],
   },
   {
     id: 'origami',
@@ -151,7 +171,7 @@ export const WORK: readonly WorkItem[] = [
     },
     summary: {
       pt: 'Ecossistema multi-repositório para acompanhamento de ordens de serviço e relatórios diários de obra em campo, com fluxo de revisão, assinatura digital e fiscalização. Desenvolvedor full stack responsável por todos os repositórios: a API, o painel administrativo, o aplicativo móvel de campo e o portal de acompanhamento.',
-      en: 'Multi-repository ecosystem for tracking work orders and daily field construction reports in the rail industry, featuring digital signature, review, and inspection workflows. Sole engineer responsible for all repositories: the backend API, admin dashboard, mobile field app (React Native/Expo), and tracking portal.',
+      en: 'Multi-repository ecosystem for tracking work orders and daily field construction reports in the rail industry, featuring digital signature, review, and inspection workflows. Full stack developer responsible for all repositories: the backend API, admin dashboard, mobile field app (React Native/Expo), and tracking portal.',
     },
     highlights: [
       { pt: 'Quatro aplicações em produção, uma base de domínio compartilhada', en: 'Four applications in production sharing a unified domain core' },
@@ -194,8 +214,8 @@ export const WORK: readonly WorkItem[] = [
       { pt: 'Faixas de classificação com fonte única, impossível divergir entre telas', en: 'Classification bands from a single source, impossible to diverge across screens' },
     ],
     stack: ['TanStack Start', 'React 19', 'Supabase', 'PostgreSQL', 'Vitest'],
-    href: 'https://github.com/GabrielArantesSilva/Dobra-SaaS',
-    hrefLabel: { pt: 'Código', en: 'Source' },
+    href: 'https://dobra-saa-s.vercel.app',
+    hrefLabel: { pt: 'Ver no ar', en: 'Live' },
   },
   {
     id: 'bot',
@@ -207,13 +227,13 @@ export const WORK: readonly WorkItem[] = [
       en: 'Sales bot with instant-payment checkout',
     },
     summary: {
-      pt: 'Produto vivo: bot de vendas no Telegram com checkout por Pix, containerizado e com esteira de deploy própria.',
-      en: 'A live product: a Telegram sales bot with instant-payment checkout, containerised and with its own deploy pipeline.',
+      pt: 'Bot de vendas no Telegram com checkout por Pix, containerizado com Docker e pronto para deploy.',
+      en: 'A Telegram sales bot with instant-payment (Pix) checkout, containerised with Docker and ready to deploy.',
     },
     highlights: [
-      { pt: 'Em operação, não em protótipo', en: 'In operation, not in prototype' },
+      { pt: 'Testes automatizados com Vitest e ambiente reproduzível via docker-compose', en: 'Automated tests with Vitest and a reproducible environment via docker-compose' },
     ],
-    stack: ['grammY', 'Fastify', 'Prisma', 'PostgreSQL', 'Docker'],
+    stack: ['grammY', 'Fastify', 'Prisma', 'PostgreSQL', 'Docker', 'Vitest'],
     href: 'https://github.com/GabrielArantesSilva/bot',
     hrefLabel: { pt: 'Código', en: 'Source' },
   },
