@@ -1,5 +1,4 @@
 import {
-  Download,
   ExternalLink,
   Mail,
   Code2,
@@ -10,6 +9,7 @@ import {
 import { useLang } from '../i18n/lang';
 import { ABOUT, IDENTITY, UI, WORK } from '../content/site';
 import type { Txt, WorkItem } from '../content/types';
+import { ResumeDownload } from '../os/ResumeDownload';
 
 const orgOf = (item: WorkItem, t: (v: Txt) => string) =>
   typeof item.org === 'string' ? item.org : t(item.org);
@@ -55,14 +55,7 @@ export function Resume() {
           </p>
         </div>
 
-        <button
-          type="button"
-          onClick={() => window.print()}
-          className="inline-flex items-center gap-1.5 shrink-0 rounded-lg bg-accent px-3 py-1.5 font-mono text-xs font-semibold text-on-accent transition-transform hover:-translate-y-0.5 shadow-sm"
-        >
-          <Download className="h-3.5 w-3.5" />
-          <span>{t(UI.downloadPdf)}</span>
-        </button>
+        <ResumeDownload label={UI.downloadPdf} />
       </div>
 
       {/* Documento Principal do Currículo */}

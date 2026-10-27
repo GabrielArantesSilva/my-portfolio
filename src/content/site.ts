@@ -33,6 +33,15 @@ export const IDENTITY = {
   } satisfies Txt,
 } as const;
 
+/**
+ * PDF do currículo, gerado por scripts/build-resume-pdf.mjs a partir da tela
+ * /curriculo. Os nomes precisam bater com scripts/resume-files.mjs.
+ */
+export const RESUME_PDF = {
+  pt: '/Curriculo-Gabriel-Arantes.pdf',
+  en: '/Resume-Gabriel-Arantes.pdf',
+} satisfies Txt;
+
 /** Preencha o WhatsApp com DDI+DDD+numero, só dígitos: 5537999999999 */
 export const CONTACT_CHANNELS = {
   whatsapp: '5537999950605',
@@ -369,6 +378,7 @@ export const UI = {
   experience: { pt: 'Experiência & Principais Sistemas', en: 'Experience & Key Systems' } satisfies Txt,
   educationTitle: { pt: 'Fundamentos, Formação & Método', en: 'Foundations & Methodology' } satisfies Txt,
   downloadPdf: { pt: 'Baixar PDF', en: 'Download PDF' } satisfies Txt,
+  downloadResume: { pt: 'Baixar currículo', en: 'Download résumé' } satisfies Txt,
   resumeHint: {
     pt: 'Gerado do mesmo conteúdo do site — nunca desatualiza',
     en: 'Generated from the same content as the site — never goes stale',

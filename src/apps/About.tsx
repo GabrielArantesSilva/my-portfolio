@@ -1,5 +1,6 @@
 import { useLang } from '../i18n/lang';
 import { ABOUT, IDENTITY, UI } from '../content/site';
+import { ResumeDownload } from '../os/ResumeDownload';
 
 const BLOCKS = [
   { label: UI.origin, text: ABOUT.origin },
@@ -33,11 +34,7 @@ export function About() {
           </div>
         </div>
 
-        <div className="flex items-center gap-2 font-mono text-[0.68rem] text-muted">
-          <span className="rounded-md border border-hairline/60 bg-ink-900/60 px-2 py-1">
-            {IDENTITY.handle}.os
-          </span>
-        </div>
+        <ResumeDownload className="self-start sm:self-auto" />
       </header>
 
       <div className="grid gap-2.5 sm:grid-cols-3">

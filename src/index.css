@@ -165,7 +165,12 @@
 @media print {
   @page {
     size: A4;
-    margin: 12mm 14mm;
+    margin: 10mm 12mm;
+  }
+
+  /* O site força color-scheme dark; no papel a margem da página ficava preta */
+  html {
+    color-scheme: light !important;
   }
 
   html,
@@ -219,8 +224,8 @@
     color: #0f172a !important;
     border: none !important;
     box-shadow: none !important;
-    font-size: 9.5pt;
-    line-height: 1.45;
+    font-size: 9pt;
+    line-height: 1.4;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
   }
@@ -243,8 +248,8 @@
     font-weight: 700 !important;
     border-bottom: 1px solid #cbd5e1 !important;
     padding-bottom: 2pt !important;
-    margin-top: 10pt !important;
-    margin-bottom: 5pt !important;
+    margin-top: 8pt !important;
+    margin-bottom: 4pt !important;
     page-break-after: avoid;
     break-after: avoid;
   }
@@ -266,6 +271,11 @@
   [data-print] a {
     color: #0284c7 !important;
     text-decoration: none !important;
+  }
+
+  /* Respiro entre blocos menor no papel: o currículo cabe em duas páginas */
+  [data-print] > * + * {
+    margin-top: 8pt !important;
   }
 
   .print-break-avoid {

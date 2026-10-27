@@ -10,6 +10,7 @@
     "sync:activity": "node scripts/sync-activity.mjs",
     "sync": "npm run sync:vault && npm run sync:activity",
     "build": "tsc -b && vite build",
+    "resume:pdf": "node scripts/build-resume-pdf.mjs",
     "lint": "oxlint",
     "preview": "vite preview"
   },

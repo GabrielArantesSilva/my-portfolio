@@ -19,6 +19,7 @@ import { useLang } from '../i18n/lang';
 import { LANG } from '../i18n/lang.const';
 import { IDENTITY, UI } from '../content/site';
 import type { AppLayout } from './layout';
+import { ResumeDownload } from './ResumeDownload';
 
 const ICONS: Record<string, ComponentType<{ className?: string }>> = {
   sobre: User,
@@ -177,6 +178,17 @@ export function Sidebar({
               <span className="font-mono font-medium text-muted">{timeStr}</span>
             </div>
           )}
+        </div>
+
+        {/* Ação principal: currículo em PDF, sempre a um toque */}
+        <div className={collapsed ? 'flex justify-center px-1.5 pt-2.5' : 'px-2.5 pt-2.5'}>
+          <ResumeDownload
+            variant={collapsed ? 'icon' : 'primary'}
+            className={collapsed ? '' : 'w-full'}
+            onClick={() => {
+              if (mobileOpen) onToggleMobile();
+            }}
+          />
         </div>
 
         {/* Lista de Navegação dos Apps */}
