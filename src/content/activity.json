@@ -1,6 +1,30 @@
 {
-  "syncedAt": "2026-10-27T12:51:14.452Z",
+  "syncedAt": "2026-10-27T13:23:30.144Z",
   "projects": [
+    {
+      "name": "gabriel.os",
+      "public": true,
+      "total": 13,
+      "lastAt": "2026-10-27",
+      "commits": [
+        {
+          "date": "2026-10-27",
+          "subject": "feat: atualiza sincronização de atividades (outubro/2026) e notas do vault"
+        },
+        {
+          "date": "2026-08-19",
+          "subject": "feat(pedidos): liga o canal do WhatsApp"
+        },
+        {
+          "date": "2026-08-19",
+          "subject": "feat(os): botao restaurar e auto-deteccao da foto do curriculo"
+        },
+        {
+          "date": "2026-08-19",
+          "subject": "feat(os): desktop infinito, tela de pedidos e auditoria de conteudo"
+        }
+      ]
+    },
     {
       "name": "VORTEX OS",
       "public": false,
@@ -34,30 +58,6 @@
         {
           "date": "2026-10-24",
           "subject": "Initial commit"
-        }
-      ]
-    },
-    {
-      "name": "gabriel.os",
-      "public": true,
-      "total": 12,
-      "lastAt": "2026-08-19",
-      "commits": [
-        {
-          "date": "2026-08-19",
-          "subject": "feat(pedidos): liga o canal do WhatsApp"
-        },
-        {
-          "date": "2026-08-19",
-          "subject": "feat(os): botao restaurar e auto-deteccao da foto do curriculo"
-        },
-        {
-          "date": "2026-08-19",
-          "subject": "feat(os): desktop infinito, tela de pedidos e auditoria de conteudo"
-        },
-        {
-          "date": "2026-08-19",
-          "subject": "feat(os): rotas por app, nos arrastaveis no grafo e tela stack"
         }
       ]
     },
@@ -135,7 +135,7 @@
     }
   ],
   "totals": {
-    "commits": 32,
+    "commits": 33,
     "repos": 6
   }
 }

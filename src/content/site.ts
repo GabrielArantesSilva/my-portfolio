@@ -17,7 +17,7 @@ export const IDENTITY = {
   short: 'Gabriel Arantes',
   handle: 'gabriel',
   host: 'formiga',
-  email: 'gabriel@origamilab.com.br',
+  email: 'gabrielarantes649@gmail.com',
   github: 'https://github.com/GabrielArantesSilva',
   githubLabel: 'github.com/GabrielArantesSilva',
   linkedin: 'https://www.linkedin.com/in/gabriel-arantes-silva/',
@@ -71,8 +71,8 @@ export const BOOT = {
   lines: [
     { pt: 'Gabriel Arantes Silva', en: 'Gabriel Arantes Silva' },
     { pt: 'engenheiro de software full stack · Formiga, MG', en: 'full stack software engineer · Brazil' },
-    { pt: 'TypeScript · Node · React · React Native · Postgres', en: 'TypeScript · Node · React · React Native · Postgres' },
-    { pt: 'disponível para arquitetura e back-end', en: 'available for architecture and backend work' },
+    { pt: 'TypeScript · Node · Next.js · React · Supabase · Postgres', en: 'TypeScript · Node · Next.js · React · Supabase · Postgres' },
+    { pt: 'disponível para novos projetos e contratos', en: 'available for new projects and contracts' },
   ] satisfies readonly Txt[],
   skip: { pt: 'pular', en: 'skip' } satisfies Txt,
   enter: { pt: 'entrar', en: 'enter' } satisfies Txt,
@@ -84,8 +84,8 @@ export const ABOUT = {
     en: 'I came into tech out of curiosity and through family. Four years of studying before it became a job, and curiosity is still what makes me open the editor.',
   } satisfies Txt,
   now: {
-    pt: 'Hoje sou desenvolvedor na Origami Lab, onde toco todos os repositórios de um ecossistema de gestão de ordens de serviço para o setor ferroviário — API, painel administrativo, aplicativo de campo e portal de acompanhamento.',
-    en: 'Today I am a developer at Origami Lab, where I own every repository of a work-order management ecosystem for the rail sector — API, admin panel, field app and tracking portal.',
+    pt: 'Atuei como desenvolvedor full stack na Origami Lab, onde fui o responsável técnico por todo o ecossistema ferroviário de ordens de serviço (API Node/Express/Prisma, painel administrativo Next.js, app móvel de campo com React Native/Expo e portal). Recentemente encerrei meu ciclo na empresa para me dedicar a produtos próprios e sistemas SaaS de alta densidade, como o VORTEX OS e o COLAÍ, além de estar aberto a novos projetos e contratos de engenharia de software.',
+    en: 'I previously worked as a full stack developer at Origami Lab, where I led technical development across the rail work-order ecosystem (Node/Express/Prisma API, Next.js admin dashboard, React Native/Expo mobile field app, and tracking portal). I recently completed my tenure there to focus on building high-density SaaS products like VORTEX OS and COLAÍ, and I am available for new software engineering contracts and full-time roles.',
   } satisfies Txt,
   method: {
     pt: 'Trabalho a partir de um sistema, não de memória: a decisão é escrita antes do código, o domínio é tipado em vez de comentado, e quando teoria e código divergem, o código vence.',
@@ -95,22 +95,64 @@ export const ABOUT = {
 
 export const WORK: readonly WorkItem[] = [
   {
+    id: 'vortex',
+    org: { pt: 'Projeto próprio / SaaS', en: 'Own project / SaaS' },
+    period: '2026 — hoje',
+    kind: 'produto',
+    title: {
+      pt: 'VORTEX OS — Sistema de Gestão Contábil e Fiscal',
+      en: 'VORTEX OS — Accounting & Fiscal Operating System',
+    },
+    summary: {
+      pt: 'Sistema operacional web de alta densidade para gestão contábil e fiscal de escritórios e empresas. Arquitetura moderna com importação e processamento de XMLs de NF-e/NFC-e, SPED Fiscal, apuração de impostos, DRE, segregação multi-tenant por escritório via Row Level Security (RLS) no Supabase e auditoria de domínio.',
+      en: 'High-density web operating system for accounting and tax management. Modern architecture featuring NF-e/NFC-e XML and SPED Fiscal parsing, tax calculations, P&L generation, multi-tenant per-office segregation via Supabase Row Level Security (RLS), and domain auditing.',
+    },
+    highlights: [
+      { pt: 'Persistência no Supabase com isolamento RLS estrito por escritório', en: 'Supabase persistence with strict per-office RLS isolation' },
+      { pt: 'Processamento e reconciliação automática de XMLs fiscais e SPED', en: 'Automated processing and reconciliation of fiscal XMLs and SPED' },
+      { pt: 'Domínio tipado com testes automatizados via Vitest', en: 'Typed domain models with automated test suite in Vitest' },
+    ],
+    stack: ['Next.js 15', 'TypeScript', 'Supabase', 'PostgreSQL', 'Tailwind CSS', 'Vitest'],
+    href: 'https://vortex-os-pi.vercel.app',
+    hrefLabel: { pt: 'Ver no ar', en: 'Live demo' },
+  },
+  {
+    id: 'colai',
+    org: { pt: 'Projeto próprio / Comunidade', en: 'Community SaaS' },
+    period: '2026',
+    kind: 'produto',
+    title: {
+      pt: 'COLAÍ — Sistema Dedicado para a Comunidade',
+      en: 'COLAÍ — Dedicated Community System',
+    },
+    summary: {
+      pt: 'Plataforma criada para conectar e fortalecer iniciativas comunitárias e pequenos negócios locais, com agendamentos, catálogo dinâmico de serviços e gestão simplificada.',
+      en: 'Platform built to connect and empower local community initiatives and small businesses with online booking, dynamic service catalogs, and streamlined management.',
+    },
+    highlights: [
+      { pt: 'Interface rápida e intuitiva focada em alta conversão e simplicidade', en: 'Fast, intuitive interface tailored for high conversion and ease of use' },
+    ],
+    stack: ['React', 'TypeScript', 'Node.js', 'Tailwind CSS'],
+    href: 'https://github.com/GabrielArantesSilva/COLA-',
+    hrefLabel: { pt: 'Código', en: 'Source' },
+  },
+  {
     id: 'origami',
     org: 'Origami Lab',
-    period: '2025 — hoje',
+    period: '2025 — 2026',
     kind: 'trabalho',
     title: {
       pt: 'Gestão de ordens de serviço para o setor ferroviário',
       en: 'Work-order management for the rail sector',
     },
     summary: {
-      pt: 'Ecossistema multi-repositório para acompanhamento de ordens de serviço e relatórios diários de obra em campo, com fluxo de revisão, assinatura e fiscalização. Sou o desenvolvedor de todos os repositórios: a API, o painel administrativo, o aplicativo de campo e o portal de acompanhamento.',
-      en: 'Multi-repository ecosystem for tracking work orders and daily field reports, with review, signature and inspection flows. I am the developer across every repository: the API, the admin panel, the field app and the tracking portal.',
+      pt: 'Ecossistema multi-repositório para acompanhamento de ordens de serviço e relatórios diários de obra em campo, com fluxo de revisão, assinatura digital e fiscalização. Desenvolvedor full stack responsável por todos os repositórios: a API, o painel administrativo, o aplicativo móvel de campo e o portal de acompanhamento.',
+      en: 'Multi-repository ecosystem for tracking work orders and daily field construction reports in the rail industry, featuring digital signature, review, and inspection workflows. Sole engineer responsible for all repositories: the backend API, admin dashboard, mobile field app (React Native/Expo), and tracking portal.',
     },
     highlights: [
-      { pt: 'Quatro aplicações em produção, uma base de domínio', en: 'Four applications in production, one domain core' },
-      { pt: 'Web e mobile nativo compartilhando o mesmo contrato', en: 'Web and native mobile sharing one contract' },
-      { pt: 'Fluxo de assinatura e fiscalização ponta a ponta', en: 'End-to-end signature and inspection flow' },
+      { pt: 'Quatro aplicações em produção, uma base de domínio compartilhada', en: 'Four applications in production sharing a unified domain core' },
+      { pt: 'Web e mobile nativo compartilhando o mesmo contrato de API', en: 'Web and native mobile sharing the same unified API contract' },
+      { pt: 'Fluxo de assinatura digital e fiscalização ponta a ponta', en: 'End-to-end digital signature and inspection workflows' },
     ],
     stack: ['Node', 'Express', 'Prisma', 'PostgreSQL', 'Next.js', 'React Native', 'Expo'],
   },
@@ -199,12 +241,12 @@ export const CONTACT = {
     en: 'If this way of working fits, the conversation is short.',
   } satisfies Txt,
   lede: {
-    pt: 'Arquitetura de back-end, domínios tipados, engenharia de produto.',
-    en: 'Backend architecture, typed domains, product engineering.',
+    pt: 'Engenharia de software full stack, arquitetura de back-end e domínios tipados.',
+    en: 'Full stack software engineering, backend architecture, and typed domains.',
   } satisfies Txt,
   available: {
-    pt: 'Disponível para arquitetura e back-end',
-    en: 'Available for architecture and backend work',
+    pt: 'Disponível para novos projetos e contratos',
+    en: 'Available for new projects and contracts',
   } satisfies Txt,
 } as const;
 

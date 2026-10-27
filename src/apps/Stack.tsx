@@ -41,7 +41,9 @@ export function Stack() {
 
   const groups = useMemo(() => {
     const entities = vault.notes.filter(
-      (n) => n.folder.startsWith('30_entities') && !NOT_A_TOOL.has(n.id)
+      (n) =>
+        (n.folder.includes('Entities') || n.folder.startsWith('30_entities')) &&
+        !NOT_A_TOOL.has(n.id)
     );
     return ORDER.map((key) => ({
       key,
