@@ -7,7 +7,7 @@ import type { Txt, WorkItem } from './types';
  * - Nada entra sem lastro verificável. Sem métrica de tempo de carreira.
  * - Projeto que não está pronto não aparece. A curadoria segue a matriz de
  *   decisão do próprio vault (50_projects/Analise-Projetos-Pessoais.md):
- *   o que está 🟡 ou 🔴 fica de fora.
+ *   o que está em rascunho ou cancelado fica de fora.
  * - Trabalho de empresa entra como experiência, nunca como código ou cliente.
  *   Nenhum nome de cliente aparece aqui, por decisão explícita.
  */

@@ -150,7 +150,7 @@ export function Desktop() {
 
   return (
     <div className="relative flex h-dvh w-screen overflow-hidden bg-canvas">
-      {/* Sidebar Fixa à Esquerda */}
+      {/* Sidebar Fixa à Esquerda no Desktop, Drawer no Mobile */}
       <Sidebar
         apps={LAYOUT}
         isOpen={(id) => tabs.includes(id)}
@@ -163,15 +163,15 @@ export function Desktop() {
         onToggleMobile={() => setMobileMenu((m) => !m)}
       />
 
-      {/* Workspace Principal (Lado direito no desktop, tela inteira no mobile) */}
-      <main className="relative flex-1 flex flex-col h-dvh overflow-hidden lg:pl-64">
+      {/* Workspace Principal */}
+      <main className="relative flex-1 flex flex-col h-dvh overflow-hidden lg:pl-60">
         {/* Fundo sutil de console de engenharia */}
         <Wallpaper />
 
         {/* Barra Superior de Abas (Tabs) - Desktop */}
-        <header className="relative z-20 hidden lg:flex h-12 shrink-0 items-center justify-between border-b border-hairline/80 bg-surface/80 px-4 backdrop-blur-xl">
+        <header className="relative z-20 hidden lg:flex h-10 shrink-0 items-center justify-between border-b border-hairline/70 bg-surface/85 px-4 backdrop-blur-xl">
           {/* Abas Abertas */}
-          <div className="flex items-center gap-1.5 overflow-x-auto [scrollbar-width:none]">
+          <div className="flex items-center gap-1 overflow-x-auto [scrollbar-width:none]">
             {tabs.map((tabId) => {
               const app = byId(tabId);
               if (!app) return null;
@@ -185,9 +185,9 @@ export function Desktop() {
                     setActiveTab(tabId);
                     navigate(tabId, true);
                   }}
-                  className={`group flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-medium cursor-pointer transition-colors duration-150 ${
+                  className={`group flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs font-medium cursor-pointer transition-colors duration-150 ${
                     isActive
-                      ? 'border border-hairline bg-ink-850 text-heading shadow-sm'
+                      ? 'border border-hairline bg-ink-850 text-heading shadow-xs'
                       : 'text-muted hover:bg-ink-850/50 hover:text-body'
                   }`}
                 >
@@ -197,10 +197,10 @@ export function Desktop() {
                     <button
                       type="button"
                       onClick={(e) => handleCloseTab(tabId, e)}
-                      className="ml-1 rounded p-0.5 opacity-60 hover:opacity-100 hover:bg-ink-700 transition-opacity"
+                      className="ml-0.5 rounded p-0.5 opacity-50 hover:opacity-100 hover:bg-ink-700 transition-opacity"
                       aria-label="Fechar aba"
                     >
-                      <X className="h-3 w-3" />
+                      <X className="h-2.5 w-2.5" />
                     </button>
                   )}
                 </div>
@@ -208,64 +208,48 @@ export function Desktop() {
             })}
           </div>
 
-          {/* Controles da Janela Ativa */}
+          {/* Atalho de Comando */}
           <div className="flex items-center gap-2">
-            <span className="font-mono text-[0.68rem] text-muted">
-              {currentApp ? t(currentApp.label) : ''}
-            </span>
-            <div className="h-3 w-px bg-hairline" />
             <button
               type="button"
               onClick={() => setPalette(true)}
-              className="flex items-center gap-1 rounded-md border border-hairline bg-ink-900/50 px-2 py-1 font-mono text-[0.65rem] text-muted hover:text-heading hover:border-ink-600 transition-colors"
+              className="flex items-center gap-1 rounded border border-hairline bg-ink-900/60 px-1.5 py-0.5 font-mono text-[0.62rem] text-muted hover:text-heading hover:border-ink-600 transition-colors"
             >
               ⌘K
             </button>
           </div>
         </header>
 
-        {/* Área de Conteúdo Centralizada e Confortável */}
-        <div className="relative z-10 flex-1 overflow-y-auto px-4 pb-20 pt-16 lg:pt-6 lg:pb-8">
+        {/* Área de Conteúdo Otimizada para Densidade e Mobile */}
+        <div className="relative z-10 flex-1 overflow-y-auto px-2.5 sm:px-4 lg:px-6 pt-14 lg:pt-3.5 pb-6">
           <div className="mx-auto max-w-4xl">
             <AnimatePresence mode="wait">
               <motion.section
                 key={activeTab}
-                initial={{ opacity: 0, y: 8 }}
+                initial={{ opacity: 0, y: 4 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -6 }}
-                transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
-                className="overflow-hidden rounded-2xl border border-hairline/80 bg-surface/90 p-6 sm:p-8 md:p-10 shadow-2xl backdrop-blur-xl"
+                exit={{ opacity: 0, y: -4 }}
+                transition={{ duration: 0.15, ease: [0.16, 1, 0.3, 1] }}
+                className="overflow-hidden rounded-xl border border-hairline/80 bg-surface/90 p-3.5 sm:p-5 md:p-6 shadow-xl backdrop-blur-xl"
               >
-                {/* Cabeçalho do Card */}
-                <div className="mb-6 flex items-center justify-between border-b border-hairline/60 pb-4">
-                  <div className="flex items-center gap-3">
-                    <span className="flex h-8 w-8 items-center justify-center rounded-lg border border-hairline bg-ink-850 text-accent">
-                      {TAB_ICONS[activeTab] ? (
-                        (() => {
-                          const IconComp = TAB_ICONS[activeTab];
-                          return <IconComp className="h-4 w-4" />;
-                        })()
-                      ) : (
-                        <User className="h-4 w-4" />
-                      )}
-                    </span>
-                    <div>
-                      <h1 className="text-base font-semibold text-heading">
-                        {currentApp ? t(currentApp.label) : ''}
-                      </h1>
-                      <p className="font-mono text-[0.68rem] text-muted">
-                        gabriel.os / {activeTab}
-                      </p>
-                    </div>
+                {/* Linha de Status / Caminho do Console (Substitui cabeçalho duplicado e economiza verticalidade) */}
+                <div className="mb-3.5 flex items-center justify-between border-b border-hairline/50 pb-2">
+                  <div className="flex items-center gap-2 font-mono text-[0.65rem] text-muted">
+                    <span className="h-1.5 w-1.5 rounded-full bg-ok" />
+                    <span>gabriel.os</span>
+                    <span className="text-ink-600">/</span>
+                    <span className="text-heading font-medium">{t(currentApp.label)}</span>
                   </div>
 
                   <div className="flex items-center gap-1.5">
-                    <span className="h-2 w-2 rounded-full bg-ok" title="Ativo" />
+                    <span className="font-mono text-[0.62rem] text-ink-500 hidden sm:inline">
+                      {tabs.length} {tabs.length === 1 ? 'aba' : 'abas'}
+                    </span>
                   </div>
                 </div>
 
                 {/* Conteúdo Renderizado do App Ativo */}
-                <div className="text-sm leading-relaxed text-body">
+                <div className="text-xs sm:text-sm leading-relaxed text-body">
                   {RENDERERS[activeTab]?.(ctx)}
                 </div>
               </motion.section>

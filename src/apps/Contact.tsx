@@ -1,3 +1,4 @@
+import { ArrowUpRight } from 'lucide-react';
 import { useLang } from '../i18n/lang';
 import { CONTACT, IDENTITY } from '../content/site';
 
@@ -11,35 +12,30 @@ export function Contact() {
   const { t } = useLang();
 
   return (
-    <div className="space-y-7">
-      <header>
-        <p className="inline-flex items-center gap-2 rounded-full border border-hairline px-3 py-1 text-[0.7rem] text-muted">
+    <div className="space-y-4">
+      <header className="border-b border-hairline/60 pb-3">
+        <div className="inline-flex items-center gap-1.5 rounded-md border border-hairline/70 bg-ink-900/50 px-2 py-0.5 font-mono text-[0.65rem] text-muted">
           <span className="h-1.5 w-1.5 rounded-full bg-ok" />
-          {t(CONTACT.available)}
-        </p>
-        <h1 className="mt-4 text-xl font-semibold leading-snug text-heading">
+          <span>{t(CONTACT.available)}</span>
+        </div>
+        <h1 className="mt-2 text-base font-semibold leading-snug text-heading">
           {t(CONTACT.headline)}
         </h1>
-        <p className="mt-2 text-sm text-muted">{t(CONTACT.lede)}</p>
+        <p className="mt-1 text-xs text-muted">{t(CONTACT.lede)}</p>
       </header>
 
-      <ul className="border-t border-hairline">
+      <ul className="divide-y divide-hairline/60 rounded-xl border border-hairline/70 bg-ink-900/30">
         {LINKS.map((link) => (
-          <li key={link.href} className="border-b border-hairline">
+          <li key={link.href}>
             <a
               href={link.href}
               {...(link.external ? { target: '_blank', rel: 'noreferrer noopener' } : {})}
-              className="group flex items-center gap-3 py-3.5"
+              className="group flex items-center justify-between px-3.5 py-2.5 transition-colors hover:bg-ink-850/60"
             >
-              <span className="numeric flex-1 truncate text-sm text-body transition-colors group-hover:text-accent">
+              <span className="font-mono text-xs text-body transition-colors group-hover:text-accent">
                 {link.label}
               </span>
-              <span
-                aria-hidden
-                className="text-muted transition-transform duration-300 group-hover:translate-x-1 group-hover:text-accent"
-              >
-                →
-              </span>
+              <ArrowUpRight className="h-3.5 w-3.5 text-muted transition-transform duration-150 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-accent" />
             </a>
           </li>
         ))}
