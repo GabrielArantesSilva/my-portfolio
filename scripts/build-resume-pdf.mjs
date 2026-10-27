@@ -52,10 +52,13 @@ const chrome = spawn(
   { stdio: 'ignore' }
 );
 
-const cleanup = () => {
+// O Chrome ainda grava no perfil enquanto fecha: espera sair antes de apagar.
+const cleanup = async () => {
+  const exited = new Promise((r) => chrome.once('exit', r));
   chrome.kill();
   preview.kill();
-  rmSync(profile, { recursive: true, force: true });
+  await Promise.race([exited, sleep(3000)]);
+  rmSync(profile, { recursive: true, force: true, maxRetries: 5, retryDelay: 200 });
 };
 
 try {
@@ -123,5 +126,5 @@ try {
   console.error(`✗ ${err.message}`);
   process.exitCode = 1;
 } finally {
-  cleanup();
+  await cleanup();
 }
