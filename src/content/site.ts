@@ -126,8 +126,6 @@ export const WORK: readonly WorkItem[] = [
       { pt: 'Domínio tipado com testes automatizados via Vitest', en: 'Typed domain models with automated test suite in Vitest' },
     ],
     stack: ['Next.js', 'TypeScript', 'Supabase', 'PostgreSQL', 'Tailwind CSS', 'Vitest'],
-    href: 'https://vortex-os-pi.vercel.app',
-    hrefLabel: { pt: 'Ver no ar', en: 'Live demo' },
   },
   {
     id: 'enemza',
