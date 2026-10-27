@@ -73,17 +73,110 @@ const publicNotes = allNotes
   .filter((n) => !IGNORED_DOMAINS.has(resolveDomain(n.folder)));
 const allowed = new Set(publicNotes.map((n) => n.id));
 
-const notes = publicNotes.map((n) => ({
-  id: String(n.id),
-  folder: String(n.folder ?? ''),
-  domain: resolveDomain(n.folder),
-  title: String(n.title ?? n.id),
-  tags: Array.isArray(n.tags) ? n.tags.slice(0, 8) : [],
-  excerpt: String(n.excerpt ?? '').slice(0, 260),
-  words: Number(n.words ?? 0),
-  in: Number(n.inDegree ?? 0),
-  out: Number(n.outDegree ?? 0),
-}));
+const vaultRoot = dirname(dirname(indexPath));
+
+/**
+ * Parte do vault foi salva como UTF-8 relido em Windows-1252 ("estÃ¡vel",
+ * "â€”"). Desfaz o round-trip; se o texto não for desse tipo, volta intacto.
+ */
+const CP1252 = new Map(
+  [...'€\u0081‚ƒ„…†‡ˆ‰Š‹Œ\u008DŽ\u008F\u0090‘’“”•–—˜™š›œ\u009DžŸ'].map((ch, i) => [ch, 0x80 + i])
+);
+const utf8 = new TextDecoder('utf-8', { fatal: true });
+
+const toByte = (ch) => (ch.codePointAt(0) < 0x100 ? ch.codePointAt(0) : CP1252.get(ch));
+
+/** Sequência UTF-8 completa (byte inicial + continuações) lida em 1252. */
+const CONT = '[\\u0080-\\u00BF€‚ƒ„…†‡ˆ‰Š‹ŒŽ‘’“”•–—˜™š›œžŸ]';
+const SUSPECT = new RegExp(
+  `[\\u00C2-\\u00DF]${CONT}|[\\u00E0-\\u00EF]${CONT}{2}|[\\u00F0-\\u00F4]${CONT}{3}`,
+  'g'
+);
+
+// Trecho a trecho: a mesma nota mistura texto corrompido com emoji e setas.
+// O decoder estrito recusa qualquer sequência que não fosse UTF-8 de verdade,
+// então "à" ou "é" legítimos nunca são tocados.
+function fixMojibake(text) {
+  return text.replace(SUSPECT, (seq) => {
+    try {
+      return utf8.decode(Uint8Array.from([...seq].map(toByte)));
+    } catch {
+      return seq;
+    }
+  });
+}
+
+/** Algumas notas têm dois blocos de frontmatter empilhados; remove todos. */
+function splitFrontmatter(source) {
+  let body = source.replace(/^﻿/, '');
+  const meta = [];
+  for (;;) {
+    const match = body.match(/^\s*---\r?\n([\s\S]*?)\r?\n---[^\S\r\n]*(\r?\n|$)/);
+    if (!match) break;
+    meta.push(match[1]);
+    body = body.slice(match[0].length).replace(/^﻿/, '');
+  }
+  return { meta: meta.join('\n'), body };
+}
+
+const cleanTag = (tag) => String(tag).replace(/^["'#\s]+|["'\s]+$/g, '').toLowerCase();
+
+function hashtagsFrom(meta) {
+  const line = meta.match(/^tags:\s*(.*)$/m)?.[1] ?? '';
+  return [...line.matchAll(/#([\p{L}\p{N}_/-]+)/gu)].map((m) => m[1]);
+}
+
+/** Primeiro parágrafo de prosa da nota, sem markdown e sem metadados. */
+function excerptFrom(body) {
+  const text = body
+    .replace(/```[\s\S]*?```/g, '')
+    .split(/\r?\n\s*\r?\n/)
+    .map((block) =>
+      block
+        .split(/\r?\n/)
+        .filter((l) => !/^\s*(#|>|\||[-*_]{3,}\s*$|!\[|<)/.test(l))
+        .join(' ')
+        .replace(/\[\[([^\]|]+)\|([^\]]+)\]\]/g, '$2')
+        .replace(/\[\[([^\]]+)\]\]/g, (_, link) => link.replace(/-/g, ' '))
+        .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+        .replace(/^\s*([-*+]|\d+\.)\s+/, '')
+        .replace(/[*_`]/g, '')
+        .replace(/\s+/g, ' ')
+        .trim()
+    )
+    .find((p) => p.length >= 40 && !/^[\w-]+:\s/.test(p));
+  if (!text) return '';
+  if (text.length <= 260) return text;
+  return `${text.slice(0, 259).replace(/\s+\S*$/, '')}…`;
+}
+
+function readNote(path) {
+  try {
+    return splitFrontmatter(fixMojibake(readFileSync(join(vaultRoot, path), 'utf8')));
+  } catch {
+    return null;
+  }
+}
+
+const notes = publicNotes.map((n) => {
+  const file = readNote(String(n.path));
+  const indexTags = Array.isArray(n.tags) ? n.tags : [];
+  const tags = [...new Set([...indexTags, ...hashtagsFrom(file?.meta ?? '')].map(cleanTag))]
+    .filter(Boolean)
+    .slice(0, 8);
+  const fallback = fixMojibake(String(n.excerpt ?? ''));
+  return {
+    id: String(n.id),
+    folder: String(n.folder ?? ''),
+    domain: resolveDomain(n.folder),
+    title: fixMojibake(String(n.title ?? n.id)),
+    tags,
+    excerpt: (file && excerptFrom(file.body)) || (/^[\w-]+:\s/.test(fallback) ? '' : fallback.slice(0, 260)),
+    words: Number(n.words ?? 0),
+    in: Number(n.inDegree ?? 0),
+    out: Number(n.outDegree ?? 0),
+  };
+});
 
 // Aresta só sobrevive se as duas pontas forem públicas.
 const rawEdges = raw.edges ?? [];

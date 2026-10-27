@@ -88,8 +88,8 @@ export const ABOUT = {
     en: 'I came into tech out of curiosity and through family. Four years of studying before it became a job, and curiosity is still what makes me open the editor.',
   } satisfies Txt,
   now: {
-    pt: 'Atuei como desenvolvedor full stack na Origami Lab, onde fui o responsável técnico por todo o ecossistema ferroviário de ordens de serviço (API Node/Express/Prisma, painel administrativo Next.js, app móvel de campo com React Native/Expo e portal). Recentemente encerrei meu ciclo na empresa para me dedicar a produtos próprios, como o VORTEX OS e o Enemza, além de estar aberto a novos projetos e contratos de engenharia de software.',
-    en: 'I previously worked as a full stack developer at Origami Lab, where I led technical development across the rail work-order ecosystem (Node/Express/Prisma API, Next.js admin dashboard, React Native/Expo mobile field app, and tracking portal). I recently completed my tenure there to focus on building my own products, like VORTEX OS and Enemza, and I am available for new software engineering contracts and full-time roles.',
+    pt: 'Atuei como desenvolvedor full stack na Origami Lab, desenvolvendo um sistema de ordens de serviço para o setor ferroviário (API Node/Express/Prisma, painel administrativo Next.js, app móvel de campo com React Native/Expo e portal). Recentemente encerrei meu ciclo na empresa para me dedicar a produtos próprios, como o VORTEX OS e o Enemza, além de estar aberto a novos projetos e contratos de engenharia de software.',
+    en: 'I previously worked as a full stack developer at Origami Lab, building a work-order management system for the rail sector (Node/Express/Prisma API, Next.js admin dashboard, React Native/Expo mobile field app, and tracking portal). I recently completed my tenure there to focus on building my own products, like VORTEX OS and Enemza, and I am available for new software engineering contracts and full-time roles.',
   } satisfies Txt,
   method: {
     pt: 'Trabalho a partir de um sistema, não de memória: a decisão é escrita antes do código, o domínio é tipado em vez de comentado, e quando teoria e código divergem, o código vence.',
@@ -170,8 +170,8 @@ export const WORK: readonly WorkItem[] = [
       en: 'Work-order management for the rail sector',
     },
     summary: {
-      pt: 'Ecossistema multi-repositório para acompanhamento de ordens de serviço e relatórios diários de obra em campo, com fluxo de revisão, assinatura digital e fiscalização. Desenvolvedor full stack responsável por todos os repositórios: a API, o painel administrativo, o aplicativo móvel de campo e o portal de acompanhamento.',
-      en: 'Multi-repository ecosystem for tracking work orders and daily field construction reports in the rail industry, featuring digital signature, review, and inspection workflows. Full stack developer responsible for all repositories: the backend API, admin dashboard, mobile field app (React Native/Expo), and tracking portal.',
+      pt: 'Sistema para acompanhamento de ordens de serviço e relatórios diários de obra em campo, com fluxo de revisão, assinatura digital e fiscalização. Atuei como desenvolvedor full stack na API, no painel administrativo, no aplicativo móvel de campo e no portal de acompanhamento.',
+      en: 'System for tracking work orders and daily field construction reports in the rail industry, featuring digital signature, review, and inspection workflows. Worked as a full stack developer on the backend API, admin dashboard, mobile field app (React Native/Expo), and tracking portal.',
     },
     highlights: [
       { pt: 'Quatro aplicações em produção, uma base de domínio compartilhada', en: 'Four applications in production sharing a unified domain core' },
@@ -289,6 +289,7 @@ export const UI = {
   origin: { pt: 'Origem', en: 'Origin' } satisfies Txt,
   today: { pt: 'Hoje', en: 'Today' } satisfies Txt,
   howIWork: { pt: 'Como trabalho', en: 'How I work' } satisfies Txt,
+  workTitle: { pt: 'Trabalho e projetos', en: 'Work and projects' } satisfies Txt,
   stack: { pt: 'Stack', en: 'Stack' } satisfies Txt,
   close: { pt: 'Fechar', en: 'Close' } satisfies Txt,
   minimize: { pt: 'Minimizar', en: 'Minimize' } satisfies Txt,

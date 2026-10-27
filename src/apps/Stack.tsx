@@ -8,6 +8,8 @@ const NOT_A_TOOL = new Set([
   'Emil-Skills',
   'fallow',
   'Signia',
+  'Prisma-vs-Drizzle',
+  'Prisma-Transactions',
 ]);
 
 const SHIPPED = new Set(
@@ -23,7 +25,13 @@ const GROUP_LABEL: Readonly<Record<string, { pt: string; en: string }>> = {
 };
 
 const ORDER = ['frameworks', 'databases', 'tools'];
-const pretty = (id: string) => id.replace(/-/g, ' ').replace(/\bjs\b/i, '.js');
+/** Nomes cujo id de arquivo não vira o nome oficial só trocando hífen. */
+const OFFICIAL_NAME: Readonly<Record<string, string>> = {
+  'ts-rest': 'ts-rest',
+  'fast-check': 'fast-check',
+};
+const pretty = (id: string) =>
+  OFFICIAL_NAME[id.toLowerCase()] ?? id.replace(/-js\b/gi, '.js').replace(/-/g, ' ');
 
 export function Stack() {
   const { t } = useLang();

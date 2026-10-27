@@ -16,6 +16,7 @@ export function Work() {
 
   return (
     <div className="space-y-2">
+      <h1 className="sr-only">{t(UI.workTitle)}</h1>
       {WORK.map((item) => {
         const expanded = open === item.id;
 
@@ -42,9 +43,9 @@ export function Work() {
                     </span>
                     <span className="font-mono text-[0.65rem] text-muted">/ {item.period}</span>
                   </div>
-                  <h3 className="mt-1 truncate text-xs sm:text-sm font-semibold text-heading">
+                  <span className="mt-1 block text-xs sm:truncate sm:text-sm font-semibold text-heading">
                     {t(item.title)}
-                  </h3>
+                  </span>
                 </div>
 
                 <div className="flex shrink-0 items-center gap-2">
