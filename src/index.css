@@ -171,15 +171,17 @@
   html,
   body {
     background: #ffffff !important;
-    color: #111111 !important;
+    color: #0f172a !important;
     height: auto !important;
     min-height: auto !important;
     overflow: visible !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
 
-  /* Oculta tudo que é interface de SO */
+  /* Oculta tudo que é interface de SO (exceto o cabeçalho do próprio currículo) */
   aside,
-  header,
+  header:not([data-resume-header]),
   nav,
   canvas,
   button,
@@ -214,33 +216,77 @@
     margin: 0 !important;
     padding: 0 !important;
     background: #ffffff !important;
-    color: #111111 !important;
+    color: #0f172a !important;
     border: none !important;
     box-shadow: none !important;
+    font-size: 9.5pt;
+    line-height: 1.45;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
 
-  [data-print] * {
-    color: #111111 !important;
-    background-color: transparent !important;
-    border-color: #e5e5e5 !important;
-    box-shadow: none !important;
+  [data-print] header {
+    display: flex !important;
   }
 
-  [data-print] h1,
-  [data-print] h2,
-  [data-print] h3 {
+  [data-print] h1 {
     color: #000000 !important;
+    font-size: 16pt !important;
     font-weight: 700 !important;
+    page-break-after: avoid;
+    break-after: avoid;
+  }
+
+  [data-print] h2 {
+    color: #0f172a !important;
+    font-size: 10pt !important;
+    font-weight: 700 !important;
+    border-bottom: 1px solid #cbd5e1 !important;
+    padding-bottom: 2pt !important;
+    margin-top: 10pt !important;
+    margin-bottom: 5pt !important;
+    page-break-after: avoid;
+    break-after: avoid;
+  }
+
+  [data-print] h3 {
+    color: #0f172a !important;
+    font-size: 9.5pt !important;
+    font-weight: 600 !important;
+    page-break-after: avoid;
+    break-after: avoid;
   }
 
   [data-print] p,
-  [data-print] span,
-  [data-print] li {
-    color: #222222 !important;
+  [data-print] li,
+  [data-print] span {
+    color: #334155 !important;
   }
 
   [data-print] a {
-    color: #0066cc !important;
-    text-decoration: underline !important;
+    color: #0284c7 !important;
+    text-decoration: none !important;
+  }
+
+  .print-break-avoid {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  .print-badge {
+    background-color: #f1f5f9 !important;
+    border: 1px solid #e2e8f0 !important;
+    color: #334155 !important;
+    padding: 1px 5px !important;
+    border-radius: 3px !important;
+    font-size: 7.5pt !important;
+    display: inline-block !important;
+  }
+
+  .print-card {
+    background-color: #f8fafc !important;
+    border: 1px solid #e2e8f0 !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
   }
 }

@@ -22,6 +22,8 @@ export const IDENTITY = {
   githubLabel: 'github.com/GabrielArantesSilva',
   linkedin: 'https://www.linkedin.com/in/gabriel-arantes-silva/',
   linkedinLabel: 'linkedin.com/in/gabriel-arantes-silva',
+  whatsapp: 'https://wa.me/5537999950605',
+  whatsappLabel: '+55 (37) 99995-0605',
   location: { pt: 'Formiga, MG', en: 'Formiga, Brazil' } satisfies Txt,
   role: {
     pt: 'Engenheiro de software full stack',
@@ -338,8 +340,10 @@ export const UI = {
     pt: 'arraste o fundo para navegar',
     en: 'drag the background to navigate',
   } satisfies Txt,
-  summary: { pt: 'Resumo', en: 'Summary' } satisfies Txt,
-  experience: { pt: 'Experiência', en: 'Experience' } satisfies Txt,
+  summary: { pt: 'Resumo Profissional', en: 'Professional Summary' } satisfies Txt,
+  skillsTitle: { pt: 'Competências Técnicas & Stack', en: 'Technical Skills & Stack' } satisfies Txt,
+  experience: { pt: 'Experiência & Principais Sistemas', en: 'Experience & Key Systems' } satisfies Txt,
+  educationTitle: { pt: 'Fundamentos, Formação & Método', en: 'Foundations & Methodology' } satisfies Txt,
   downloadPdf: { pt: 'Baixar PDF', en: 'Download PDF' } satisfies Txt,
   resumeHint: {
     pt: 'Gerado do mesmo conteúdo do site — nunca desatualiza',
