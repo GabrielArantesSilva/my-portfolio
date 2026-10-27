@@ -36,7 +36,7 @@ export function Boot({ onDone }: { onDone: () => void }) {
 
   return (
     <motion.div
-      className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-canvas px-4 sm:px-6"
+      className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-canvas px-4 sm:px-6 print:hidden"
       exit={{ opacity: 0 }}
       transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
     >

@@ -107,8 +107,7 @@
   }
   ::-webkit-scrollbar-thumb:hover { background: var(--color-ink-700); }
 
-  /* O site abusa de movimento por decisão de produto. Quem pediu
-     para não ver, não vê — o conteúdo continua legível. */
+  /* Preferência de movimento reduzido */
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
       animation-duration: 0.01ms !important;
@@ -119,11 +118,7 @@
   }
 }
 
-/* ── Utilities ──────────────────────────────────────────────────
-   Em v4 utilitário custom é @utility, não @layer components com
-   @apply encadeado — foi exatamente o que quebrava o build.
-   ──────────────────────────────────────────────────────────── */
-
+/* ── Utilities ────────────────────────────────────────────────── */
 @utility glass {
   background-color: color-mix(in oklch, var(--color-surface) 62%, transparent);
   backdrop-filter: blur(20px) saturate(140%);
@@ -163,49 +158,89 @@
   font-variant-numeric: tabular-nums;
 }
 
-/* ── Impressão ──────────────────────────────────────────────────
-   O PDF do currículo sai daqui. Some com o OS inteiro e promove o
-   [data-print] a documento A4 — sem biblioteca de PDF no bundle.
+/* ── Impressão e Download de PDF ────────────────────────────────
+   Gera um documento A4 profissional e limpo direto via window.print().
+   Remove a interface de sistema operacional e garante fluxo livre de páginas.
    ──────────────────────────────────────────────────────────── */
 @media print {
   @page {
     size: A4;
-    margin: 16mm 14mm;
+    margin: 12mm 14mm;
   }
 
   html,
   body {
-    background: #fff !important;
-    color: #111 !important;
+    background: #ffffff !important;
+    color: #111111 !important;
+    height: auto !important;
+    min-height: auto !important;
+    overflow: visible !important;
   }
 
-  /* visibility herda: os ancestrais somem, a subárvore do documento reaparece.
-     Funciona com a janela aninhada fundo no desktop, onde display:none nos
-     irmãos não funcionaria. */
-  body * {
-    visibility: hidden !important;
+  /* Oculta tudo que é interface de SO */
+  aside,
+  header,
+  nav,
+  canvas,
+  button,
+  .print\:hidden {
+    display: none !important;
+  }
+
+  /* Libera containers de altura fixa/overflow e transforms para fluxo natural de páginas */
+  #root,
+  #root > div,
+  main,
+  main > div,
+  section {
+    position: static !important;
+    display: block !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
+    transform: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    background: transparent !important;
     box-shadow: none !important;
   }
 
-  [data-print],
-  [data-print] * {
-    visibility: visible !important;
-    color: #111 !important;
-    background: transparent !important;
-    border-color: #d4d4d4 !important;
-  }
-
   [data-print] {
-    position: absolute !important;
-    inset: 0 auto auto 0;
-    width: 100%;
-    max-height: none !important;
-    overflow: visible !important;
+    display: block !important;
+    position: static !important;
+    width: 100% !important;
+    margin: 0 !important;
     padding: 0 !important;
-    border: 0 !important;
+    background: #ffffff !important;
+    color: #111111 !important;
+    border: none !important;
+    box-shadow: none !important;
   }
 
-  canvas {
-    display: none !important;
+  [data-print] * {
+    color: #111111 !important;
+    background-color: transparent !important;
+    border-color: #e5e5e5 !important;
+    box-shadow: none !important;
+  }
+
+  [data-print] h1,
+  [data-print] h2,
+  [data-print] h3 {
+    color: #000000 !important;
+    font-weight: 700 !important;
+  }
+
+  [data-print] p,
+  [data-print] span,
+  [data-print] li {
+    color: #222222 !important;
+  }
+
+  [data-print] a {
+    color: #0066cc !important;
+    text-decoration: underline !important;
   }
 }

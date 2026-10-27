@@ -57,9 +57,14 @@ export function Desktop() {
   const { t } = useLang();
   const { route, navigate } = useRoute(APP_IDS, 'sobre');
 
-  // Abas abertas no workspace (inicia com Sobre e Trabalho)
-  const [tabs, setTabs] = useState<string[]>(['sobre', 'trabalho']);
-  const [activeTab, setActiveTab] = useState<string>('sobre');
+  // Abas abertas no workspace (inicia com Sobre e Trabalho, mais a rota ativa se houver)
+  const [tabs, setTabs] = useState<string[]>(() => {
+    const base = ['sobre', 'trabalho'];
+    return route && APP_IDS.includes(route) && !base.includes(route) ? [...base, route] : base;
+  });
+  const [activeTab, setActiveTab] = useState<string>(() => {
+    return route && APP_IDS.includes(route) ? route : 'sobre';
+  });
 
   const [clock, setClock] = useState(() => new Date());
   const [palette, setPalette] = useState(false);
@@ -232,8 +237,8 @@ export function Desktop() {
                 transition={{ duration: 0.15, ease: [0.16, 1, 0.3, 1] }}
                 className="overflow-hidden rounded-xl border border-hairline/80 bg-surface/90 p-3.5 sm:p-5 md:p-6 shadow-xl backdrop-blur-xl"
               >
-                {/* Linha de Status / Caminho do Console (Substitui cabeçalho duplicado e economiza verticalidade) */}
-                <div className="mb-3.5 flex items-center justify-between border-b border-hairline/50 pb-2">
+                {/* Linha de Status / Caminho do Console (Oculto na impressão) */}
+                <div className="mb-3.5 flex items-center justify-between border-b border-hairline/50 pb-2 print:hidden">
                   <div className="flex items-center gap-2 font-mono text-[0.65rem] text-muted">
                     <span className="h-1.5 w-1.5 rounded-full bg-ok" />
                     <span>gabriel.os</span>
