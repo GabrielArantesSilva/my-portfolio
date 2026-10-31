@@ -1,4 +1,4 @@
-import { act, render, screen, within } from '@testing-library/react';
+import { act, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
 import { LangProvider } from '../i18n/LangProvider';
@@ -40,8 +40,10 @@ describe('Desktop: rotas e abas', () => {
   it('link direto abre o app da URL, carregado sob demanda', async () => {
     const { container } = open('/curriculo');
     expect(activeTab()).toBe('currículo');
-    await screen.findByText((_, el) => el?.hasAttribute('data-resume-header') ?? false);
-    expect(container.querySelector('[data-resume-header]')).not.toBeNull();
+    // O chunk lazy é compilado na primeira importação: o 1s padrão do waitFor às vezes não basta.
+    await waitFor(() => expect(container.querySelector('[data-resume-header]')).not.toBeNull(), {
+      timeout: 5_000,
+    });
   });
 
   it('trocar de aba entra no histórico e o voltar restaura o app anterior', async () => {
