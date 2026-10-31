@@ -44,7 +44,7 @@ export function Boot({ onDone }: { onDone: () => void }) {
         <div className="mb-4 flex items-center justify-between border-b border-hairline/60 pb-3">
           <div className="flex items-center gap-2.5">
             <img
-              src={IDENTITY.avatar}
+              src={IDENTITY.avatarSmall}
               alt={IDENTITY.name}
               className="h-7 w-7 rounded-lg object-cover border border-hairline/80 shadow-xs"
             />

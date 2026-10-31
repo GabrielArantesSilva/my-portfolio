@@ -1,4 +1,5 @@
 import profilePhoto from '../assets/perfil.webp';
+import profilePhotoSmall from '../assets/perfil-sm.webp';
 import type { Txt, WorkItem } from './types';
 
 /**
@@ -26,6 +27,8 @@ export const IDENTITY = {
   whatsapp: 'https://wa.me/5537999950605',
   whatsappLabel: '+55 (37) 99995-0605',
   avatar: profilePhoto,
+  /** 112px: para os avatares de até ~36px (sidebar, boot), sem baixar o de 256. */
+  avatarSmall: profilePhotoSmall,
   location: { pt: 'Formiga, MG', en: 'Formiga, Brazil' } satisfies Txt,
   role: {
     pt: 'Engenheiro de software full stack',
@@ -299,9 +302,12 @@ export const UI = {
   cleanScreen: { pt: 'Tela limpa', en: 'Clean screen' } satisfies Txt,
   backTo: { pt: 'voltar para', en: 'back to' } satisfies Txt,
   closeTab: { pt: 'Fechar aba', en: 'Close tab' } satisfies Txt,
+  openTabs: { pt: 'Abas abertas', en: 'Open tabs' } satisfies Txt,
   tab: { pt: 'aba', en: 'tab' } satisfies Txt,
   tabs: { pt: 'abas', en: 'tabs' } satisfies Txt,
   loading: { pt: 'Carregando…', en: 'Loading…' } satisfies Txt,
+  openMenu: { pt: 'abrir menu', en: 'open menu' } satisfies Txt,
+  closeMenu: { pt: 'fechar menu', en: 'close menu' } satisfies Txt,
   requestEmpty: {
     pt: 'Escreve a mensagem antes de enviar.',
     en: 'Write the message before sending.',

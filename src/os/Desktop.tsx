@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion';
-import { Suspense, lazy, useCallback, useEffect, useRef, useState } from 'react';
+import { Suspense, lazy, useCallback, useEffect, useState } from 'react';
 import type { ReactNode } from 'react';
 import {
   Activity,
@@ -105,13 +105,13 @@ export function Desktop() {
     return () => clearInterval(timer);
   }, []);
 
-  // Seleciona ou abre um app
+  // Seleciona ou abre um app. Entra no histórico: o voltar do navegador volta de app.
   const handleSelectApp = useCallback(
     (id: string) => {
       setTabs((prev) => (prev.includes(id) ? prev : [...prev, id]));
       setActiveTab(id);
       setMinimized(false);
-      navigate(id, true);
+      navigate(id);
     },
     [navigate]
   );
@@ -133,14 +133,12 @@ export function Desktop() {
     [tabs, activeTab, navigate]
   );
 
-  // Atende a rota inicial
-  const handledInitial = useRef(false);
+  // A URL manda: voltar/avançar do navegador (popstate) troca o app em foco.
   useEffect(() => {
-    if (!handledInitial.current && route) {
-      handledInitial.current = true;
-      handleSelectApp(route);
-    }
-  }, [route, handleSelectApp]);
+    const id = route ?? 'sobre';
+    setTabs((prev) => (prev.includes(id) ? prev : [...prev, id]));
+    setActiveTab(id);
+  }, [route]);
 
   // Atalhos de teclado
   useEffect(() => {
@@ -209,7 +207,10 @@ export function Desktop() {
         {/* Barra Superior de Abas (Tabs) - Desktop */}
         <header className="relative z-20 hidden lg:flex h-10 shrink-0 items-center justify-between border-b border-hairline/70 bg-surface/85 px-4 backdrop-blur-xl">
           {/* Abas Abertas */}
-          <div className="flex items-center gap-1 overflow-x-auto [scrollbar-width:none]">
+          <nav
+            aria-label={t(UI.openTabs)}
+            className="flex items-center gap-1 overflow-x-auto [scrollbar-width:none]"
+          >
             {tabs.map((tabId) => {
               const app = byId(tabId);
               if (!app) return null;
@@ -230,7 +231,7 @@ export function Desktop() {
                     aria-current={isActive ? 'page' : undefined}
                     onClick={() => {
                       setActiveTab(tabId);
-                      navigate(tabId, true);
+                      navigate(tabId);
                     }}
                     className={`flex items-center gap-1.5 rounded-md py-1 pl-2.5 ${tabs.length > 1 ? 'pr-1' : 'pr-2.5'}`}
                   >
@@ -250,7 +251,7 @@ export function Desktop() {
                 </div>
               );
             })}
-          </div>
+          </nav>
 
           {/* Atalho de Comando */}
           <div className="flex items-center gap-2">

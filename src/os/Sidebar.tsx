@@ -74,13 +74,14 @@ export function Sidebar({
         <button
           type="button"
           onClick={onToggleMobile}
-          aria-label="Abrir Menu de Aplicativos"
+          aria-label={`${IDENTITY.handle}.os: ${t(mobileOpen ? UI.closeMenu : UI.openMenu)}`}
+          aria-expanded={mobileOpen}
           className="group flex items-center gap-2.5 rounded-full border border-hairline/80 bg-surface/90 px-3 py-1.5 shadow-2xl backdrop-blur-xl transition-all active:scale-95 hover:border-accent hover:shadow-accent/15"
         >
           <div className="relative">
             <img
-              src={IDENTITY.avatar}
-              alt={IDENTITY.name}
+              src={IDENTITY.avatarSmall}
+              alt=""
               className="h-7 w-7 rounded-full object-cover border border-hairline/80"
             />
             <span className="absolute -bottom-0.5 -right-0.5 h-2 w-2 rounded-full border border-surface bg-ok" />
@@ -121,7 +122,7 @@ export function Sidebar({
             <div className={`flex items-center gap-2.5 min-w-0 ${collapsed ? 'flex-col' : ''}`}>
               <div className="relative shrink-0">
                 <img
-                  src={IDENTITY.avatar}
+                  src={IDENTITY.avatarSmall}
                   alt={IDENTITY.name}
                   className={`rounded-lg object-cover border border-hairline/80 shadow-sm ${
                     collapsed ? 'h-8 w-8' : 'h-9 w-9'

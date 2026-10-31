@@ -1,32 +1,27 @@
-# React + TypeScript + Vite
+# gabriel.os — portfólio de Gabriel Arantes
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+No ar em https://gabrielarantes.vercel.app. Produto e decisões em `PRD.md` e `SPEC.md`.
 
-Currently, two official plugins are available:
+React 19 + Vite + Tailwind 4 + framer-motion. Sem router: `src/os/useRoute.ts`
+sincroniza o app em foco com a URL (cada app tem rota própria e entra no histórico).
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Comandos
 
-## React Compiler
+| Comando | O que faz |
+| --- | --- |
+| `npm run dev` | Servidor local |
+| `npm test` | Testes (Vitest + Testing Library) |
+| `npm run typecheck` / `npm run lint` | TypeScript e oxlint |
+| `npm run sync` | Regenera `vault.json` e `activity.json` a partir do vault e dos repos locais |
+| `npm run check:content` | Falha se esses JSONs têm mais de 14 dias |
+| `npm run resume:pdf` | Gera os PDFs do currículo a partir de `/curriculo` |
+| `npm run deploy` | Check de conteúdo, typecheck, lint, testes e `vercel --prod` |
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Deploy
 
-## Expanding the Oxlint configuration
+**Push no GitHub não publica.** O projeto Vercel não está ligado ao repositório;
+publicar é `npm run deploy` (ou `vercel --prod`) daqui. Rollback: `vercel rollback`.
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
-```
-
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+O conteúdo do vault e da atividade só existe nesta máquina, então rode
+`npm run sync` antes de publicar. O `deploy` barra se estiver velho
+(`ALLOW_STALE=1` publica mesmo assim).
