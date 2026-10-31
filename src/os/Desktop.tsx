@@ -202,7 +202,7 @@ export function Desktop() {
         }`}
       >
         {/* Fundo sutil de console de engenharia */}
-        <Wallpaper />
+        <Wallpaper shapes={minimized} />
 
         {/* Barra Superior de Abas (Tabs) - Desktop */}
         <header className="relative z-20 hidden lg:flex h-10 shrink-0 items-center justify-between border-b border-hairline/70 bg-surface/85 px-4 backdrop-blur-xl">
