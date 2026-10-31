@@ -1,4 +1,4 @@
-import profilePhoto from '../assets/perfil.jpg';
+import profilePhoto from '../assets/perfil.webp';
 import type { Txt, WorkItem } from './types';
 
 /**
@@ -298,6 +298,10 @@ export const UI = {
   workTitle: { pt: 'Trabalho e projetos', en: 'Work and projects' } satisfies Txt,
   cleanScreen: { pt: 'Tela limpa', en: 'Clean screen' } satisfies Txt,
   backTo: { pt: 'voltar para', en: 'back to' } satisfies Txt,
+  closeTab: { pt: 'Fechar aba', en: 'Close tab' } satisfies Txt,
+  tab: { pt: 'aba', en: 'tab' } satisfies Txt,
+  tabs: { pt: 'abas', en: 'tabs' } satisfies Txt,
+  loading: { pt: 'Carregando…', en: 'Loading…' } satisfies Txt,
   requestEmpty: {
     pt: 'Escreve a mensagem antes de enviar.',
     en: 'Write the message before sending.',

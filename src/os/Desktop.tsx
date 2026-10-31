@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { Suspense, lazy, useCallback, useEffect, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 import {
   Activity,
@@ -19,15 +19,20 @@ import { useRoute } from './useRoute';
 import { APP_IDS, LAYOUT, byId } from './layout';
 import { Sidebar } from './Sidebar';
 import { Wallpaper } from './Wallpaper';
-import { CommandPalette } from './CommandPalette';
 import { About } from '../apps/About';
 import { Work } from '../apps/Work';
-import { Brain as BrainApp } from '../apps/Brain';
-import { Contact } from '../apps/Contact';
-import { Resume } from '../apps/Resume';
-import { Now } from '../apps/Now';
-import { Stack } from '../apps/Stack';
-import { Requests } from '../apps/Requests';
+
+// Sobre e Trabalho abrem de saída e ficam no bundle inicial. O resto (inclusive
+// o vault.json, usado por Cérebro, Stack e pela paleta) só baixa quando abre.
+const BrainApp = lazy(() => import('../apps/Brain').then((m) => ({ default: m.Brain })));
+const Contact = lazy(() => import('../apps/Contact').then((m) => ({ default: m.Contact })));
+const Resume = lazy(() => import('../apps/Resume').then((m) => ({ default: m.Resume })));
+const Now = lazy(() => import('../apps/Now').then((m) => ({ default: m.Now })));
+const Stack = lazy(() => import('../apps/Stack').then((m) => ({ default: m.Stack })));
+const Requests = lazy(() => import('../apps/Requests').then((m) => ({ default: m.Requests })));
+const CommandPalette = lazy(() =>
+  import('./CommandPalette').then((m) => ({ default: m.CommandPalette }))
+);
 
 const KEY = { palette: 'k', escape: 'Escape' } as const;
 
@@ -70,6 +75,9 @@ export function Desktop() {
 
   const [clock, setClock] = useState(() => new Date());
   const [palette, setPalette] = useState(false);
+  // A paleta só é baixada na primeira abertura e depois fica montada (anima a saída).
+  const [paletteLoaded, setPaletteLoaded] = useState(false);
+  if (palette && !paletteLoaded) setPaletteLoaded(true);
   const [mobileMenu, setMobileMenu] = useState(false);
   const [note, setNote] = useState<string | null>(null);
   // Tela limpa: esconde o painel e deixa só o wallpaper interativo
@@ -108,27 +116,21 @@ export function Desktop() {
     [navigate]
   );
 
-  // Fecha uma aba
+  // Fecha uma aba. Efeitos ficam fora do updater: em StrictMode ele roda duas vezes.
   const handleCloseTab = useCallback(
     (id: string, e?: React.MouseEvent) => {
       e?.stopPropagation();
-      setTabs((prev) => {
-        const next = prev.filter((tId) => tId !== id);
-        if (next.length === 0) return ['sobre'];
-        return next;
-      });
+      const remaining = tabs.filter((tId) => tId !== id);
+      const next = remaining.length > 0 ? remaining : ['sobre'];
+      setTabs(next);
 
       if (activeTab === id) {
-        setTabs((prev) => {
-          const remaining = prev.filter((tId) => tId !== id);
-          const nextActive = remaining[remaining.length - 1] ?? 'sobre';
-          setActiveTab(nextActive);
-          navigate(nextActive, true);
-          return remaining.length > 0 ? remaining : ['sobre'];
-        });
+        const nextActive = next[next.length - 1];
+        setActiveTab(nextActive);
+        navigate(nextActive, true);
       }
     },
-    [activeTab, navigate]
+    [tabs, activeTab, navigate]
   );
 
   // Atende a rota inicial
@@ -217,24 +219,30 @@ export function Desktop() {
               return (
                 <div
                   key={tabId}
-                  onClick={() => {
-                    setActiveTab(tabId);
-                    navigate(tabId, true);
-                  }}
-                  className={`group flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs font-medium cursor-pointer transition-colors duration-150 ${
+                  className={`group flex items-center rounded-md text-xs font-medium transition-colors duration-150 ${
                     isActive
                       ? 'border border-hairline bg-ink-850 text-heading shadow-xs'
                       : 'text-muted hover:bg-ink-850/50 hover:text-body'
                   }`}
                 >
-                  <Icon className={`h-3.5 w-3.5 ${isActive ? 'text-accent' : 'text-muted'}`} />
-                  <span>{t(app.label)}</span>
+                  <button
+                    type="button"
+                    aria-current={isActive ? 'page' : undefined}
+                    onClick={() => {
+                      setActiveTab(tabId);
+                      navigate(tabId, true);
+                    }}
+                    className={`flex items-center gap-1.5 rounded-md py-1 pl-2.5 ${tabs.length > 1 ? 'pr-1' : 'pr-2.5'}`}
+                  >
+                    <Icon className={`h-3.5 w-3.5 ${isActive ? 'text-accent' : 'text-muted'}`} />
+                    <span>{t(app.label)}</span>
+                  </button>
                   {tabs.length > 1 && (
                     <button
                       type="button"
                       onClick={(e) => handleCloseTab(tabId, e)}
-                      className="ml-0.5 rounded p-0.5 opacity-50 hover:opacity-100 hover:bg-ink-700 transition-opacity"
-                      aria-label="Fechar aba"
+                      className="mr-1.5 rounded p-0.5 opacity-50 hover:opacity-100 focus-visible:opacity-100 hover:bg-ink-700 transition-opacity"
+                      aria-label={`${t(UI.closeTab)}: ${t(app.label)}`}
                     >
                       <X className="h-2.5 w-2.5" />
                     </button>
@@ -280,7 +288,7 @@ export function Desktop() {
 
                   <div className="flex items-center gap-1.5">
                     <span className="font-mono text-[0.62rem] text-ink-500 hidden sm:inline">
-                      {tabs.length} {tabs.length === 1 ? 'aba' : 'abas'}
+                      {tabs.length} {t(tabs.length === 1 ? UI.tab : UI.tabs)}
                     </span>
                     <button
                       type="button"
@@ -296,7 +304,15 @@ export function Desktop() {
 
                 {/* Conteúdo Renderizado do App Ativo */}
                 <div className="text-xs sm:text-sm leading-relaxed text-body">
-                  {RENDERERS[activeTab]?.(ctx)}
+                  <Suspense
+                    fallback={
+                      <p role="status" className="py-8 text-center font-mono text-[0.7rem] text-muted">
+                        {t(UI.loading)}
+                      </p>
+                    }
+                  >
+                    {RENDERERS[activeTab]?.(ctx)}
+                  </Suspense>
                 </div>
               </motion.section>
               )}
@@ -329,13 +345,17 @@ export function Desktop() {
       </main>
 
       {/* Paleta de Comandos ⌘K */}
-      <CommandPalette
-        open={palette}
-        onClose={() => setPalette(false)}
-        apps={LAYOUT.map(({ id, label }) => ({ id, label }))}
-        onOpenApp={handleSelectApp}
-        onSelectNote={selectNote}
-      />
+      {paletteLoaded && (
+        <Suspense fallback={null}>
+          <CommandPalette
+            open={palette}
+            onClose={() => setPalette(false)}
+            apps={LAYOUT.map(({ id, label }) => ({ id, label }))}
+            onOpenApp={handleSelectApp}
+            onSelectNote={selectNote}
+          />
+        </Suspense>
+      )}
     </div>
   );
 }
