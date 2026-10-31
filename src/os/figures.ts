@@ -44,29 +44,83 @@ const letterG = (cx: number, rx: number, ry: number): Stroke => {
   return [...arc, [cx + rx * 0.1, 0]];
 };
 
-export const FIGURES: readonly (readonly Stroke[])[] = [
-  // GA: as iniciais, primeira figura do ciclo
-  [
+const FIGURE_SHAPES = {
+  // As iniciais: a assinatura
+  ga: [
     letterG(-0.55, 0.5, 0.75),
     [[0.1, 0.75], [0.55, -0.75], [1.0, 0.75]],
     [[0.27, 0.2], [0.83, 0.2]],
   ],
-  // </>
-  [
+  code: [
     [[-0.35, -0.55], [-0.95, 0], [-0.35, 0.55]],
     [[0.2, -0.75], [-0.2, 0.75]],
     [[0.35, -0.55], [0.95, 0], [0.35, 0.55]],
   ],
-  // >_
-  [
+  terminal: [
     [[-0.8, -0.5], [-0.2, 0], [-0.8, 0.5]],
     [[0.05, 0.5], [0.85, 0.5]],
   ],
-  // grafo hexagonal: o "cérebro"
-  [hexagon(0.9), ...hexagon(0.9).slice(0, 6).map((p): Stroke => [[0, 0], p])],
-  // { }
-  [brace(-1), brace(1)],
+  // Grafo hexagonal: o vault
+  brain: [hexagon(0.9), ...hexagon(0.9).slice(0, 6).map((p): Stroke => [[0, 0], p])],
+  braces: [brace(-1), brace(1)],
+  // Linha de batimento, como o ícone do app agora
+  pulse: [
+    [[-1, 0.1], [-0.45, 0.1], [-0.3, -0.25], [-0.12, 0.55], [0.08, -0.75], [0.25, 0.35], [0.38, 0.1], [1, 0.1]],
+  ],
+  // Camadas empilhadas, como o ícone do app stack
+  layers: [
+    [[0, -0.75], [0.85, -0.35], [0, 0.05], [-0.85, -0.35], [0, -0.75]],
+    [[-0.85, 0], [0, 0.4], [0.85, 0]],
+    [[-0.85, 0.35], [0, 0.75], [0.85, 0.35]],
+  ],
+  // Folha com canto dobrado e linhas de texto: o currículo
+  document: [
+    [[-0.55, -0.8], [0.25, -0.8], [0.55, -0.5], [0.55, 0.8], [-0.55, 0.8], [-0.55, -0.8]],
+    [[0.25, -0.8], [0.25, -0.5], [0.55, -0.5]],
+    [[-0.3, -0.15], [0.3, -0.15]],
+    [[-0.3, 0.15], [0.3, 0.15]],
+    [[-0.3, 0.45], [0.1, 0.45]],
+  ],
+  // Avião de papel, como o ícone de pedidos
+  plane: [
+    [[-0.9, -0.1], [0.9, -0.8], [0.3, 0.85], [0, 0.15], [-0.9, -0.1]],
+    [[0, 0.15], [0.9, -0.8]],
+  ],
+  envelope: [
+    [[-0.9, -0.6], [0.9, -0.6], [0.9, 0.6], [-0.9, 0.6], [-0.9, -0.6]],
+    [[-0.9, -0.6], [0, 0.1], [0.9, -0.6]],
+  ],
+} satisfies Record<string, readonly Stroke[]>;
+
+export type FigureId = keyof typeof FIGURE_SHAPES;
+
+export const FIGURES: Readonly<Record<FigureId, readonly Stroke[]>> = FIGURE_SHAPES;
+
+/** Ordem do ciclo na tela limpa. Começa pela figura do app aberto e segue daqui. */
+export const CYCLE: readonly FigureId[] = [
+  'ga',
+  'code',
+  'pulse',
+  'brain',
+  'layers',
+  'document',
+  'plane',
+  'envelope',
+  'terminal',
+  'braces',
 ];
+
+/** Figura que abre a tela limpa para cada app. */
+export const APP_FIGURE: Readonly<Record<string, FigureId>> = {
+  sobre: 'ga',
+  trabalho: 'code',
+  agora: 'pulse',
+  cerebro: 'brain',
+  stack: 'layers',
+  curriculo: 'document',
+  pedidos: 'plane',
+  contato: 'envelope',
+};
 
 export interface Sampled {
   /** Alvos em px, já escalados e centralizados. */

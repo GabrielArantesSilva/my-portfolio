@@ -19,6 +19,7 @@ import { useRoute } from './useRoute';
 import { APP_IDS, LAYOUT, byId } from './layout';
 import { Sidebar } from './Sidebar';
 import { Wallpaper } from './Wallpaper';
+import { APP_FIGURE } from './figures';
 import { About } from '../apps/About';
 import { Work } from '../apps/Work';
 
@@ -202,7 +203,7 @@ export function Desktop() {
         }`}
       >
         {/* Fundo sutil de console de engenharia */}
-        <Wallpaper shapes={minimized} />
+        <Wallpaper shapes={minimized} figure={APP_FIGURE[activeTab]} />
 
         {/* Barra Superior de Abas (Tabs) - Desktop */}
         <header className="relative z-20 hidden lg:flex h-10 shrink-0 items-center justify-between border-b border-hairline/70 bg-surface/85 px-4 backdrop-blur-xl">
@@ -266,7 +267,12 @@ export function Desktop() {
         </header>
 
         {/* Área de Conteúdo Otimizada para Densidade e Mobile */}
-        <div className="relative z-10 flex-1 overflow-y-auto px-2.5 sm:px-4 lg:px-6 pt-3.5 pb-24 lg:pb-6">
+        {/* Na tela limpa o dedo é dos pontos: sem rolagem nem puxar-para-atualizar roubando o gesto. */}
+        <div
+          className={`relative z-10 flex-1 overflow-y-auto px-2.5 sm:px-4 lg:px-6 pt-3.5 pb-24 lg:pb-6 ${
+            minimized ? 'touch-none overscroll-none' : ''
+          }`}
+        >
           <div className="mx-auto max-w-4xl">
             <AnimatePresence mode="wait">
               {!minimized && (
