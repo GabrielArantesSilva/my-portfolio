@@ -356,12 +356,17 @@ export const UI = {
   privateCommit: { pt: 'repositório privado', en: 'private repository' } satisfies Txt,
   today2: { pt: 'hoje', en: 'today' } satisfies Txt,
   stackTitle: {
-    pt: 'As ferramentas, e o que eu já escrevi sobre cada uma',
-    en: 'The tools, and what I have written about each',
+    pt: 'O que eu uso, e o que eu já documentei',
+    en: 'What I use, and what I have documented',
   } satisfies Txt,
   stackLede: {
-    pt: 'Cada item aqui tem uma nota minha no vault. Não é lista de logo — é o que eu estudei a fundo o bastante para documentar.',
-    en: 'Every item here has a note of mine in the vault. Not a logo wall — it is what I studied deeply enough to document.',
+    pt: 'Primeiro o que uso nos projetos, cada um com onde foi usado. Depois o que estudei a fundo o bastante para documentar no vault.',
+    en: 'First what I use in my projects, each with where it shipped. Then what I studied deeply enough to document in my vault.',
+  } satisfies Txt,
+  usedIn: { pt: 'Usado em', en: 'Used in' } satisfies Txt,
+  stackNoNote: {
+    pt: 'Uso no dia a dia, ainda sem nota própria no vault.',
+    en: 'Daily driver, no dedicated vault note yet.',
   } satisfies Txt,
   stackHint: { pt: 'Clique numa ferramenta', en: 'Click a tool' } satisfies Txt,
   referencedBy: { pt: 'citada por', en: 'referenced by' } satisfies Txt,
@@ -415,4 +420,28 @@ export const UI = {
     pt: 'Grafo de notas e ligações do vault',
     en: 'Graph of vault notes and links',
   } satisfies Txt,
+} as const;
+
+/**
+ * O que eu uso, por grupo, na ordem em que aparece no app Stack. Fonte: a stack
+ * dos projetos em WORK e as linguagens do currículo. O app cruza cada nome com
+ * WORK (mostra onde foi usado) e com as notas do vault (mostra o resumo).
+ * Ferramentas que só existem no vault entram depois destas, sozinhas.
+ */
+export const STACK_CORE = {
+  languages: ['TypeScript', 'JavaScript', 'SQL', 'HTML / CSS'],
+  frameworks: [
+    'React',
+    'Next.js',
+    'React Native',
+    'Expo',
+    'Node.js',
+    'Express',
+    'Fastify',
+    'TanStack Start',
+    'Tailwind CSS',
+  ],
+  databases: ['PostgreSQL', 'Supabase', 'Prisma', 'Drizzle', 'PostGIS'],
+  infra: ['Vite', 'Vitest', 'Docker'],
+  tools: ['grammY', 'MapLibre'],
 } as const;

@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { useLang } from '../i18n/lang';
-import { UI, WORK } from '../content/site';
+import { STACK_CORE, UI, WORK } from '../content/site';
 import vault from '../content/vault.json';
 
 const NOT_A_TOOL = new Set([
@@ -12,19 +12,41 @@ const NOT_A_TOOL = new Set([
   'Prisma-Transactions',
 ]);
 
-const SHIPPED = new Set(
-  WORK.flatMap((w) => w.stack).map((s) => s.toLowerCase().replace(/[.\s-]/g, ''))
-);
+/**
+ * Chave de comparação entre nomes de WORK, STACK_CORE e ids do vault:
+ * "Next.js 15", "Next-js-15" e "Next.js" viram "next"; "PostgreSQL (Neon)"
+ * vira "postgresql"; "Node" e "Node.js" viram "node".
+ */
+const norm = (name: string) =>
+  name
+    .toLowerCase()
+    .replace(/\(.*?\)/g, '')
+    .replace(/[\d.\s/-]/g, '')
+    .replace(/js$/, '');
 
-const ships = (id: string) => SHIPPED.has(id.toLowerCase().replace(/[.\s-]/g, ''));
+/** Nome curto do projeto: o que vem antes do travessão no título. */
+const shortTitle = (title: string) => title.split(' — ')[0];
+
+type VaultNote = (typeof vault.notes)[number];
+
+interface StackItem {
+  key: string;
+  name: string;
+  note?: VaultNote;
+  /** Projetos de WORK que usam a ferramenta, já como Txt do título. */
+  projects: (typeof WORK)[number]['title'][];
+}
 
 const GROUP_LABEL: Readonly<Record<string, { pt: string; en: string }>> = {
-  frameworks: { pt: 'Frameworks', en: 'Frameworks' },
+  languages: { pt: 'Linguagens', en: 'Languages' },
+  frameworks: { pt: 'Frameworks & Runtime', en: 'Frameworks & Runtime' },
   databases: { pt: 'Dados & ORMs', en: 'Data & ORMs' },
+  infra: { pt: 'Build, testes & infra', en: 'Build, testing & infra' },
   tools: { pt: 'Ferramentas & Libs', en: 'Tools & Libs' },
 };
 
-const ORDER = ['frameworks', 'databases', 'tools'];
+const ORDER = ['languages', 'frameworks', 'databases', 'infra', 'tools'] as const;
+
 /** Nomes cujo id de arquivo não vira o nome oficial só trocando hífen. */
 const OFFICIAL_NAME: Readonly<Record<string, string>> = {
   'ts-rest': 'ts-rest',
@@ -33,9 +55,12 @@ const OFFICIAL_NAME: Readonly<Record<string, string>> = {
 const pretty = (id: string) =>
   OFFICIAL_NAME[id.toLowerCase()] ?? id.replace(/-js\b/gi, '.js').replace(/-/g, ' ');
 
+const projectsUsing = (key: string) =>
+  WORK.filter((w) => w.stack.some((s) => norm(s) === key)).map((w) => w.title);
+
 export function Stack() {
   const { t } = useLang();
-  const [open, setOpen] = useState<string | null>('React-19');
+  const [open, setOpen] = useState<string | null>('react');
 
   const groups = useMemo(() => {
     const entities = vault.notes.filter(
@@ -43,16 +68,29 @@ export function Stack() {
         (n.folder.includes('Entities') || n.folder.startsWith('30_entities')) &&
         !NOT_A_TOOL.has(n.id)
     );
-    return ORDER.map((key) => ({
-      key,
-      label: GROUP_LABEL[key],
-      items: entities
-        .filter((n) => n.domain === key)
-        .sort((a, b) => b.in - a.in || a.id.localeCompare(b.id)),
-    })).filter((g) => g.items.length > 0);
+    const noteByKey = new Map(entities.map((n) => [norm(n.id), n]));
+    // A lista curada decide o grupo: nota do vault em outro domínio não repete o item.
+    const taken = new Set(Object.values(STACK_CORE).flat().map(norm));
+
+    return ORDER.map((group) => {
+      const core: StackItem[] = (STACK_CORE[group as keyof typeof STACK_CORE] ?? []).map(
+        (name) => {
+          const key = norm(name);
+          return { key, name, note: noteByKey.get(key), projects: projectsUsing(key) };
+        }
+      );
+      const vaultOnly: StackItem[] = entities
+        .filter((n) => n.domain === group && !taken.has(norm(n.id)))
+        .sort((a, b) => b.in - a.in || a.id.localeCompare(b.id))
+        .map((n) => {
+          const key = norm(n.id);
+          return { key, name: pretty(n.id), note: n, projects: projectsUsing(key) };
+        });
+      return { key: group, label: GROUP_LABEL[group], items: [...core, ...vaultOnly] };
+    }).filter((g) => g.items.length > 0);
   }, []);
 
-  const detail = open ? vault.notes.find((n) => n.id === open) : null;
+  const detail = open ? groups.flatMap((g) => g.items).find((i) => i.key === open) : null;
 
   return (
     <div className="space-y-4">
@@ -67,12 +105,11 @@ export function Stack() {
         </div>
       </header>
 
-      {/* Grid de 3 colunas compactas */}
-      <div className="grid gap-3 sm:grid-cols-3">
+      <div className="grid gap-3 sm:grid-cols-2">
         {groups.map((group) => (
           <section
             key={group.key}
-            className="rounded-xl border border-hairline/70 bg-ink-900/30 p-3 flex flex-col justify-between"
+            className="rounded-xl border border-hairline/70 bg-ink-900/30 p-3 flex flex-col justify-between sm:odd:last:col-span-2"
           >
             <div>
               <h2 className="font-mono text-[0.65rem] uppercase tracking-wider text-accent font-medium pb-2 border-b border-hairline/40">
@@ -81,20 +118,21 @@ export function Stack() {
 
               <ul className="mt-2 flex flex-wrap gap-1">
                 {group.items.map((item) => (
-                  <li key={item.id}>
+                  <li key={item.key}>
                     <button
                       type="button"
-                      onClick={() => setOpen(open === item.id ? null : item.id)}
+                      aria-pressed={open === item.key}
+                      onClick={() => setOpen(open === item.key ? null : item.key)}
                       className={`font-mono inline-flex items-center gap-1 rounded border px-2 py-0.5 text-[0.65rem] transition-colors ${
-                        open === item.id
+                        open === item.key
                           ? 'border-accent bg-accent/15 text-heading font-medium'
                           : 'border-hairline bg-ink-850/60 text-muted hover:border-hairline hover:text-heading'
                       }`}
                     >
-                      {ships(item.id) && (
+                      {item.projects.length > 0 && (
                         <span className="h-1 w-1 shrink-0 rounded-full bg-ok" />
                       )}
-                      <span>{pretty(item.id)}</span>
+                      <span>{item.name}</span>
                     </button>
                   </li>
                 ))}
@@ -108,13 +146,24 @@ export function Stack() {
       {detail ? (
         <article className="rounded-xl border border-hairline bg-ink-900/70 p-3.5">
           <div className="flex items-center justify-between gap-2 border-b border-hairline/50 pb-2">
-            <h3 className="text-xs font-semibold text-heading">{pretty(detail.id)}</h3>
-            <span className="font-mono text-[0.62rem] text-muted">
-              {ships(detail.id) && <span className="text-ok font-medium mr-2">[produção]</span>}
-              {detail.words} {t(UI.words)} / ref: {detail.in}
-            </span>
+            <h3 className="text-xs font-semibold text-heading">{detail.name}</h3>
+            {detail.note && (
+              <span className="font-mono text-[0.62rem] text-muted">
+                {detail.note.words} {t(UI.words)} / ref: {detail.note.in}
+              </span>
+            )}
           </div>
-          <p className="mt-2 text-xs leading-relaxed text-body">{detail.excerpt}</p>
+          {detail.projects.length > 0 && (
+            <p className="mt-2 text-xs text-body">
+              <span className="font-mono text-[0.62rem] uppercase tracking-wider text-ok mr-1.5">
+                {t(UI.usedIn)}
+              </span>
+              {detail.projects.map((p) => shortTitle(t(p))).join(' · ')}
+            </p>
+          )}
+          <p className="mt-2 text-xs leading-relaxed text-body">
+            {detail.note ? detail.note.excerpt : t(UI.stackNoNote)}
+          </p>
         </article>
       ) : (
         <p className="font-mono rounded-xl border border-dashed border-hairline/60 p-3 text-center text-xs text-muted">
