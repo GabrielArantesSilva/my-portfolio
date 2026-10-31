@@ -40,8 +40,8 @@
   --color-danger: oklch(0.62 0.180 25);       /* Vermelho controlado */
 
   /* ── Tipografia ───────────────────────────────────────────── */
-  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --font-sans: "Inter Variable", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "JetBrains Mono Variable", "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
 
   /* ── Movimento ────────────────────────────────────────────── */
   --ease-out-strong: cubic-bezier(0.16, 1, 0.3, 1);
