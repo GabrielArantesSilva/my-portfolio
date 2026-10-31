@@ -20,6 +20,8 @@ interface Particle {
 
 const DENSITY = 16_000; // 1 partícula a cada N px² de tela
 const MAX_PARTICLES = 95;
+/** Piso no celular: com menos que isso as figuras perdem o desenho (o G vira polígono). */
+const MIN_PARTICLES = 40;
 const LINK_DIST = 125;
 const MOUSE_RADIUS = 150;
 
@@ -85,7 +87,7 @@ export function Wallpaper({ shapes = false }: { shapes?: boolean }) {
       canvas.height = h * dpr;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-      const count = Math.min(MAX_PARTICLES, Math.max(28, Math.round((w * h) / DENSITY)));
+      const count = Math.min(MAX_PARTICLES, Math.max(MIN_PARTICLES, Math.round((w * h) / DENSITY)));
       particles = Array.from({ length: count }, (_, i) => {
         const r = 0.8 + seed(i * 5 + 3) * 1.4;
         const dx = (seed(i * 3 + 7) - 0.5) * 0.28;

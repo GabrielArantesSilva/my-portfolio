@@ -27,7 +27,30 @@ const brace = (dir: 1 | -1): Stroke =>
     ] as const
   ).map(([x, y]) => [x * dir, y]);
 
+/**
+ * G: arco elíptico do canto superior direito, passando pela esquerda, até o
+ * meio da direita (y para baixo, então o ângulo decresce no sentido anti-horário),
+ * fechando com a barra para dentro.
+ */
+const letterG = (cx: number, rx: number, ry: number): Stroke => {
+  const arc: Pt[] = [];
+  const from = -Math.PI / 4;
+  const to = -2 * Math.PI;
+  const steps = 28;
+  for (let i = 0; i <= steps; i++) {
+    const a = from + ((to - from) * i) / steps;
+    arc.push([cx + Math.cos(a) * rx, Math.sin(a) * ry]);
+  }
+  return [...arc, [cx + rx * 0.1, 0]];
+};
+
 export const FIGURES: readonly (readonly Stroke[])[] = [
+  // GA: as iniciais, primeira figura do ciclo
+  [
+    letterG(-0.55, 0.5, 0.75),
+    [[0.1, 0.75], [0.55, -0.75], [1.0, 0.75]],
+    [[0.27, 0.2], [0.83, 0.2]],
+  ],
   // </>
   [
     [[-0.35, -0.55], [-0.95, 0], [-0.35, 0.55]],
