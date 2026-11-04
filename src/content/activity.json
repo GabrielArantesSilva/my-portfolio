@@ -1,34 +1,58 @@
 {
-  "syncedAt": "2026-10-27T13:23:30.144Z",
+  "syncedAt": "2026-11-04T20:16:33.495Z",
   "projects": [
     {
       "name": "gabriel.os",
       "public": true,
-      "total": 13,
-      "lastAt": "2026-10-27",
+      "total": 38,
+      "lastAt": "2026-11-04",
       "commits": [
         {
-          "date": "2026-10-27",
-          "subject": "feat: atualiza sincronização de atividades (outubro/2026) e notas do vault"
+          "date": "2026-11-04",
+          "subject": "feat(wallpaper): tag GA em estilo graffiti wildstyle, novas figuras e melhorias de grafo/stack"
         },
         {
-          "date": "2026-08-19",
-          "subject": "feat(pedidos): liga o canal do WhatsApp"
+          "date": "2026-10-31",
+          "subject": "feat(wallpaper): figura por app, mais pontos, física solta e toque que estoura"
         },
         {
-          "date": "2026-08-19",
-          "subject": "feat(os): botao restaurar e auto-deteccao da foto do curriculo"
+          "date": "2026-10-31",
+          "subject": "test: dá 5s para o chunk lazy do currículo no teste de rota direta"
         },
         {
-          "date": "2026-08-19",
-          "subject": "feat(os): desktop infinito, tela de pedidos e auditoria de conteudo"
+          "date": "2026-10-31",
+          "subject": "feat(wallpaper): iniciais GA como primeira figura"
+        }
+      ]
+    },
+    {
+      "name": "Enemza",
+      "public": true,
+      "total": 15,
+      "lastAt": "2026-10-31",
+      "commits": [
+        {
+          "date": "2026-10-31",
+          "subject": "refactor(auth): visual profissional e institucional para a tela de login"
+        },
+        {
+          "date": "2026-10-31",
+          "subject": "fix(lint): corrige entidades HTML e remove imports nao utilizados para o build do Vercel"
+        },
+        {
+          "date": "2026-10-31",
+          "subject": "feat: redesenho moderno da tela de login e organizador didático de estudos"
+        },
+        {
+          "date": "2026-08-06",
+          "subject": "feat: histórico de estudos no perfil (aulas + provas) com estatísticas"
         }
       ]
     },
     {
       "name": "VORTEX OS",
       "public": false,
-      "total": 7,
+      "total": 6,
       "lastAt": "2026-10-26",
       "commits": [
         {
@@ -40,11 +64,11 @@
           "subject": null
         },
         {
-          "date": "2026-10-26",
+          "date": "2026-10-23",
           "subject": null
         },
         {
-          "date": "2026-10-26",
+          "date": "2026-10-23",
           "subject": null
         }
       ]
@@ -64,23 +88,23 @@
     {
       "name": "Bancada",
       "public": false,
-      "total": 4,
-      "lastAt": "2026-08-17",
+      "total": 7,
+      "lastAt": "2026-08-16",
       "commits": [
         {
-          "date": "2026-08-17",
+          "date": "2026-08-16",
           "subject": null
         },
         {
-          "date": "2026-08-17",
+          "date": "2026-08-16",
           "subject": null
         },
         {
-          "date": "2026-08-17",
+          "date": "2026-08-16",
           "subject": null
         },
         {
-          "date": "2026-08-17",
+          "date": "2026-08-16",
           "subject": null
         }
       ]
@@ -88,7 +112,7 @@
     {
       "name": "Dobra SaaS",
       "public": true,
-      "total": 4,
+      "total": 16,
       "lastAt": "2026-08-06",
       "commits": [
         {
@@ -112,7 +136,7 @@
     {
       "name": "Bot de vendas",
       "public": true,
-      "total": 4,
+      "total": 11,
       "lastAt": "2026-07-31",
       "commits": [
         {
@@ -135,7 +159,7 @@
     }
   ],
   "totals": {
-    "commits": 33,
-    "repos": 6
+    "commits": 94,
+    "repos": 7
   }
 }
