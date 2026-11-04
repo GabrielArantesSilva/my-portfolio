@@ -8,87 +8,199 @@
 type Pt = readonly [number, number];
 type Stroke = readonly Pt[];
 
-const hexagon = (r: number): Pt[] =>
-  Array.from({ length: 7 }, (_, i) => {
-    const a = (Math.PI / 3) * i - Math.PI / 2;
-    return [Math.cos(a) * r, Math.sin(a) * r];
+const polygon = (sides: number, r: number, rot = -Math.PI / 2): Pt[] =>
+  Array.from({ length: sides + 1 }, (_, i) => {
+    const a = ((Math.PI * 2) / sides) * i + rot;
+    return [
+      Number((Math.cos(a) * r).toFixed(4)),
+      Number((Math.sin(a) * r).toFixed(4)),
+    ];
   });
 
 const brace = (dir: 1 | -1): Stroke =>
   (
     [
-      [0.3, -0.8],
-      [0.5, -0.7],
-      [0.5, -0.15],
-      [0.75, 0],
-      [0.5, 0.15],
-      [0.5, 0.7],
-      [0.3, 0.8],
+      [0.24, -0.84],
+      [0.48, -0.84],
+      [0.56, -0.72],
+      [0.56, -0.16],
+      [0.84, 0],
+      [0.56, 0.16],
+      [0.56, 0.72],
+      [0.48, 0.84],
+      [0.24, 0.84],
     ] as const
   ).map(([x, y]) => [x * dir, y]);
 
 /**
- * G: arco elíptico do canto superior direito, passando pela esquerda, até o
- * meio da direita (y para baixo, então o ângulo decresce no sentido anti-horário),
- * fechando com a barra para dentro.
+ * Tag "GA" em estilo Graffiti / Wildstyle:
+ * - Coroa street-art de 3 pontas inclinada no topo esquerdo
+ * - Letra G angular (handstyle/chisel) com serifa superior, espinha dupla interna
+ *   e barra central terminando em seta wildstyle apontando para dentro
+ * - Letra A com serifa de apoio, topo chanfrado, kick-out no pé direito e corte
+ *   transversal em seta de grafite
+ * - Sublinhado em chicote (tag whip) ancorando a assinatura
  */
-const letterG = (cx: number, rx: number, ry: number): Stroke => {
-  const arc: Pt[] = [];
-  const from = -Math.PI / 4;
-  const to = -2 * Math.PI;
-  const steps = 28;
-  for (let i = 0; i <= steps; i++) {
-    const a = from + ((to - from) * i) / steps;
-    arc.push([cx + Math.cos(a) * rx, Math.sin(a) * ry]);
-  }
-  return [...arc, [cx + rx * 0.1, 0]];
-};
+const GRAFFITI_GA: readonly Stroke[] = [
+  // Coroa de 3 pontas (Basquiat / Tag Crown) inclinada sobre o G
+  [
+    [-0.78, -0.7],
+    [-0.86, -0.95],
+    [-0.63, -0.79],
+    [-0.48, -0.98],
+    [-0.33, -0.79],
+    [-0.1, -0.93],
+    [-0.18, -0.7],
+    [-0.78, -0.7],
+  ],
+  // Corpo principal do G em traço chanfrado + barra interna com ponta em seta
+  [
+    [-0.06, -0.32],
+    [-0.02, -0.54],
+    [-0.34, -0.62],
+    [-0.76, -0.5],
+    [-0.98, -0.14],
+    [-0.96, 0.34],
+    [-0.72, 0.64],
+    [-0.28, 0.66],
+    [-0.04, 0.44],
+    [-0.02, 0.04],
+    [-0.52, 0.04],
+    [-0.38, -0.07],
+    [-0.52, 0.04],
+    [-0.38, 0.15],
+  ],
+  // Sombra interna / duplo contorno chanfrado da espinha do G
+  [
+    [-0.38, -0.44],
+    [-0.68, -0.34],
+    [-0.78, -0.06],
+    [-0.76, 0.28],
+    [-0.56, 0.48],
+  ],
+  // Corpo do A wildstyle com serifa de apoio, topo chanfrado e kick-out na perna direita
+  [
+    [-0.06, 0.54],
+    [0.08, 0.66],
+    [0.46, -0.66],
+    [0.58, -0.66],
+    [0.9, 0.66],
+    [1.04, 0.52],
+  ],
+  // Barra transversal do A rasgando em seta de grafite para a direita
+  [
+    [0.04, 0.2],
+    [0.98, 0.02],
+    [0.83, -0.1],
+    [0.98, 0.02],
+    [0.85, 0.15],
+  ],
+  // Sublinhado "tag whip" em zigue-zague sob a assinatura
+  [
+    [-0.88, 0.84],
+    [0.52, 0.76],
+    [0.18, 0.92],
+    [0.94, 0.86],
+  ],
+];
+
+const outerHex = polygon(6, 0.92, -Math.PI / 2);
+const innerHex = polygon(6, 0.42, -Math.PI / 6);
 
 const FIGURE_SHAPES = {
-  // As iniciais: a assinatura
-  ga: [
-    letterG(-0.55, 0.5, 0.75),
-    [[0.1, 0.75], [0.55, -0.75], [1.0, 0.75]],
-    [[0.27, 0.2], [0.83, 0.2]],
-  ],
+  // As iniciais: a assinatura em estilo Graffiti / Wildstyle Tag
+  ga: GRAFFITI_GA,
+
+  // Emblema </> com chanfro duplo nas chaves e serifa na barra
   code: [
-    [[-0.35, -0.55], [-0.95, 0], [-0.35, 0.55]],
-    [[0.2, -0.75], [-0.2, 0.75]],
-    [[0.35, -0.55], [0.95, 0], [0.35, 0.55]],
+    [[-0.36, -0.56], [-0.96, 0], [-0.36, 0.56]],
+    [[-0.48, -0.32], [-0.76, 0], [-0.48, 0.32]],
+    [[0.26, -0.78], [0.16, -0.78], [-0.16, 0.78], [-0.26, 0.78]],
+    [[0.36, -0.56], [0.96, 0], [0.36, 0.56]],
+    [[0.48, -0.32], [0.76, 0], [0.48, 0.32]],
   ],
+
+  // Janela de terminal completa com barra de topo, prompt > e cursor em bloco
   terminal: [
-    [[-0.8, -0.5], [-0.2, 0], [-0.8, 0.5]],
-    [[0.05, 0.5], [0.85, 0.5]],
+    [[-0.94, -0.68], [0.94, -0.68], [0.94, 0.68], [-0.94, 0.68], [-0.94, -0.68]],
+    [[-0.94, -0.4], [0.94, -0.4]],
+    [[-0.62, -0.14], [-0.22, 0.14], [-0.62, 0.42]],
+    [[-0.04, 0.42], [0.52, 0.42], [0.52, 0.28], [-0.04, 0.28], [-0.04, 0.42]],
   ],
-  // Grafo hexagonal: o vault
-  brain: [hexagon(0.9), ...hexagon(0.9).slice(0, 6).map((p): Stroke => [[0, 0], p])],
-  braces: [brace(-1), brace(1)],
-  // Linha de batimento, como o ícone do app agora
+
+  // Grafo cristalino em duplo anel hexagonal conectado: o segundo cérebro / vault
+  brain: [
+    outerHex,
+    innerHex,
+    [outerHex[0], innerHex[0], innerHex[3], outerHex[3]],
+    [outerHex[1], innerHex[1], innerHex[4], outerHex[4]],
+    [outerHex[2], innerHex[2], innerHex[5], outerHex[5]],
+  ],
+
+  // Chaves { } esculpidas com nós de código centrais (: ;)
+  braces: [
+    brace(-1),
+    brace(1),
+    [[0, -0.36], [0.12, -0.24], [0, -0.12], [-0.12, -0.24], [0, -0.36]],
+    [[0, 0.12], [0.12, 0.24], [0, 0.36], [-0.12, 0.24], [0, 0.12]],
+    [[0, 0.36], [-0.08, 0.52]],
+  ],
+
+  // Linha de batimento / telemetria emoldurada por cantoneiras de radar e beacon
   pulse: [
-    [[-1, 0.1], [-0.45, 0.1], [-0.3, -0.25], [-0.12, 0.55], [0.08, -0.75], [0.25, 0.35], [0.38, 0.1], [1, 0.1]],
+    [
+      [-1, 0.08],
+      [-0.52, 0.08],
+      [-0.38, -0.22],
+      [-0.22, 0.42],
+      [-0.04, -0.78],
+      [0.14, 0.58],
+      [0.3, -0.32],
+      [0.44, 0.08],
+      [1, 0.08],
+    ],
+    [[-0.88, -0.52], [-0.88, -0.78], [-0.56, -0.78]],
+    [[0.56, -0.78], [0.88, -0.78], [0.88, -0.52]],
+    [[-0.88, 0.52], [-0.88, 0.78], [-0.56, 0.78]],
+    [[0.56, 0.78], [0.88, 0.78], [0.88, 0.52]],
   ],
-  // Camadas empilhadas, como o ícone do app stack
+
+  // Camadas isométricas empilhadas com núcleo superior e pilares de arquitetura
   layers: [
-    [[0, -0.75], [0.85, -0.35], [0, 0.05], [-0.85, -0.35], [0, -0.75]],
-    [[-0.85, 0], [0, 0.4], [0.85, 0]],
-    [[-0.85, 0.35], [0, 0.75], [0.85, 0.35]],
+    [[0, -0.8], [0.88, -0.38], [0, 0.04], [-0.88, -0.38], [0, -0.8]],
+    [[0, -0.58], [0.42, -0.38], [0, -0.18], [-0.42, -0.38], [0, -0.58]],
+    [[-0.88, 0], [0, 0.42], [0.88, 0]],
+    [[-0.88, 0.38], [0, 0.8], [0.88, 0.38]],
+    [[-0.88, -0.38], [-0.88, 0.38]],
+    [[0.88, -0.38], [0.88, 0.38]],
   ],
-  // Folha com canto dobrado e linhas de texto: o currículo
+
+  // Folha com dobra, badge de perfil, linhas de texto e selo de aprovação: o currículo
   document: [
-    [[-0.55, -0.8], [0.25, -0.8], [0.55, -0.5], [0.55, 0.8], [-0.55, 0.8], [-0.55, -0.8]],
-    [[0.25, -0.8], [0.25, -0.5], [0.55, -0.5]],
-    [[-0.3, -0.15], [0.3, -0.15]],
-    [[-0.3, 0.15], [0.3, 0.15]],
-    [[-0.3, 0.45], [0.1, 0.45]],
+    [[-0.6, -0.84], [0.24, -0.84], [0.6, -0.48], [0.6, 0.84], [-0.6, 0.84], [-0.6, -0.84]],
+    [[0.24, -0.84], [0.24, -0.48], [0.6, -0.48]],
+    [[-0.4, -0.62], [-0.14, -0.62], [-0.14, -0.36], [-0.4, -0.36], [-0.4, -0.62]],
+    [[-0.4, -0.12], [0.38, -0.12]],
+    [[-0.4, 0.16], [0.38, 0.16]],
+    [[-0.4, 0.44], [0.04, 0.44]],
+    [[0.16, 0.46], [0.26, 0.58], [0.44, 0.34]],
   ],
-  // Avião de papel, como o ícone de pedidos
+
+  // Avião de papel em origami 3D com dobras internas e rastro de velocidade
   plane: [
-    [[-0.9, -0.1], [0.9, -0.8], [0.3, 0.85], [0, 0.15], [-0.9, -0.1]],
-    [[0, 0.15], [0.9, -0.8]],
+    [[-0.92, -0.12], [0.94, -0.78], [0.36, 0.84], [0.02, 0.16], [-0.92, -0.12]],
+    [[0.94, -0.78], [0.02, 0.16], [0.08, 0.54], [0.22, 0.32]],
+    [[-0.78, 0.36], [-0.36, 0.2]],
+    [[-0.56, 0.72], [-0.12, 0.54]],
   ],
+
+  // Envelope selado com dobras diagonais e lacre em diamante: contato
   envelope: [
-    [[-0.9, -0.6], [0.9, -0.6], [0.9, 0.6], [-0.9, 0.6], [-0.9, -0.6]],
-    [[-0.9, -0.6], [0, 0.1], [0.9, -0.6]],
+    [[-0.92, -0.62], [0.92, -0.62], [0.92, 0.62], [-0.92, 0.62], [-0.92, -0.62]],
+    [[-0.92, -0.62], [0, 0.08], [0.92, -0.62]],
+    [[-0.92, 0.62], [-0.32, 0.08]],
+    [[0.92, 0.62], [0.32, 0.08]],
+    [[0, -0.08], [0.14, 0.08], [0, 0.24], [-0.14, 0.08], [0, -0.08]],
   ],
 } satisfies Record<string, readonly Stroke[]>;
 
@@ -134,10 +246,10 @@ export interface Sampled {
 const segLen = (a: Pt, b: Pt) => Math.hypot(b[0] - a[0], b[1] - a[1]);
 
 /**
- * Distribui `n` pontos igualmente espaçados ao longo de todos os traços.
- * Pontos consecutivos no mesmo traço ganham uma aresta.
+ * Amostragem por comprimento de arco usada apenas como fallback caso `n` seja
+ * menor que o número total de vértices explícitos da figura.
  */
-export function sampleFigure(
+function sampleByArcLength(
   figure: readonly Stroke[],
   n: number,
   cx: number,
@@ -146,7 +258,7 @@ export function sampleFigure(
 ): Sampled {
   const lengths = figure.map((s) => s.slice(1).reduce((acc, p, i) => acc + segLen(s[i], p), 0));
   const total = lengths.reduce((a, b) => a + b, 0);
-  const step = total / n;
+  const step = total / Math.max(1, n);
 
   const targets: Sampled['targets'] = [];
   const edges: Sampled['edges'] = [];
@@ -177,4 +289,128 @@ export function sampleFigure(
   }
 
   return { targets, edges, spacing: step * scale };
+}
+
+/**
+ * Distribui `n` pontos ao longo dos traços preservando 100% dos vértices
+ * explícitos (quinas vivas, serifas, pontas de seta e fechamentos) e
+ * subdividindo os segmentos proporcionalmente ao seu comprimento.
+ */
+export function sampleFigure(
+  figure: readonly Stroke[],
+  n: number,
+  cx: number,
+  cy: number,
+  scale: number
+): Sampled {
+  const validStrokes = figure.filter((s) => s.length >= 2);
+  if (validStrokes.length === 0 || n <= 0) {
+    return { targets: [], edges: [], spacing: 0 };
+  }
+
+  interface SegInfo {
+    strokeIdx: number;
+    segIdx: number;
+    a: Pt;
+    b: Pt;
+    len: number;
+    subs: number;
+    rem: number;
+  }
+
+  const segments: SegInfo[] = [];
+  let totalVertices = 0;
+  let totalLen = 0;
+
+  validStrokes.forEach((stroke, strokeIdx) => {
+    totalVertices += stroke.length;
+    for (let i = 1; i < stroke.length; i++) {
+      const len = segLen(stroke[i - 1], stroke[i]);
+      totalLen += len;
+      segments.push({
+        strokeIdx,
+        segIdx: i - 1,
+        a: stroke[i - 1],
+        b: stroke[i],
+        len,
+        subs: 1,
+        rem: 0,
+      });
+    }
+  });
+
+  if (n < totalVertices || totalLen === 0) {
+    return sampleByArcLength(validStrokes, n, cx, cy, scale);
+  }
+
+  // Cada segmento já começa com 1 subsegmento (garantindo todos os vértices).
+  // Os pontos extras (n - totalVertices) viram subdivisões proporcionais ao tamanho.
+  const extraPoints = n - totalVertices;
+  const totalDesiredSubs = segments.length + extraPoints;
+
+  let assignedExtra = 0;
+  for (const seg of segments) {
+    const idealSubs = Math.max(1, (seg.len / totalLen) * totalDesiredSubs);
+    const extra = Math.max(0, Math.floor(idealSubs - 1));
+    seg.subs = 1 + extra;
+    seg.rem = idealSubs - seg.subs;
+    assignedExtra += extra;
+  }
+
+  let remaining = extraPoints - assignedExtra;
+  if (remaining > 0) {
+    const byRemainder = [...segments].sort((x, y) => y.rem - x.rem);
+    for (let i = 0; i < remaining; i++) {
+      byRemainder[i % byRemainder.length].subs += 1;
+    }
+  } else if (remaining < 0) {
+    const bySmallestRem = [...segments]
+      .filter((s) => s.subs > 1)
+      .sort((x, y) => x.rem - y.rem);
+    let idx = 0;
+    while (remaining < 0 && bySmallestRem.length > 0) {
+      const target = bySmallestRem[idx % bySmallestRem.length];
+      if (target.subs > 1) {
+        target.subs -= 1;
+        remaining += 1;
+      }
+      idx += 1;
+    }
+  }
+
+  const targets: Sampled['targets'] = [];
+  const edges: Sampled['edges'] = [];
+  let maxSubLen = 0;
+
+  let segCursor = 0;
+  for (let si = 0; si < validStrokes.length; si++) {
+    const stroke = validStrokes[si];
+    targets.push({
+      x: cx + stroke[0][0] * scale,
+      y: cy + stroke[0][1] * scale,
+    });
+
+    for (let i = 1; i < stroke.length; i++) {
+      const seg = segments[segCursor++];
+      const subLen = seg.len / seg.subs;
+      if (subLen > maxSubLen) maxSubLen = subLen;
+
+      for (let m = 1; m <= seg.subs; m++) {
+        const t = m / seg.subs;
+        const px = seg.a[0] + (seg.b[0] - seg.a[0]) * t;
+        const py = seg.a[1] + (seg.b[1] - seg.a[1]) * t;
+        const nextIdx = targets.length;
+        targets.push({
+          x: cx + px * scale,
+          y: cy + py * scale,
+        });
+        edges.push([nextIdx - 1, nextIdx]);
+      }
+    }
+  }
+
+  const avgStep = totalLen / Math.max(1, edges.length);
+  const spacing = Math.max(avgStep, maxSubLen * 0.92) * scale;
+
+  return { targets, edges, spacing };
 }

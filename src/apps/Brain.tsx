@@ -50,6 +50,7 @@ export function Brain({
         .filter(
           (n) =>
             n.id.toLowerCase().includes(q) ||
+            n.title.toLowerCase().includes(q) ||
             n.domain.toLowerCase().includes(q) ||
             n.tags.some((tag) => tag.toLowerCase().includes(q))
         )

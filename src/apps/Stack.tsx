@@ -10,17 +10,19 @@ const NOT_A_TOOL = new Set([
   'Signia',
   'Prisma-vs-Drizzle',
   'Prisma-Transactions',
+  'Obsidian-Git',
 ]);
 
 /**
  * Chave de comparação entre nomes de WORK, STACK_CORE e ids do vault:
  * "Next.js 15", "Next-js-15" e "Next.js" viram "next"; "PostgreSQL (Neon)"
- * vira "postgresql"; "Node" e "Node.js" viram "node".
+ * vira "postgresql"; "Prisma-ORM" vira "prisma"; "Tailwind-CSS-v4" vira "tailwindcss".
  */
 const norm = (name: string) =>
   name
     .toLowerCase()
     .replace(/\(.*?\)/g, '')
+    .replace(/[-s]?(orm|v\d+)\b/g, '')
     .replace(/[\d.\s/-]/g, '')
     .replace(/js$/, '');
 
@@ -80,7 +82,7 @@ export function Stack() {
         }
       );
       const vaultOnly: StackItem[] = entities
-        .filter((n) => n.domain === group && !taken.has(norm(n.id)))
+        .filter((n) => n.domain.toLowerCase() === group && !taken.has(norm(n.id)))
         .sort((a, b) => b.in - a.in || a.id.localeCompare(b.id))
         .map((n) => {
           const key = norm(n.id);

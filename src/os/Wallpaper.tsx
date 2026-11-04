@@ -34,7 +34,7 @@ const STEP_MS = 1000 / 60;
 const MAX_STEPS = 4;
 
 /** Tempos do ciclo de figuras no modo tela limpa, em ms. */
-const FIRST_FORM_DELAY = 1_200;
+const FIRST_FORM_DELAY = 350;
 const HOLD_MS = 8_000;
 const DRIFT_MS = 3_000;
 /** Depois de um toque espalhar tudo, quanto tempo até a próxima figura se montar. */
@@ -331,15 +331,16 @@ export function Wallpaper({
 
       // Traços da figura: somem quando o par é esticado (pelo ponteiro, ou ao se desfazer).
       if (strength > 0.01 && spacing > 0) {
-        ctx.lineWidth = 1.1;
+        ctx.lineWidth = 1.2;
         ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
         for (const [a, b] of edges) {
           const p = particles[a];
           const q = particles[b];
           if (!p || !q) continue;
           const d = Math.hypot(q.x - p.x, q.y - p.y);
           const taut = Math.max(0, Math.min(1, 1 - (d - spacing * 1.3) / (spacing * 2)));
-          const alpha = strength * taut * 0.6;
+          const alpha = strength * taut * 0.65;
           if (alpha < 0.01) continue;
           ctx.strokeStyle = `rgba(125, 211, 252, ${alpha})`;
           ctx.beginPath();

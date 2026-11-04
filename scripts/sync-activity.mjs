@@ -31,8 +31,15 @@ const TRACKED = [
     paths: [
       resolve(root, '..', '..', 'DESENVOVLIEMNTO', 'VORTEX OS'),
       join(root, '..', 'VORTEX OS'),
+      join(root, '..', 'VORTEX-OS'),
     ],
     repo: 'GabrielArantesSilva/VORTEX-OS',
+  },
+  {
+    name: 'Enemza',
+    public: true,
+    paths: [join(root, '..', 'EnemzaMVP'), join(root, '..', 'enemza')],
+    repo: 'GabrielArantesSilva/EnemzaMVP',
   },
   {
     name: 'Dobra SaaS',
@@ -56,6 +63,7 @@ const TRACKED = [
     name: 'COLAÍ',
     public: true,
     paths: [
+      join(root, '..', 'COLA-'),
       resolve(
         root,
         '..',

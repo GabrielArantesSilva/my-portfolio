@@ -30,15 +30,18 @@ const SPRING_LENGTH = 52;
 const CENTER_PULL = 0.006;
 const DAMPING = 0.86;
 const SETTLE_TICKS = 260;
+const MIN_ALPHA = 0.022;
 
 /**
- * Simulação de força própria em vez de d3-force: são 156 nós, o O(n²) roda
- * folgado, e evita 40kB de dependência num portfólio.
+ * Simulação de força própria em vez de d3-force: evita 40kB de dependência
+ * e congela o loop de animação assim que o grafo estabiliza (alpha <= MIN_ALPHA),
+ * retomando sob demanda apenas quando o usuário arrasta um nó.
  */
 export function useForceGraph({ nodes, edges, width, height, still }: Options) {
   const nodesRef = useRef<GraphNode[]>([]);
   const [, setTick] = useState(0);
   const alphaRef = useRef(1);
+  const wakeRef = useRef<(() => void) | null>(null);
   const pinnedRef = useRef<{ id: string | null; x: number; y: number }>({
     id: null,
     x: 0,
@@ -48,7 +51,10 @@ export function useForceGraph({ nodes, edges, width, height, still }: Options) {
   /** Prende um nó na posição do cursor e reaquece a simulação. */
   const pin = (id: string | null, x = 0, y = 0) => {
     pinnedRef.current = { id, x, y };
-    if (id) alphaRef.current = Math.max(alphaRef.current, 0.55);
+    if (id) {
+      alphaRef.current = Math.max(alphaRef.current, 0.55);
+      wakeRef.current?.();
+    }
   };
 
   // Semente determinística: o grafo abre igual toda vez, sem Math.random.
@@ -153,13 +159,32 @@ export function useForceGraph({ nodes, edges, width, height, still }: Options) {
     }
 
     let raf = 0;
+    let running = false;
+
     const loop = () => {
       step();
       setTick((t) => t + 1);
+      if (alphaRef.current > MIN_ALPHA || pinnedRef.current.id !== null) {
+        raf = requestAnimationFrame(loop);
+      } else {
+        running = false;
+      }
+    };
+
+    const start = () => {
+      if (running) return;
+      running = true;
       raf = requestAnimationFrame(loop);
     };
-    raf = requestAnimationFrame(loop);
-    return () => cancelAnimationFrame(raf);
+
+    wakeRef.current = start;
+    start();
+
+    return () => {
+      running = false;
+      wakeRef.current = null;
+      cancelAnimationFrame(raf);
+    };
   }, [nodes, edges, width, height, still]);
 
   return { nodes: nodesRef, pin };

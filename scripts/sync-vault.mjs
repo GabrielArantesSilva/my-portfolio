@@ -29,7 +29,7 @@ const indexPath =
   process.env.VAULT_INDEX ??
   (existsSync(defaultIndexPath)
     ? defaultIndexPath
-    : resolve(root, '..', 'Obsidian Vault', '_tooling', 'vault-index.json'));
+    : (existsSync(resolve(root, '..', 'My-obsidian-brain', '_tooling', 'vault-index.json')) ? resolve(root, '..', 'My-obsidian-brain', '_tooling', 'vault-index.json') : resolve(root, '..', 'Obsidian Vault', '_tooling', 'vault-index.json')));
 
 const outPath = join(root, 'src', 'content', 'vault.json');
 
