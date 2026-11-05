@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { useLang } from '../i18n/lang';
 import { STACK_CORE, UI, WORK } from '../content/site';
 import vault from '../content/vault.json';
+import { TechIcon } from '../components/TechIcon';
 
 const NOT_A_TOOL = new Set([
   'Ollama-Tutorial-Instalacao',
@@ -118,23 +119,24 @@ export function Stack() {
                 {t(group.label)}
               </h2>
 
-              <ul className="mt-2 flex flex-wrap gap-1">
+              <ul className="mt-2 flex flex-wrap gap-1.5">
                 {group.items.map((item) => (
                   <li key={item.key}>
                     <button
                       type="button"
                       aria-pressed={open === item.key}
                       onClick={() => setOpen(open === item.key ? null : item.key)}
-                      className={`font-mono inline-flex items-center gap-1 rounded border px-2 py-0.5 text-[0.65rem] transition-colors ${
+                      className={`font-mono inline-flex items-center gap-1.5 rounded-md border px-2 py-0.5 text-[0.65rem] transition-all ${
                         open === item.key
-                          ? 'border-accent bg-accent/15 text-heading font-medium'
-                          : 'border-hairline bg-ink-850/60 text-muted hover:border-hairline hover:text-heading'
+                          ? 'border-accent bg-accent/15 text-heading font-medium shadow-sm shadow-accent/10'
+                          : 'border-hairline/80 bg-ink-850/60 text-muted hover:border-hairline hover:text-heading hover:bg-ink-800/80'
                       }`}
                     >
+                      <TechIcon name={item.name} className="h-3 w-3 shrink-0" />
+                      <span>{item.name}</span>
                       {item.projects.length > 0 && (
                         <span className="h-1 w-1 shrink-0 rounded-full bg-ok" />
                       )}
-                      <span>{item.name}</span>
                     </button>
                   </li>
                 ))}
@@ -148,7 +150,10 @@ export function Stack() {
       {detail ? (
         <article className="rounded-xl border border-hairline bg-ink-900/70 p-3.5">
           <div className="flex items-center justify-between gap-2 border-b border-hairline/50 pb-2">
-            <h3 className="text-xs font-semibold text-heading">{detail.name}</h3>
+            <div className="flex items-center gap-2">
+              <TechIcon name={detail.name} className="h-4.5 w-4.5 shrink-0" />
+              <h3 className="text-xs font-semibold text-heading">{detail.name}</h3>
+            </div>
             {detail.note && (
               <span className="font-mono text-[0.62rem] text-muted">
                 {detail.note.words} {t(UI.words)} / ref: {detail.note.in}

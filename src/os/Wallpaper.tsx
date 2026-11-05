@@ -19,11 +19,11 @@ interface Particle {
   ty: number | null;
 }
 
-const DENSITY = 9_000; // 1 partícula a cada N px² de tela
-const MAX_PARTICLES = 160;
-/** Piso no celular: com menos que isso as figuras perdem o desenho (o G vira polígono). */
-const MIN_PARTICLES = 75;
-const LINK_DIST = 110;
+const DENSITY = 5_000; // 1 partícula a cada N px² de tela (mais densa e nítida)
+const MAX_PARTICLES = 260; // mais partículas para figuras ultra-definidas no desktop
+/** Piso no celular: figuras sólidas e nítidas em telas pequenas. */
+const MIN_PARTICLES = 100;
+const LINK_DIST = 95;
 const LINK_DIST_SQ = LINK_DIST * LINK_DIST;
 /** Raio de influência do ponteiro: o dedo é maior e menos preciso que o mouse. */
 const MOUSE_RADIUS = 150;
@@ -43,17 +43,16 @@ const SCATTER_MS = 3_000;
 const SCATTER_FORCE = 10;
 
 /**
- * Mola macia e pouco atrito: chega com um leve balanço em vez de travar no lugar.
- * (ζ ≈ 0,5: subamortecido de propósito.)
+ * Mola macia e pouco atrito: balanço suave e fluido ao montar figuras.
  */
-const SPRING = 0.007;
-const FORM_DAMPING = 0.92;
+const SPRING = 0.0085;
+const FORM_DAMPING = 0.925;
 /** Quanto a figura montada "respira" em volta do alvo, em px. */
-const WOBBLE = 2.5;
+const WOBBLE = 1.8;
 /** Tamanho da figura relativo ao menor lado da área de conteúdo. */
-const FIGURE_SCALE = 0.28;
+const FIGURE_SCALE = 0.30;
 /** Quantas partículas ficam fora da figura, no máximo. */
-const FREE_PARTICLES = 25;
+const FREE_PARTICLES = 35;
 
 /**
  * Wallpaper interativo de alta performance.
@@ -319,19 +318,19 @@ export function Wallpaper({
         // Pulso suave
         const pulse = Math.sin(tick + p.phase) * 0.3;
         const lit = p.tx !== null ? strength : 0;
-        const currentR = p.baseR + pulse + near * 1.4 + lit * 0.6;
+        const currentR = p.baseR + pulse + near * 1.5 + lit * 0.7;
 
         ctx.beginPath();
         ctx.arc(p.x, p.y, Math.max(0.4, currentR), 0, Math.PI * 2);
         ctx.fillStyle = near > 0
-          ? `rgba(56, 189, 248, ${0.4 + near * 0.5})`
-          : `rgba(186, 230, 253, ${0.22 + pulse * 0.08 + lit * 0.5})`;
+          ? `rgba(56, 189, 248, ${0.45 + near * 0.5})`
+          : `rgba(186, 230, 253, ${0.2 + pulse * 0.08 + lit * 0.65})`;
         ctx.fill();
       }
 
       // Traços da figura: somem quando o par é esticado (pelo ponteiro, ou ao se desfazer).
       if (strength > 0.01 && spacing > 0) {
-        ctx.lineWidth = 1.2;
+        ctx.lineWidth = 1.35;
         ctx.lineCap = 'round';
         ctx.lineJoin = 'round';
         for (const [a, b] of edges) {
@@ -340,9 +339,9 @@ export function Wallpaper({
           if (!p || !q) continue;
           const d = Math.hypot(q.x - p.x, q.y - p.y);
           const taut = Math.max(0, Math.min(1, 1 - (d - spacing * 1.3) / (spacing * 2)));
-          const alpha = strength * taut * 0.65;
+          const alpha = strength * taut * 0.75;
           if (alpha < 0.01) continue;
-          ctx.strokeStyle = `rgba(125, 211, 252, ${alpha})`;
+          ctx.strokeStyle = `rgba(56, 189, 248, ${alpha})`;
           ctx.beginPath();
           ctx.moveTo(p.x, p.y);
           ctx.lineTo(q.x, q.y);

@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { APP_FIGURE, CYCLE, FIGURES, sampleFigure } from './figures';
 
-/** 60 = celular (75 partículas - folga), 135 = desktop (160 - 25 soltas). */
-const BUDGETS = [60, 135] as const;
+/** 60 = celular (folga), 135 = desktop base, 225 = desktop alta densidade. */
+const BUDGETS = [60, 135, 225] as const;
 
 describe('figuras do wallpaper', () => {
   it('todo app aponta para uma figura do ciclo', () => {

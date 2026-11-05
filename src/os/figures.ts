@@ -1,12 +1,13 @@
 /**
  * Figuras que as partículas do Wallpaper montam no modo tela limpa.
  *
- * Cada figura é uma lista de traços; cada traço, uma polilinha em coordenadas
- * normalizadas ([-1, 1], y para baixo). O Wallpaper escala pelo menor lado da
- * tela e centraliza.
+ * Cada figura é uma coleção de traços normalizados em [-1, 1] (y para baixo).
+ * Design minimalista, geométrico, refinado e com estética de engenharia de software.
  */
-type Pt = readonly [number, number];
-type Stroke = readonly Pt[];
+export type Pt = readonly [number, number];
+export type Stroke = readonly Pt[];
+
+const segLen = (a: Pt, b: Pt) => Math.hypot(b[0] - a[0], b[1] - a[1]);
 
 const polygon = (sides: number, r: number, rot = -Math.PI / 2): Pt[] =>
   Array.from({ length: sides + 1 }, (_, i) => {
@@ -17,204 +18,181 @@ const polygon = (sides: number, r: number, rot = -Math.PI / 2): Pt[] =>
     ];
   });
 
+/**
+ * Monograma G A — Design arquitetural, geométrico e de alta precisão.
+ * Ambos os caracteres compartilham proporção áurea e a mesma linha de centro (y = 0.04).
+ */
+const letterG: Stroke = [
+  [-0.18, -0.68],
+  [-0.56, -0.68],
+  [-0.84, -0.38],
+  [-0.84, 0.38],
+  [-0.56, 0.68],
+  [-0.18, 0.68],
+  [-0.18, 0.04],
+  [-0.48, 0.04],
+];
+
+const letterA_body: Stroke = [
+  [0.18, 0.68],
+  [0.44, -0.68],
+  [0.58, -0.68],
+  [0.84, 0.68],
+];
+
+const letterA_bar: Stroke = [
+  [0.29, 0.04],
+  [0.73, 0.04],
+];
+
+/**
+ * Chaves matemáticas { }
+ */
 const brace = (dir: 1 | -1): Stroke =>
   (
     [
-      [0.24, -0.84],
-      [0.48, -0.84],
-      [0.56, -0.72],
-      [0.56, -0.16],
-      [0.84, 0],
-      [0.56, 0.16],
-      [0.56, 0.72],
-      [0.48, 0.84],
-      [0.24, 0.84],
+      [0.24, -0.80],
+      [0.48, -0.74],
+      [0.48, -0.16],
+      [0.74, 0],
+      [0.48, 0.16],
+      [0.48, 0.74],
+      [0.24, 0.80],
     ] as const
-  ).map(([x, y]) => [x * dir, y]);
+  ).map(([x, y]) => [Number((x * dir).toFixed(4)), y]);
 
 /**
- * Tag "GA" em estilo Graffiti / Wildstyle:
- * - Coroa street-art de 3 pontas inclinada no topo esquerdo
- * - Letra G angular (handstyle/chisel) com serifa superior, espinha dupla interna
- *   e barra central terminando em seta wildstyle apontando para dentro
- * - Letra A com serifa de apoio, topo chanfrado, kick-out no pé direito e corte
- *   transversal em seta de grafite
- * - Sublinhado em chicote (tag whip) ancorando a assinatura
+ * Cubo Isométrico 3D (Design de Sistemas & Infraestrutura)
  */
-const GRAFFITI_GA: readonly Stroke[] = [
-  // Coroa de 3 pontas (Basquiat / Tag Crown) inclinada sobre o G
-  [
-    [-0.78, -0.7],
-    [-0.86, -0.95],
-    [-0.63, -0.79],
-    [-0.48, -0.98],
-    [-0.33, -0.79],
-    [-0.1, -0.93],
-    [-0.18, -0.7],
-    [-0.78, -0.7],
-  ],
-  // Corpo principal do G em traço chanfrado + barra interna com ponta em seta
-  [
-    [-0.06, -0.32],
-    [-0.02, -0.54],
-    [-0.34, -0.62],
-    [-0.76, -0.5],
-    [-0.98, -0.14],
-    [-0.96, 0.34],
-    [-0.72, 0.64],
-    [-0.28, 0.66],
-    [-0.04, 0.44],
-    [-0.02, 0.04],
-    [-0.52, 0.04],
-    [-0.38, -0.07],
-    [-0.52, 0.04],
-    [-0.38, 0.15],
-  ],
-  // Sombra interna / duplo contorno chanfrado da espinha do G
-  [
-    [-0.38, -0.44],
-    [-0.68, -0.34],
-    [-0.78, -0.06],
-    [-0.76, 0.28],
-    [-0.56, 0.48],
-  ],
-  // Corpo do A wildstyle com serifa de apoio, topo chanfrado e kick-out na perna direita
-  [
-    [-0.06, 0.54],
-    [0.08, 0.66],
-    [0.46, -0.66],
-    [0.58, -0.66],
-    [0.9, 0.66],
-    [1.04, 0.52],
-  ],
-  // Barra transversal do A rasgando em seta de grafite para a direita
-  [
-    [0.04, 0.2],
-    [0.98, 0.02],
-    [0.83, -0.1],
-    [0.98, 0.02],
-    [0.85, 0.15],
-  ],
-  // Sublinhado "tag whip" em zigue-zague sob a assinatura
-  [
-    [-0.88, 0.84],
-    [0.52, 0.76],
-    [0.18, 0.92],
-    [0.94, 0.86],
-  ],
+const cube3D: readonly Stroke[] = [
+  // Losango superior
+  [[0, -0.82], [0.68, -0.42], [0, -0.02], [-0.68, -0.42], [0, -0.82]],
+  // Eixo vertical central frontal
+  [[0, -0.02], [0, 0.78]],
+  // Face esquerda
+  [[-0.68, -0.42], [-0.68, 0.38], [0, 0.78]],
+  // Face direita
+  [[0.68, -0.42], [0.68, 0.38], [0, 0.78]],
 ];
 
-const outerHex = polygon(6, 0.92, -Math.PI / 2);
-const innerHex = polygon(6, 0.42, -Math.PI / 6);
+/**
+ * Órbitas Atômicas / React (Núcleo com elipses orbitais suaves)
+ */
+const orbitalEllipse = (angle: number): Stroke => {
+  const cos = Math.cos(angle);
+  const sin = Math.sin(angle);
+  const rx = 0.86;
+  const ry = 0.32;
+  const steps = 18;
+  const pts: Pt[] = [];
+  for (let i = 0; i <= steps; i++) {
+    const t = (Math.PI * 2 * i) / steps;
+    const px = Math.cos(t) * rx;
+    const py = Math.sin(t) * ry;
+    pts.push([
+      Number((px * cos - py * sin).toFixed(4)),
+      Number((px * sin + py * cos).toFixed(4)),
+    ]);
+  }
+  return pts;
+};
 
 const FIGURE_SHAPES = {
-  // As iniciais: a assinatura em estilo Graffiti / Wildstyle Tag
-  ga: GRAFFITI_GA,
+  // As iniciais: Monograma limpo, arquitetural e simétrico
+  ga: [letterG, letterA_body, letterA_bar],
 
-  // Emblema </> com chanfro duplo nas chaves e serifa na barra
+  // Símbolo de código </>
   code: [
-    [[-0.36, -0.56], [-0.96, 0], [-0.36, 0.56]],
-    [[-0.48, -0.32], [-0.76, 0], [-0.48, 0.32]],
-    [[0.26, -0.78], [0.16, -0.78], [-0.16, 0.78], [-0.26, 0.78]],
-    [[0.36, -0.56], [0.96, 0], [0.36, 0.56]],
-    [[0.48, -0.32], [0.76, 0], [0.48, 0.32]],
+    [[-0.34, -0.55], [-0.88, 0], [-0.34, 0.55]],
+    [[0.18, -0.74], [-0.18, 0.74]],
+    [[0.34, -0.55], [0.88, 0], [0.34, 0.55]],
   ],
 
-  // Janela de terminal completa com barra de topo, prompt > e cursor em bloco
+  // Cubo Isométrico 3D
+  cube: cube3D,
+
+  // Átomo / React & Core Engineering
+  atom: [
+    orbitalEllipse(Math.PI / 6),
+    orbitalEllipse(-Math.PI / 6),
+    polygon(10, 0.14),
+  ],
+
+  // Janela de terminal com prompt > e cursor
   terminal: [
-    [[-0.94, -0.68], [0.94, -0.68], [0.94, 0.68], [-0.94, 0.68], [-0.94, -0.68]],
-    [[-0.94, -0.4], [0.94, -0.4]],
-    [[-0.62, -0.14], [-0.22, 0.14], [-0.62, 0.42]],
-    [[-0.04, 0.42], [0.52, 0.42], [0.52, 0.28], [-0.04, 0.28], [-0.04, 0.42]],
+    [[-0.92, -0.65], [0.92, -0.65], [0.92, 0.65], [-0.92, 0.65], [-0.92, -0.65]],
+    [[-0.92, -0.38], [0.92, -0.38]],
+    [[-0.65, -0.12], [-0.35, 0.12], [-0.65, 0.36]],
+    [[-0.15, 0.36], [0.35, 0.36]],
   ],
 
-  // Grafo cristalino em duplo anel hexagonal conectado: o segundo cérebro / vault
+  // Grafo hexagonal cristalino (Segundo Cérebro / Obsidian Vault)
   brain: [
-    outerHex,
-    innerHex,
-    [outerHex[0], innerHex[0], innerHex[3], outerHex[3]],
-    [outerHex[1], innerHex[1], innerHex[4], outerHex[4]],
-    [outerHex[2], innerHex[2], innerHex[5], outerHex[5]],
+    polygon(6, 0.86),
+    polygon(6, 0.42),
+    [[0, -0.86], [0, 0.86]],
+    [[-0.7448, -0.43], [0.7448, 0.43]],
+    [[-0.7448, 0.43], [0.7448, -0.43]],
   ],
 
-  // Chaves { } esculpidas com nós de código centrais (: ;)
-  braces: [
-    brace(-1),
-    brace(1),
-    [[0, -0.36], [0.12, -0.24], [0, -0.12], [-0.12, -0.24], [0, -0.36]],
-    [[0, 0.12], [0.12, 0.24], [0, 0.36], [-0.12, 0.24], [0, 0.12]],
-    [[0, 0.36], [-0.08, 0.52]],
-  ],
+  // Chaves { }
+  braces: [brace(-1), brace(1)],
 
-  // Linha de batimento / telemetria emoldurada por cantoneiras de radar e beacon
+  // Batimento / Pulso de atividade em tempo real
   pulse: [
     [
-      [-1, 0.08],
-      [-0.52, 0.08],
-      [-0.38, -0.22],
-      [-0.22, 0.42],
-      [-0.04, -0.78],
-      [0.14, 0.58],
-      [0.3, -0.32],
-      [0.44, 0.08],
-      [1, 0.08],
+      [-0.96, 0.08],
+      [-0.45, 0.08],
+      [-0.30, -0.22],
+      [-0.14, 0.52],
+      [0.08, -0.74],
+      [0.26, 0.34],
+      [0.40, 0.08],
+      [0.96, 0.08],
     ],
-    [[-0.88, -0.52], [-0.88, -0.78], [-0.56, -0.78]],
-    [[0.56, -0.78], [0.88, -0.78], [0.88, -0.52]],
-    [[-0.88, 0.52], [-0.88, 0.78], [-0.56, 0.78]],
-    [[0.56, 0.78], [0.88, 0.78], [0.88, 0.52]],
   ],
 
-  // Camadas isométricas empilhadas com núcleo superior e pilares de arquitetura
+  // Camadas de arquitetura empilhadas (Stack & Tecnologias)
   layers: [
-    [[0, -0.8], [0.88, -0.38], [0, 0.04], [-0.88, -0.38], [0, -0.8]],
-    [[0, -0.58], [0.42, -0.38], [0, -0.18], [-0.42, -0.38], [0, -0.58]],
-    [[-0.88, 0], [0, 0.42], [0.88, 0]],
-    [[-0.88, 0.38], [0, 0.8], [0.88, 0.38]],
-    [[-0.88, -0.38], [-0.88, 0.38]],
-    [[0.88, -0.38], [0.88, 0.38]],
+    [[0, -0.76], [0.84, -0.36], [0, 0.04], [-0.84, -0.36], [0, -0.76]],
+    [[-0.84, 0.02], [0, 0.42], [0.84, 0.02]],
+    [[-0.84, 0.38], [0, 0.78], [0.84, 0.38]],
   ],
 
-  // Folha com dobra, badge de perfil, linhas de texto e selo de aprovação: o currículo
+  // Documento técnico com dobra de página (Currículo)
   document: [
-    [[-0.6, -0.84], [0.24, -0.84], [0.6, -0.48], [0.6, 0.84], [-0.6, 0.84], [-0.6, -0.84]],
-    [[0.24, -0.84], [0.24, -0.48], [0.6, -0.48]],
-    [[-0.4, -0.62], [-0.14, -0.62], [-0.14, -0.36], [-0.4, -0.36], [-0.4, -0.62]],
-    [[-0.4, -0.12], [0.38, -0.12]],
-    [[-0.4, 0.16], [0.38, 0.16]],
-    [[-0.4, 0.44], [0.04, 0.44]],
-    [[0.16, 0.46], [0.26, 0.58], [0.44, 0.34]],
+    [[-0.55, -0.82], [0.22, -0.82], [0.55, -0.49], [0.55, 0.82], [-0.55, 0.82], [-0.55, -0.82]],
+    [[0.22, -0.82], [0.22, -0.49], [0.55, -0.49]],
+    [[-0.32, -0.18], [0.32, -0.18]],
+    [[-0.32, 0.12], [0.32, 0.12]],
+    [[-0.32, 0.42], [0.08, 0.42]],
   ],
 
-  // Avião de papel em origami 3D com dobras internas e rastro de velocidade
+  // Avião de papel minimalista (Requests & Comunicação)
   plane: [
-    [[-0.92, -0.12], [0.94, -0.78], [0.36, 0.84], [0.02, 0.16], [-0.92, -0.12]],
-    [[0.94, -0.78], [0.02, 0.16], [0.08, 0.54], [0.22, 0.32]],
-    [[-0.78, 0.36], [-0.36, 0.2]],
-    [[-0.56, 0.72], [-0.12, 0.54]],
+    [[-0.90, -0.12], [0.90, -0.78], [0.32, 0.82], [0.02, 0.18], [-0.90, -0.12]],
+    [[0.02, 0.18], [0.90, -0.78]],
   ],
 
-  // Envelope selado com dobras diagonais e lacre em diamante: contato
+  // Envelope com aba dobrada (Contato)
   envelope: [
-    [[-0.92, -0.62], [0.92, -0.62], [0.92, 0.62], [-0.92, 0.62], [-0.92, -0.62]],
-    [[-0.92, -0.62], [0, 0.08], [0.92, -0.62]],
-    [[-0.92, 0.62], [-0.32, 0.08]],
-    [[0.92, 0.62], [0.32, 0.08]],
-    [[0, -0.08], [0.14, 0.08], [0, 0.24], [-0.14, 0.08], [0, -0.08]],
+    [[-0.90, -0.62], [0.90, -0.62], [0.90, 0.62], [-0.90, 0.62], [-0.90, -0.62]],
+    [[-0.90, -0.62], [0, 0.12], [0.90, -0.62]],
   ],
 } satisfies Record<string, readonly Stroke[]>;
 
 export type FigureId = keyof typeof FIGURE_SHAPES;
-
 export const FIGURES: Readonly<Record<FigureId, readonly Stroke[]>> = FIGURE_SHAPES;
 
-/** Ordem do ciclo na tela limpa. Começa pela figura do app aberto e segue daqui. */
+/** Ordem de exibição no modo tela limpa */
 export const CYCLE: readonly FigureId[] = [
   'ga',
   'code',
+  'cube',
   'pulse',
   'brain',
   'layers',
+  'atom',
   'document',
   'plane',
   'envelope',
@@ -222,7 +200,7 @@ export const CYCLE: readonly FigureId[] = [
   'braces',
 ];
 
-/** Figura que abre a tela limpa para cada app. */
+/** Figura inicial associada a cada aba/aplicação */
 export const APP_FIGURE: Readonly<Record<string, FigureId>> = {
   sobre: 'ga',
   trabalho: 'code',
@@ -235,19 +213,13 @@ export const APP_FIGURE: Readonly<Record<string, FigureId>> = {
 };
 
 export interface Sampled {
-  /** Alvos em px, já escalados e centralizados. */
   targets: { x: number; y: number }[];
-  /** Pares de índices de alvos vizinhos no mesmo traço: viram os traços desenhados. */
   edges: [number, number][];
-  /** Distância esperada entre vizinhos, em px. */
   spacing: number;
 }
 
-const segLen = (a: Pt, b: Pt) => Math.hypot(b[0] - a[0], b[1] - a[1]);
-
 /**
- * Amostragem por comprimento de arco usada apenas como fallback caso `n` seja
- * menor que o número total de vértices explícitos da figura.
+ * Amostragem por comprimento de arco usada como fallback se n for menor que os vértices.
  */
 function sampleByArcLength(
   figure: readonly Stroke[],
@@ -292,9 +264,10 @@ function sampleByArcLength(
 }
 
 /**
- * Distribui `n` pontos ao longo dos traços preservando 100% dos vértices
- * explícitos (quinas vivas, serifas, pontas de seta e fechamentos) e
- * subdividindo os segmentos proporcionalmente ao seu comprimento.
+ * Distribui exatamente `n` pontos ao longo dos traços:
+ * - Preserva 100% dos vértices explícitos (quinas vivas, serifas, pontas de seta).
+ * - Subdivide os segmentos proporcionalmente ao seu comprimento.
+ * - Garante que cada traço é contínuo, sem arestas órfãs ou esticadas.
  */
 export function sampleFigure(
   figure: readonly Stroke[],
@@ -343,8 +316,8 @@ export function sampleFigure(
     return sampleByArcLength(validStrokes, n, cx, cy, scale);
   }
 
-  // Cada segmento já começa com 1 subsegmento (garantindo todos os vértices).
-  // Os pontos extras (n - totalVertices) viram subdivisões proporcionais ao tamanho.
+  // Cada segmento começa com 1 subsegmento (preservando todos os vértices).
+  // Os pontos extras (n - totalVertices) viram subdivisões proporcionais ao comprimento.
   const extraPoints = n - totalVertices;
   const totalDesiredSubs = segments.length + extraPoints;
 
