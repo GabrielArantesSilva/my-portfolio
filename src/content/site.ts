@@ -112,9 +112,9 @@ export const ABOUT = {
 export const WORK: readonly WorkItem[] = [
   {
     id: 'vortex',
-    org: { pt: 'Projeto próprio / SaaS', en: 'Own project / SaaS' },
+    org: { pt: 'Projeto para empresa / ERP', en: 'Client project / ERP' },
     period: '2026 — hoje',
-    kind: 'produto',
+    kind: 'trabalho',
     title: {
       pt: 'VORTEX OS — ERP contábil (fiscal, folha e contabilidade)',
       en: 'VORTEX OS — Accounting ERP (tax, payroll and bookkeeping)',
@@ -129,6 +129,8 @@ export const WORK: readonly WorkItem[] = [
       { pt: 'Domínio tipado com testes automatizados via Vitest', en: 'Typed domain models with automated test suite in Vitest' },
     ],
     stack: ['Next.js', 'TypeScript', 'Supabase', 'PostgreSQL', 'Tailwind CSS', 'Vitest'],
+    href: 'https://vortex-os-pi.vercel.app/login',
+    hrefLabel: { pt: 'Ver no ar', en: 'Live' },
   },
   {
     id: 'enemza',
@@ -148,8 +150,8 @@ export const WORK: readonly WorkItem[] = [
       { pt: 'Autenticação própria com scrypt e cookie assinado (HMAC)', en: 'Custom auth with scrypt and HMAC-signed cookies' },
     ],
     stack: ['Next.js 15', 'TypeScript', 'Prisma', 'PostgreSQL (Neon)', 'PWA', 'Gemini', 'Vitest'],
-    href: 'https://enemza.vercel.app',
-    hrefLabel: { pt: 'Ver no ar', en: 'Live' },
+    href: 'https://github.com/GabrielArantesSilva/EnemzaMVP',
+    hrefLabel: { pt: 'Código', en: 'Source' },
   },
   {
     id: 'colai',
@@ -223,8 +225,8 @@ export const WORK: readonly WorkItem[] = [
       { pt: 'Faixas de classificação com fonte única, impossível divergir entre telas', en: 'Classification bands from a single source, impossible to diverge across screens' },
     ],
     stack: ['TanStack Start', 'React 19', 'Supabase', 'PostgreSQL', 'Vitest'],
-    href: 'https://dobra-saa-s.vercel.app',
-    hrefLabel: { pt: 'Ver no ar', en: 'Live' },
+    href: 'https://github.com/GabrielArantesSilva/Dobra-SaaS',
+    hrefLabel: { pt: 'Código', en: 'Source' },
   },
   {
     id: 'bot',
@@ -263,8 +265,6 @@ export const WORK: readonly WorkItem[] = [
       { pt: 'Variância como métrica de primeira classe', en: 'Variance as a first-class metric' },
     ],
     stack: ['TypeScript', 'Next.js', 'Drizzle', 'Vitest'],
-    href: 'https://bancada-sand.vercel.app',
-    hrefLabel: { pt: 'Ver no ar', en: 'Live' },
   },
 ] as const;
 
