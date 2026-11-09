@@ -33,17 +33,22 @@ const indexPath =
 
 const outPath = join(root, 'src', 'content', 'vault.json');
 
-/** Prefixos de pasta liberados. Qualquer outro caminho é descartado. */
+/** Prefixos de pasta estritamente liberados. Conhecimento técnico puro (Concepts e Entities). Qualquer outro caminho é descartado para blindagem de sigilo. */
 const PUBLIC_ROOTS = [
-  '20_concepts/',
-  '30_entities/',
-  '10_sources/',
   '04_Resources/Concepts/',
   '04_Resources/Entities/',
-  '04_Resources/Sources/',
 ];
 
-const IGNORED_DOMAINS = new Set(['Clippings', 'Threejs-Documentation', 'Sources']);
+const IGNORED_DOMAINS = new Set([
+  'Clippings',
+  'Threejs-Documentation',
+  'Sources',
+  'github-stars-711',
+  'garimpo-2026',
+  'github-stars-novos-2026',
+  'github-stars',
+  'garimpo',
+]);
 
 const isPublic = (path) => PUBLIC_ROOTS.some((root) => path.startsWith(root));
 
@@ -70,8 +75,8 @@ function resolveDomain(folder) {
 const allNotes = raw.notes ?? [];
 const publicNotes = allNotes
   .filter((n) => isPublic(String(n.path ?? '')))
-  .filter((n) => !IGNORED_DOMAINS.has(resolveDomain(n.folder)));
-const allowed = new Set(publicNotes.map((n) => n.id));
+  .filter((n) => !IGNORED_DOMAINS.has(resolveDomain(n.folder)))
+  .filter((n) => Number(n.words ?? 0) >= 80);
 
 const vaultRoot = dirname(dirname(indexPath));
 
@@ -158,25 +163,29 @@ function readNote(path) {
   }
 }
 
-const notes = publicNotes.map((n) => {
-  const file = readNote(String(n.path));
-  const indexTags = Array.isArray(n.tags) ? n.tags : [];
-  const tags = [...new Set([...indexTags, ...hashtagsFrom(file?.meta ?? '')].map(cleanTag))]
-    .filter(Boolean)
-    .slice(0, 8);
-  const fallback = fixMojibake(String(n.excerpt ?? ''));
-  return {
-    id: String(n.id),
-    folder: String(n.folder ?? ''),
-    domain: resolveDomain(n.folder),
-    title: fixMojibake(String(n.title ?? n.id)),
-    tags,
-    excerpt: (file && excerptFrom(file.body)) || (/^[\w-]+:\s/.test(fallback) ? '' : fallback.slice(0, 260)),
-    words: Number(n.words ?? 0),
-    in: Number(n.inDegree ?? 0),
-    out: Number(n.outDegree ?? 0),
-  };
-});
+const notes = publicNotes
+  .map((n) => {
+    const file = readNote(String(n.path));
+    const indexTags = Array.isArray(n.tags) ? n.tags : [];
+    const tags = [...new Set([...indexTags, ...hashtagsFrom(file?.meta ?? '')].map(cleanTag))]
+      .filter(Boolean)
+      .slice(0, 8);
+    const fallback = fixMojibake(String(n.excerpt ?? ''));
+    return {
+      id: String(n.id),
+      folder: String(n.folder ?? ''),
+      domain: resolveDomain(n.folder),
+      title: fixMojibake(String(n.title ?? n.id)),
+      tags,
+      excerpt: (file && excerptFrom(file.body)) || (/^[\w-]+:\s/.test(fallback) ? '' : fallback.slice(0, 260)),
+      words: Number(n.words ?? 0),
+      in: Number(n.inDegree ?? 0),
+      out: Number(n.outDegree ?? 0),
+    };
+  })
+  .filter((n) => Boolean(n.excerpt && n.excerpt.trim().length >= 20));
+
+const allowed = new Set(notes.map((n) => n.id));
 
 // Aresta só sobrevive se as duas pontas forem públicas.
 const rawEdges = raw.edges ?? [];

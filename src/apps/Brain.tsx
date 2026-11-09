@@ -6,7 +6,7 @@ import vault from '../content/vault.json';
 import { useForceGraph } from '../os/useForceGraph';
 
 const W = 520;
-const H = 200;
+const H = 210;
 
 /** Matiz sutil e técnico por domínio */
 const HUES = [200, 215, 230, 190, 210, 220, 175, 240];
@@ -200,7 +200,7 @@ export function Brain({
         ))}
       </dl>
 
-      {/* Canvas com altura reduzida (200px) */}
+      {/* Grafo do vault em canvas 2D */}
       <div className="overflow-hidden rounded-xl border border-hairline/70 bg-ink-950">
         <canvas
           ref={canvasRef}
@@ -224,6 +224,41 @@ export function Brain({
         className="numeric w-full rounded-lg border border-hairline bg-canvas px-3 py-1.5 text-xs text-body outline-none transition-colors placeholder:text-ink-600 focus:border-accent"
       />
 
+      {/* Domínios principais de estudo */}
+      <div className="space-y-1.5">
+        <div className="flex items-center justify-between text-[0.6rem] font-mono text-muted uppercase tracking-wider">
+          <span>{lang === 'pt' ? 'Domínios de Estudo' : 'Study Domains'}</span>
+          {query && (
+            <button
+              type="button"
+              onClick={() => setQuery('')}
+              className="text-accent hover:underline lowercase"
+            >
+              {lang === 'pt' ? 'limpar filtro' : 'clear filter'}
+            </button>
+          )}
+        </div>
+        <ul className="flex flex-wrap gap-1" aria-label={t(UI.domains)}>
+          {vault.domains.slice(0, 10).map((d) => (
+            <li key={d.slug}>
+              <button
+                type="button"
+                onClick={() => setQuery(query === d.slug ? '' : d.slug)}
+                aria-pressed={query === d.slug}
+                className={`numeric rounded-md border px-2 py-0.5 text-[0.62rem] transition-colors font-mono ${
+                  query === d.slug
+                    ? 'border-accent bg-accent/20 text-heading font-medium'
+                    : 'border-hairline/80 bg-ink-950/40 text-muted hover:border-accent/60 hover:text-body'
+                }`}
+              >
+                {d.slug}
+                <span className="ml-1 text-ink-500">{d.count}</span>
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
+
       <ul className="flex flex-wrap gap-1" aria-label={t(UI.topTags)}>
         {vault.topTags.map((tag) => (
           <li key={tag.tag}>
@@ -244,29 +279,105 @@ export function Brain({
         ))}
       </ul>
 
+      {/* Lista de notas encontradas na busca/filtro para navegação rápida */}
+      {matches && (
+        <div className="max-h-48 overflow-y-auto rounded-xl border border-hairline/80 bg-ink-950/60 p-2 space-y-1.5 scrollbar-thin">
+          <div className="flex items-center justify-between px-1 text-[0.6rem] font-mono text-muted uppercase tracking-wider">
+            <span>
+              {matches.size} {lang === 'pt' ? 'notas encontradas' : 'notes matching'}
+            </span>
+            <span className="text-ink-500">
+              {lang === 'pt' ? 'clique para ler a nota' : 'click to read note'}
+            </span>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
+            {vault.notes
+              .filter((n) => matches.has(n.id))
+              .slice(0, 12)
+              .map((n) => (
+                <button
+                  key={n.id}
+                  type="button"
+                  onClick={() => onSelect(n.id)}
+                  className={`flex flex-col text-left rounded-lg p-2 transition-colors border ${
+                    selected === n.id
+                      ? 'border-accent bg-accent/15 text-heading'
+                      : 'border-hairline/50 bg-ink-900/40 hover:bg-ink-850 hover:border-accent/40 text-body'
+                  }`}
+                >
+                  <span className="text-xs font-semibold truncate text-heading">{n.title}</span>
+                  <div className="flex items-center gap-2 mt-0.5 text-[0.6rem] font-mono text-muted">
+                    <span className="text-accent">{n.domain}</span>
+                    <span>·</span>
+                    <span>{n.words} {t(UI.words)}</span>
+                  </div>
+                </button>
+              ))}
+          </div>
+        </div>
+      )}
+
       {detail ? (
         <article className="rounded-xl border border-accent/40 bg-surface/80 p-3 sm:p-4">
-          <h2 className="numeric text-xs sm:text-sm font-semibold text-heading">{detail.title}</h2>
-          <p className="numeric mt-0.5 text-[0.62rem] text-accent">{detail.folder}</p>
+          <div className="flex items-start justify-between gap-2">
+            <div>
+              <h2 className="numeric text-xs sm:text-sm font-semibold text-heading">{detail.title}</h2>
+              <p className="numeric mt-0.5 text-[0.62rem] text-accent font-mono">{detail.folder}</p>
+            </div>
+            <button
+              type="button"
+              onClick={() => onSelect(null)}
+              className="font-mono text-[0.62rem] text-muted hover:text-heading border border-hairline rounded px-1.5 py-0.5"
+            >
+              {lang === 'pt' ? 'fechar' : 'close'}
+            </button>
+          </div>
+
           {detail.excerpt && (
-            <p className="mt-2 text-xs leading-relaxed text-muted">{detail.excerpt}</p>
+            <p className="mt-2.5 text-xs leading-relaxed text-body">{detail.excerpt}</p>
           )}
+
           <dl className="numeric mt-2.5 flex flex-wrap gap-x-4 gap-y-1 text-[0.65rem] text-muted font-mono">
-            <span>{lang === 'pt' ? 'in' : 'in'}: {detail.in}</span>
-            <span>{lang === 'pt' ? 'out' : 'out'}: {detail.out}</span>
+            <span>{lang === 'pt' ? 'conexões in' : 'in'}: {detail.in}</span>
+            <span>{lang === 'pt' ? 'conexões out' : 'out'}: {detail.out}</span>
             <span>{detail.words} {t(UI.words)}</span>
           </dl>
+
           {detail.tags.length > 0 && (
             <ul className="mt-2 flex flex-wrap gap-1">
               {detail.tags.map((tag) => (
                 <li
                   key={tag}
-                  className="numeric rounded border border-hairline px-1.5 py-0.5 text-[0.6rem] text-muted"
+                  className="numeric rounded border border-hairline px-1.5 py-0.5 text-[0.6rem] text-muted font-mono"
                 >
                   {tag}
                 </li>
               ))}
             </ul>
+          )}
+
+          {/* Notas conectadas / referências cruzadas no grafo */}
+          {neighbours.size > 0 && (
+            <div className="mt-3 pt-2.5 border-t border-hairline/60">
+              <span className="text-[0.62rem] font-mono text-muted uppercase tracking-wider block mb-1.5">
+                {lang === 'pt' ? 'notas conectadas no grafo' : 'connected notes'} ({neighbours.size})
+              </span>
+              <div className="flex flex-wrap gap-1 max-h-32 overflow-y-auto">
+                {vault.notes
+                  .filter((n) => neighbours.has(n.id))
+                  .map((n) => (
+                    <button
+                      key={n.id}
+                      type="button"
+                      onClick={() => onSelect(n.id)}
+                      className="text-left rounded border border-hairline/60 bg-ink-950/40 hover:bg-ink-900 hover:border-accent/50 px-2 py-0.5 text-[0.62rem] text-body transition-colors"
+                      title={n.domain}
+                    >
+                      <span>{n.title}</span>
+                    </button>
+                  ))}
+              </div>
+            </div>
           )}
         </article>
       ) : (

@@ -37,11 +37,16 @@ export function Work() {
                 className="group flex w-full items-center justify-between p-3 sm:p-3.5 text-left"
               >
                 <div className="min-w-0 flex-1 pr-3">
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-wrap items-center gap-2">
                     <span className="font-mono text-[0.65rem] uppercase tracking-wider text-accent font-medium">
                       {orgOf(item, t)}
                     </span>
                     <span className="font-mono text-[0.65rem] text-muted">/ {item.period}</span>
+                    {item.metric && (
+                      <span className="font-mono text-[0.62rem] text-muted hidden sm:inline">
+                        · {t(item.metric)}
+                      </span>
+                    )}
                   </div>
                   <span className="mt-1 block text-xs sm:truncate sm:text-sm font-semibold text-heading">
                     {t(item.title)}
@@ -81,6 +86,21 @@ export function Work() {
                           </li>
                         ))}
                       </ul>
+                    )}
+
+                    {item.architecture && (
+                      <div className="mt-3 rounded-lg border border-hairline/60 bg-ink-950/40 p-2.5 sm:p-3 space-y-1">
+                        <div className="font-mono text-[0.62rem] text-accent uppercase tracking-wider font-medium">
+                          {t({ pt: 'Decisão de arquitetura', en: 'Architecture decision' })}
+                        </div>
+                        <p className="text-xs font-medium text-heading">
+                          {t(item.architecture.decision)}
+                        </p>
+                        <p className="text-[0.7rem] text-muted leading-relaxed">
+                          <span className="font-mono text-ink-500">{t({ pt: 'Trade-off: ', en: 'Trade-off: ' })}</span>
+                          {t(item.architecture.tradeOff)}
+                        </p>
+                      </div>
                     )}
 
                     <div className="mt-3 flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-hairline/40">

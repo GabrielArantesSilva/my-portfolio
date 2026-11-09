@@ -14,6 +14,13 @@ export interface WorkItem {
   readonly period: string;
   readonly kind: WorkKind;
   readonly title: Txt;
+  /** Métrica de ganho / impacto para liderança e RH (ex: -70% tempo, 100% digital) */
+  readonly metric?: Txt;
+  /** Decisão arquitetural de alto nível e seus trade-offs (para tech leads e avaliação QI) */
+  readonly architecture?: {
+    readonly decision: Txt;
+    readonly tradeOff: Txt;
+  };
   readonly summary: Txt;
   readonly highlights: readonly Txt[];
   readonly stack: readonly string[];

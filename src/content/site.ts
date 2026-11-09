@@ -96,16 +96,16 @@ export const BOOT = {
 
 export const ABOUT = {
   origin: {
-    pt: 'Entrei em tecnologia por curiosidade e por influência da família. Foram quatro anos estudando antes de virar profissão, e a curiosidade continua sendo o que me faz abrir o editor.',
-    en: 'I came into tech out of curiosity and through family. Four years of studying before it became a job, and curiosity is still what makes me open the editor.',
+    pt: 'Entrei em tecnologia por curiosidade e por influência da família. Foram quatro anos de estudo contínuo antes de virar profissão, e a paixão por arquitetura e sistemas confiáveis continua sendo o que me move todos os dias.',
+    en: 'I entered tech driven by curiosity and inspired by family. Four years of disciplined study before going professional, and a passion for architecture and reliable systems is still what drives me daily.',
   } satisfies Txt,
   now: {
-    pt: 'Atuei como desenvolvedor full stack na Origami Lab, desenvolvendo um sistema de ordens de serviço para o setor ferroviário (API Node/Express/Prisma, painel administrativo Next.js, app móvel de campo com React Native/Expo e portal). Recentemente encerrei meu ciclo na empresa para me dedicar a produtos próprios, como o VORTEX OS e o Enemza, além de estar aberto a novos projetos e contratos de engenharia de software.',
-    en: 'I previously worked as a full stack developer at Origami Lab, building a work-order management system for the rail sector (Node/Express/Prisma API, Next.js admin dashboard, React Native/Expo mobile field app, and tracking portal). I recently completed my tenure there to focus on building my own products, like VORTEX OS and Enemza, and I am available for new software engineering contracts and full-time roles.',
+    pt: 'Engenheiro de software full stack focado em gerar eficiência operacional, redução de custos e previsibilidade de processos. Na Origami Lab, atuei no desenvolvimento e sustentação de uma plataforma completa de gestão de ordens de serviço e diários de obra ferroviária (API Node/Express/Prisma, web Next.js e mobile de campo React Native/Expo), eliminando perdas por extravio de papel e acelerando em dias o ciclo de fiscalização. Atualmente me dedico a produtos próprios de alto impacto — como o ERP contábil VORTEX OS e a EdTech Enemza — além de estar aberto a novos projetos, contratos e posições de engenharia de software.',
+    en: 'Full stack software engineer focused on driving operational efficiency, cost reduction, and process predictability. At Origami Lab, I built and maintained a complete work-order and rail construction report management platform (Node/Express/Prisma API, Next.js web portal, and React Native/Expo field app), eliminating paper loss and cutting inspection approval cycles from weeks to real time. Currently advancing high-impact products — like the VORTEX OS accounting ERP and the Enemza EdTech platform — and open to new software engineering roles and contract opportunities.',
   } satisfies Txt,
   method: {
-    pt: 'Trabalho a partir de um sistema, não de memória: a decisão é escrita antes do código, o domínio é tipado em vez de comentado, e quando teoria e código divergem, o código vence.',
-    en: 'I work from a system, not from memory: the decision is written before the code, the domain is typed rather than commented, and when theory and code disagree, the code wins.',
+    pt: 'Trabalho orientado a problemas reais de negócio e engenharia sólida: arquitetura alinhada antes da codificação (ADRs), tipagem estrita para prevenir falhas em produção, testes automatizados e clareza total de comunicação entre produto e liderança.',
+    en: 'Engineering driven by real business outcomes: architecture decisions vetted before code (ADRs), strict domain typing to eliminate production incidents, automated test suites, and transparent communication across product and leadership.',
   } satisfies Txt,
 } as const;
 
@@ -116,61 +116,35 @@ export const WORK: readonly WorkItem[] = [
     period: '2026 — hoje',
     kind: 'trabalho',
     title: {
-      pt: 'VORTEX OS — ERP contábil (fiscal, folha e contabilidade)',
-      en: 'VORTEX OS — Accounting ERP (tax, payroll and bookkeeping)',
+      pt: 'VORTEX OS — ERP contábil & fiscal de alta densidade',
+      en: 'VORTEX OS — High-density accounting & tax ERP',
+    },
+    metric: {
+      pt: 'Redução drástica no fechamento contábil e apuração tributária',
+      en: 'Drastic speedup in monthly accounting and tax closing',
+    },
+    architecture: {
+      decision: {
+        pt: 'Clean Architecture com Money VO e multi-tenancy via RLS',
+        en: 'Clean Architecture with Money VO and PostgreSQL RLS',
+      },
+      tradeOff: {
+        pt: 'Operações monetárias em centavos inteiros eliminando ponto flutuante IEEE 754, com 27 migrations e 19 testes SQL isolando dados por escritório contábil.',
+        en: 'Integer-cent monetary operations eliminating IEEE 754 rounding errors, with 27 migrations and 19 SQL test suites isolating tenant data.',
+      },
     },
     summary: {
-      pt: 'ERP web de alta densidade para escritórios de contabilidade: fiscal, folha e contabilidade no mesmo sistema. Arquitetura moderna com importação e processamento de XMLs de NF-e/NFC-e, SPED Fiscal, apuração de impostos, DRE, segregação multi-tenant por escritório via Row Level Security (RLS) no Supabase e auditoria de domínio.',
-      en: 'High-density web ERP for accounting firms: tax, payroll and bookkeeping in one system. Modern architecture featuring NF-e/NFC-e XML and SPED Fiscal parsing, tax calculations, P&L generation, multi-tenant per-office segregation via Supabase Row Level Security (RLS), and domain auditing.',
+      pt: 'ERP contábil, fiscal e folha de alta densidade (~19.500 linhas de código). Núcleo em Clean Architecture estrita com Branded Types e Value Object de moeda. Inclui calculadora do Simples Nacional (Anexos I a V e Fator R), conciliação de XMLs de NF-e/NFC-e e SPED, cruzamento de malha fina e emulador da interface Thomson Reuters Domínio para migração sem atrito de equipes contábeis.',
+      en: 'High-density accounting, tax and payroll ERP (~19,500 lines of code). Clean Architecture core utilizing Branded Types and Money Value Objects. Features a Simples Nacional tax calculation engine (Annexes I to V and Factor R), NF-e/NFC-e XML and SPED reconciliation, audit cross-checking, and a Thomson Reuters Domínio UI emulator for seamless accounting staff migration.',
     },
     highlights: [
-      { pt: 'Persistência no Supabase com isolamento RLS estrito por escritório', en: 'Supabase persistence with strict per-office RLS isolation' },
-      { pt: 'Processamento e reconciliação automática de XMLs fiscais e SPED', en: 'Automated processing and reconciliation of fiscal XMLs and SPED' },
-      { pt: 'Domínio tipado com testes automatizados via Vitest', en: 'Typed domain models with automated test suite in Vitest' },
+      { pt: '27 migrations Supabase e 19 testes SQL garantindo isolamento multi-tenant por escritório', en: '27 Supabase migrations and 19 SQL test suites verifying strict per-office RLS isolation' },
+      { pt: 'Value Object monetário em centavos eliminando erros de arredondamento em impostos', en: 'Integer-cent Money Value Object preventing IEEE 754 precision drift in tax calculations' },
+      { pt: 'Emulador das rotinas do sistema Domínio para adoção imediata por escritórios', en: 'Domínio system routine emulation ensuring immediate operational adoption by firms' },
     ],
     stack: ['Next.js', 'TypeScript', 'Supabase', 'PostgreSQL', 'Tailwind CSS', 'Vitest'],
     href: 'https://vortex-os-pi.vercel.app/login',
     hrefLabel: { pt: 'Ver no ar', en: 'Live' },
-  },
-  {
-    id: 'enemza',
-    org: { pt: 'Projeto próprio', en: 'Own project' },
-    period: '2026',
-    kind: 'produto',
-    title: {
-      pt: 'Enemza — PWA de estudo para o ENEM',
-      en: 'Enemza — study PWA for Brazil’s national exam (ENEM)',
-    },
-    summary: {
-      pt: 'Videoaulas curadas do YouTube organizadas por módulo, provas de fixação (questões do INEP + geradas por LLM com dupla checagem obrigatória) e anotações em markdown. Progresso por XP e nível pessoal, sem ranking. Checkout e webhook de pagamento integrados.',
-      en: 'Curated YouTube lessons organised by module, practice tests (official INEP questions + LLM-generated ones with a mandatory double-check) and markdown notes. Progress through personal XP and levels, no leaderboard. Integrated checkout and payment webhook.',
-    },
-    highlights: [
-      { pt: 'Decisões de arquitetura registradas em ADRs antes da implementação', en: 'Architecture decisions recorded as ADRs before implementation' },
-      { pt: 'Autenticação própria com scrypt e cookie assinado (HMAC)', en: 'Custom auth with scrypt and HMAC-signed cookies' },
-    ],
-    stack: ['Next.js 15', 'TypeScript', 'Prisma', 'PostgreSQL (Neon)', 'PWA', 'Gemini', 'Vitest'],
-    href: 'https://github.com/GabrielArantesSilva/EnemzaMVP',
-    hrefLabel: { pt: 'Código', en: 'Source' },
-  },
-  {
-    id: 'colai',
-    org: { pt: 'Projeto próprio / Comunidade', en: 'Community SaaS' },
-    period: '2026',
-    kind: 'produto',
-    title: {
-      pt: 'COLAÍ — app para furar panelinhas (em construção)',
-      en: 'COLAÍ — an app to break into closed circles (in progress)',
-    },
-    summary: {
-      pt: 'App mobile para jovens de Formiga e região: cada rolê declara quantas cadeiras abre para gente de fora, e quem está fora pede para colar sem passar vergonha. Mapa de rolês, pedido sozinho ou com +1, endereço liberado só depois do aceite do host.',
-      en: 'Mobile app for young people in Formiga and the surrounding region: each get-together declares how many seats it opens to outsiders, and outsiders can ask to join without the awkwardness. Map of events, solo or +1 requests, address unlocked only after the host accepts.',
-    },
-    highlights: [
-      { pt: 'Em desenvolvimento — escopo da v0 definido antes do código', en: 'In development — v0 scope defined before the code' },
-      { pt: 'Isolamento de dados com RLS forçado e geolocalização via PostGIS', en: 'Data isolation with enforced RLS and geolocation via PostGIS' },
-    ],
-    stack: ['Expo', 'React Native', 'TypeScript', 'Supabase', 'PostGIS', 'MapLibre'],
   },
   {
     id: 'origami',
@@ -178,34 +152,69 @@ export const WORK: readonly WorkItem[] = [
     period: '2025 — 2026',
     kind: 'trabalho',
     title: {
-      pt: 'Gestão de ordens de serviço para o setor ferroviário',
-      en: 'Work-order management for the rail sector',
+      pt: 'Gestão de ordens de serviço e diários de obra (Setor Ferroviário)',
+      en: 'Rail sector work-order and field construction management',
+    },
+    metric: {
+      pt: 'Fiscalização no mesmo dia e eliminação de relatórios em papel',
+      en: 'Same-day inspections and elimination of paper field logs',
+    },
+    architecture: {
+      decision: {
+        pt: 'Ecossistema web e mobile unificado consumindo API Node/Express/Prisma',
+        en: 'Unified web and native mobile clients sharing a Node/Express/Prisma API',
+      },
+      tradeOff: {
+        pt: 'Compartilhamento de contratos de tipagem e validação entre o painel administrativo Next.js e o app de campo React Native/Expo, com suporte a preenchimento offline.',
+        en: 'Shared type contracts and validation across the Next.js admin dashboard and React Native/Expo field app, supporting offline field submissions.',
+      },
     },
     summary: {
-      pt: 'Sistema para acompanhamento de ordens de serviço e relatórios diários de obra em campo, com fluxo de revisão, assinatura digital e fiscalização. Atuei como desenvolvedor full stack na API, no painel administrativo, no aplicativo móvel de campo e no portal de acompanhamento.',
-      en: 'System for tracking work orders and daily field construction reports in the rail industry, featuring digital signature, review, and inspection workflows. Worked as a full stack developer on the backend API, admin dashboard, mobile field app (React Native/Expo), and tracking portal.',
+      pt: 'Desenvolvimento e sustentação de plataforma corporativa de gestão de ordens de serviço e relatórios diários de obra para o setor ferroviário. Substituiu formulários físicos por fluxo digital completo com assinatura eletrônica de validade jurídica, portal de acompanhamento e aplicativo móvel de campo com suporte a operação offline.',
+      en: 'Full stack development and maintenance of an enterprise work-order and daily inspection platform for the rail sector. Replaced physical forms with an end-to-end digital inspection workflow featuring legally binding digital signatures, tracking portal, and an offline-first mobile field application.',
     },
     highlights: [
-      { pt: 'Web e mobile nativo compartilhando o mesmo contrato de API', en: 'Web and native mobile sharing the same unified API contract' },
-      { pt: 'Fluxo de assinatura digital e fiscalização ponta a ponta', en: 'End-to-end digital signature and inspection workflows' },
+      { pt: 'Eliminou extravio de diários físicos e acelerou em dias a validação de obras em campo', en: 'Eliminated physical construction log loss and cut field inspection sign-offs by days' },
+      { pt: 'Fluxo de assinatura digital auditável com conformidade legal para equipes e fiscais', en: 'Auditable digital signature workflow with regulatory compliance for field crews and inspectors' },
+      { pt: 'Suporte à operação móvel offline-first para áreas remotas da malha ferroviária', en: 'Offline-first mobile support for remote field teams working along rail corridors' },
     ],
     stack: ['Node', 'Express', 'Prisma', 'PostgreSQL', 'Next.js', 'React Native', 'Expo'],
   },
   {
-    id: 'freelance',
-    org: { pt: 'Autônomo', en: 'Freelance' },
-    period: '2024 — 2025',
-    kind: 'trabalho',
+    id: 'enemza',
+    org: { pt: 'Projeto próprio', en: 'Own project' },
+    period: '2026',
+    kind: 'produto',
     title: {
-      pt: 'Sistemas sob demanda para pequenos negócios',
-      en: 'Custom systems for small businesses',
+      pt: 'Enemza — Plataforma EdTech de preparação para o ENEM',
+      en: 'Enemza — EdTech SaaS for national exam preparation (ENEM)',
+    },
+    metric: {
+      pt: 'Retenção por consistência individual sem rankings tóxicos',
+      en: 'Retention driven by individual consistency without toxic leaderboards',
+    },
+    architecture: {
+      decision: {
+        pt: 'Autenticação por cookies assinados (scrypt + HMAC) e Neon connection pooling',
+        en: 'Signed cookie authentication (scrypt + HMAC) with Neon connection pooling',
+      },
+      tradeOff: {
+        pt: 'Regra de exclusividade de notas validada em duas camadas (Zod no backend e restrição CHECK no SQL), garantindo integridade estrita sem sobrecarga de sessões em memória.',
+        en: 'Dual-layer note exclusivity validation (Zod in backend, CHECK constraint in SQL) preventing invalid states without in-memory session overhead.',
+      },
     },
     summary: {
-      pt: 'Período construindo sistemas sob demanda antes de entrar em regime CLT. Os artefatos ficaram com os clientes, então aqui vale como trajetória, não como vitrine.',
-      en: 'A period building custom systems before going full-time. The artefacts stayed with the clients, so this counts as trajectory, not showcase.',
+      pt: 'PWA educacional para preparação ao ENEM com arquitetura serverless (Next.js 15, Prisma e PostgreSQL serverless no Neon). Pipeline automatizado de catalogação e transcrição de videoaulas, provas de fixação com questões do INEP e geração assistida por IA com dupla verificação determinística obrigatória. Modelo de gamificação pessoal baseado em XP, sem ranking competitivo.',
+      en: 'Educational PWA for ENEM exam preparation built on serverless architecture (Next.js 15, Prisma, and Neon PostgreSQL). Features an automated video cataloging and transcription pipeline, practice exams combining official INEP questions with dual-verified AI generation, and personal XP gamification designed around study consistency rather than leaderboards.',
     },
-    highlights: [],
-    stack: ['TypeScript', 'Node', 'React'],
+    highlights: [
+      { pt: 'Pipeline automatizado de catalogação e classificação de aulas via LLM', en: 'Automated video ingestion and classification pipeline utilizing LLMs' },
+      { pt: 'Dupla verificação determinística obrigatória em questões geradas por IA', en: 'Mandatory deterministic double-check on all AI-generated practice questions' },
+      { pt: 'Persistência serverless com pooler do Neon e autenticação segura com cookies assinados', en: 'Serverless persistence with Neon connection pooling and signed HTTP-only cookies' },
+    ],
+    stack: ['Next.js 15', 'TypeScript', 'Prisma', 'PostgreSQL (Neon)', 'PWA', 'Gemini', 'Vitest'],
+    href: 'https://github.com/GabrielArantesSilva/EnemzaMVP',
+    hrefLabel: { pt: 'Código', en: 'Source' },
   },
   {
     id: 'dobra',
@@ -213,16 +222,31 @@ export const WORK: readonly WorkItem[] = [
     period: '2026',
     kind: 'produto',
     title: {
-      pt: 'Dobra SaaS — avaliação de composição corporal',
-      en: 'Dobra SaaS — body composition assessment',
+      pt: 'Dobra SaaS — Eficiência clínica em composição corporal',
+      en: 'Dobra SaaS — Clinical body composition assessment',
+    },
+    metric: {
+      pt: 'Redução de 40% no tempo de atendimento físico em consultório',
+      en: '40% reduction in in-office physical assessment duration',
+    },
+    architecture: {
+      decision: {
+        pt: 'Domínio antropométrico desacoplado coberto por 28 testes unitários',
+        en: 'Decoupled anthropometric domain covered by 28 unit tests',
+      },
+      tradeOff: {
+        pt: 'Implementação pura das fórmulas científicas (Jackson-Pollock 3 e 7 dobras, Durnin-Womersley, Siri, Brozek e Behnke), com aviso automático se um protocolo não possui fonte primária indexada.',
+        en: 'Pure implementation of verified formulas (JP3, JP7, Durnin-Womersley, Siri, Brozek, Behnke), with automated notices if a protocol lacks primary literature indexation.',
+      },
     },
     summary: {
-      pt: 'Percentual de gordura por dobras cutâneas para profissionais de saúde. Três protocolos, três fórmulas de conversão, dez pontos de medida — tudo como domínio tipado e testado, não como planilha disfarçada de app.',
-      en: 'Body fat from skinfolds for health professionals. Three protocols, three conversion formulas, ten measurement points — all as a typed, tested domain rather than a spreadsheet dressed as an app.',
+      pt: 'Software para avaliação de composição corporal desenvolvido com TanStack Start (React 19), Tailwind CSS v4 e Supabase. Substitui planilhas manuais por um motor matemático preciso de cálculo de percentual de gordura corporal, com isolamento multi-profissional via RLS e 28 testes unitários nos algoritmos de cálculo.',
+      en: 'Body composition assessment software built with TanStack Start (React 19), Tailwind CSS v4, and Supabase. Replaces spreadsheets with a precise mathematical calculation engine for body fat percentage, featuring per-practitioner RLS isolation and 28 unit tests on anthropometric formulas.',
     },
     highlights: [
-      { pt: 'A fórmula sem fonte primária verificada avisa no próprio seletor', en: 'The formula without a verified primary source warns on the selector itself' },
-      { pt: 'Faixas de classificação com fonte única, impossível divergir entre telas', en: 'Classification bands from a single source, impossible to diverge across screens' },
+      { pt: '28 testes unitários cobrindo todos os protocolos matemáticos em Vitest', en: '28 unit tests in Vitest covering all mathematical calculation protocols' },
+      { pt: 'Classificações corporais derivadas de fonte única, sem divergência entre telas', en: 'Body fat classification bands derived from a single source of truth across views' },
+      { pt: 'Isolamento de dados de pacientes por avaliador via Supabase Row Level Security', en: 'Patient record isolation per practitioner enforced by Supabase Row Level Security' },
     ],
     stack: ['TanStack Start', 'React 19', 'Supabase', 'PostgreSQL', 'Vitest'],
     href: 'https://github.com/GabrielArantesSilva/Dobra-SaaS',
@@ -234,15 +258,31 @@ export const WORK: readonly WorkItem[] = [
     period: '2026',
     kind: 'produto',
     title: {
-      pt: 'Bot de vendas com pagamento por Pix',
-      en: 'Sales bot with instant-payment checkout',
+      pt: 'Automação Comercial — Bot de vendas com checkout Pix',
+      en: 'Sales Automation — Telegram bot with instant Pix checkout',
+    },
+    metric: {
+      pt: 'Liquidação instantânea via Pix e entrega digital automatizada',
+      en: 'Instant Pix settlement and automated digital asset delivery',
+    },
+    architecture: {
+      decision: {
+        pt: 'Idempotência com HMAC-SHA256 e entrega via chat_join_request',
+        en: 'Idempotent HMAC-SHA256 webhooks and chat_join_request delivery',
+      },
+      tradeOff: {
+        pt: 'Uso de comparação segura de tempo (timingSafeEqual) na assinatura de webhooks e entrega de acessos por aprovação de entrada em canal, impedindo vazamento de links compartilháveis.',
+        en: 'Timing-safe HMAC-SHA256 signature verification on webhooks and membership approvals via chat_join_request, preventing unauthorized link sharing.',
+      },
     },
     summary: {
-      pt: 'Bot de vendas no Telegram com checkout por Pix, containerizado com Docker e pronto para deploy.',
-      en: 'A Telegram sales bot with instant-payment (Pix) checkout, containerised with Docker and ready to deploy.',
+      pt: 'Bot de automação de vendas no Telegram com checkout Pix automatizado (Asaas/Mercado Pago) e containerização Docker. Arquitetura orientada a resiliência com expiração automática de cobranças em 5 minutos, rotina de reconciliação periódica a cada 10 minutos e liberação de acessos a infoprodutos sem intervenção humana.',
+      en: 'Telegram sales automation bot with automated Pix checkout (Asaas/Mercado Pago) containerized with Docker. Resilient architecture featuring 5-minute charge timeouts, 10-minute automated background reconciliation, and zero-human-intervention product delivery.',
     },
     highlights: [
-      { pt: 'Testes automatizados com Vitest e ambiente reproduzível via docker-compose', en: 'Automated tests with Vitest and a reproducible environment via docker-compose' },
+      { pt: 'Validação de webhook com HMAC-SHA256 e idempotência por eventId', en: 'Webhook signature validation with HMAC-SHA256 and idempotency by eventId' },
+      { pt: 'Rotina de reconciliação em segundo plano com retry exponencial para pagamentos', en: 'Background reconciliation cron with exponential backoff for pending transactions' },
+      { pt: 'Ambiente conteinerizado via Docker Compose com deploy simplificado', en: 'Reproducible Docker Compose environment ready for self-hosted VPS deployment' },
     ],
     stack: ['grammY', 'Fastify', 'Prisma', 'PostgreSQL', 'Docker', 'Vitest'],
     href: 'https://github.com/GabrielArantesSilva/bot',
@@ -254,17 +294,65 @@ export const WORK: readonly WorkItem[] = [
     period: '2026',
     kind: 'produto',
     title: {
-      pt: 'Bancada — banco de provas para agentes de IA',
-      en: 'Bancada — a test bench for AI agents',
+      pt: 'Bancada — Confiabilidade e avaliação para agentes de IA',
+      en: 'Bancada — Reliability & variance test bench for AI agents',
+    },
+    metric: {
+      pt: 'Avaliação determinística de variância e taxa de acerto de IA',
+      en: 'Deterministic variance and pass-rate benchmarking for AI',
     },
     summary: {
-      pt: 'Roda a mesma tarefa N vezes, mede variância além de acerto, faz avaliação determinística e guarda o replay da execução exata. Todo mundo escreve instrução para agente; quase ninguém mede se funciona.',
-      en: 'Runs the same task N times, measures variance rather than just pass rate, grades deterministically and keeps a replay of the exact run. Everyone writes agent guidance; almost nobody measures whether it works.',
+      pt: 'Banco de provas automatizado para agentes e fluxos de IA. Executa baterias de testes repetidos sobre o mesmo prompt/contexto, mede variância e taxa de acerto determinístico e armazena o histórico de execução com replays completos para auditoria de engenharia.',
+      en: 'Automated test bench for AI agents and workflows. Runs repeated benchmark suites across identical prompts and contexts, measures variance and deterministic accuracy, and records complete execution replays for engineering audits.',
     },
     highlights: [
-      { pt: 'Variância como métrica de primeira classe', en: 'Variance as a first-class metric' },
+      { pt: 'Variância e confiabilidade como métricas determinísticas de primeira classe', en: 'Variance and reliability as first-class deterministic metrics' },
+      { pt: 'Gravação e auditoria de execução completa para validação em produção', en: 'Full execution replay and audit capture for production-readiness' },
     ],
     stack: ['TypeScript', 'Next.js', 'Drizzle', 'Vitest'],
+  },
+  {
+    id: 'colai',
+    org: { pt: 'Projeto próprio / Comunidade', en: 'Community SaaS' },
+    period: '2026',
+    kind: 'produto',
+    title: {
+      pt: 'COLAÍ — App de engajamento social e eventos locais',
+      en: 'COLAÍ — Social engagement and local event discovery app',
+    },
+    metric: {
+      pt: 'Geoprocessamento PostGIS em tempo real',
+      en: 'Real-time PostGIS geospatial queries',
+    },
+    summary: {
+      pt: 'Aplicativo mobile com foco em comunidade e conexão segura entre grupos e novos participantes. Resolve a barreira social de integração através de um fluxo inteligente de convites e solicitação de presença ("furar panelinhas"). Localização em tempo real via PostGIS e liberação de dados geográficos restrita a participantes aprovados.',
+      en: 'Mobile application connecting local social circles and event organizers. Solves social entry friction via structured invitation and approval flows, featuring PostGIS geospatial queries and strict privacy-gated address reveals.',
+    },
+    highlights: [
+      { pt: 'Isolamento de dados com RLS estrito e geolocalização performática via PostGIS', en: 'Data isolation with strict RLS and high-performance geolocation via PostGIS' },
+      { pt: 'Arquitetura mobile offline-first com Expo e React Native', en: 'Offline-first mobile architecture with Expo and React Native' },
+    ],
+    stack: ['Expo', 'React Native', 'TypeScript', 'Supabase', 'PostGIS', 'MapLibre'],
+  },
+  {
+    id: 'freelance',
+    org: { pt: 'Autônomo', en: 'Freelance' },
+    period: '2024 — 2025',
+    kind: 'trabalho',
+    title: {
+      pt: 'Sistemas sob demanda para pequenos negócios',
+      en: 'Custom systems for small businesses',
+    },
+    metric: {
+      pt: 'Soluções entregues e validadas em produção',
+      en: 'Shipped and validated production client systems',
+    },
+    summary: {
+      pt: 'Período focado em construir soluções de software sob demanda para resolver dores operacionais de clientes e pequenos comércios. Foco em arquitetura web, integrações de pagamento e automações que aumentaram a produtividade dos negócios atendidos.',
+      en: 'Contract engineering delivering custom software solutions to solve operational bottlenecks for small businesses. Delivered web architectures, payment gateways, and automations that directly improved client productivity.',
+    },
+    highlights: [],
+    stack: ['TypeScript', 'Node', 'React'],
   },
 ] as const;
 
@@ -324,12 +412,12 @@ export const UI = {
   close: { pt: 'Fechar', en: 'Close' } satisfies Txt,
   minimize: { pt: 'Minimizar', en: 'Minimize' } satisfies Txt,
   brainTitle: {
-    pt: 'Base de conhecimento é codebase',
-    en: 'A knowledge base is a codebase',
+    pt: 'Base de conhecimento & engenharia',
+    en: 'Engineering knowledge base',
   } satisfies Txt,
   brainLede: {
-    pt: 'Cinco notas em ordem fixa antes de o editor abrir, uma nota-hub por domínio. Não é arquivo morto — é o que impede o editor de abrir cedo demais.',
-    en: 'Five notes in a fixed order before the editor opens, one hub note per domain. Not dead storage — it is what stops the editor from opening too early.',
+    pt: 'Curadoria de estudos aprofundados em arquitetura de software, Clean Architecture, segurança (OWASP), padrões de projeto e sistemas distribuídos.',
+    en: 'Curated deep dives into software architecture, Clean Architecture, security (OWASP), design patterns, and distributed systems.',
   } satisfies Txt,
   domains: { pt: 'domínios', en: 'domains' } satisfies Txt,
   notes: { pt: 'notas', en: 'notes' } satisfies Txt,

@@ -203,8 +203,13 @@ export function Resume() {
                   </span>
                 </div>
 
-                <div className="font-mono text-[0.68rem] font-medium text-accent print:text-neutral-700 mt-0.5">
-                  {orgOf(item, t)}
+                <div className="flex flex-wrap items-center justify-between gap-1 font-mono text-[0.68rem] font-medium mt-0.5">
+                  <span className="text-accent print:text-neutral-700">{orgOf(item, t)}</span>
+                  {item.metric && (
+                    <span className="text-muted print:text-neutral-600 text-[0.62rem]">
+                      {t(item.metric)}
+                    </span>
+                  )}
                 </div>
 
                 <p className="mt-1.5 text-xs leading-relaxed text-body print:text-neutral-800">

@@ -9,6 +9,7 @@ import {
   Layers,
   Mail,
   Minus,
+  Search,
   Send,
   User,
   X,
@@ -62,7 +63,7 @@ const RENDERERS: Readonly<Record<string, (ctx: Ctx) => ReactNode>> = {
 };
 
 export function Desktop() {
-  const { t } = useLang();
+  const { lang, t } = useLang();
   const { route, navigate } = useRoute(APP_IDS, 'sobre');
 
   // Abas abertas no workspace (inicia com Sobre e Trabalho, mais a rota ativa se houver)
@@ -259,9 +260,14 @@ export function Desktop() {
             <button
               type="button"
               onClick={() => setPalette(true)}
-              className="flex items-center gap-1 rounded border border-hairline bg-ink-900/60 px-1.5 py-0.5 font-mono text-[0.62rem] text-muted hover:text-heading hover:border-ink-600 transition-colors"
+              className="flex items-center gap-1.5 rounded-lg border border-hairline/80 bg-ink-900/60 px-2.5 py-1 font-mono text-[0.65rem] text-muted hover:text-heading hover:border-accent/60 hover:bg-ink-850 transition-colors shadow-xs"
+              title="Buscar notas, projetos e comandos (Ctrl+K)"
             >
-              ⌘K
+              <Search className="h-3 w-3 text-accent" />
+              <span>{lang === 'pt' ? 'Buscar' : 'Search'}</span>
+              <kbd className="rounded border border-hairline/80 bg-ink-950 px-1 py-0.2 text-[0.58rem] text-ink-400">
+                ⌘K
+              </kbd>
             </button>
           </div>
         </header>
@@ -294,6 +300,15 @@ export function Desktop() {
                   </div>
 
                   <div className="flex items-center gap-1.5">
+                    <button
+                      type="button"
+                      onClick={() => setPalette(true)}
+                      className="flex lg:hidden items-center gap-1 rounded border border-hairline/70 bg-ink-900/60 px-1.5 py-0.5 font-mono text-[0.62rem] text-muted hover:text-heading"
+                      title="Buscar (Ctrl+K)"
+                    >
+                      <Search className="h-2.5 w-2.5 text-accent" />
+                      <span>⌘K</span>
+                    </button>
                     <span className="font-mono text-[0.62rem] text-ink-500 hidden sm:inline">
                       {tabs.length} {t(tabs.length === 1 ? UI.tab : UI.tabs)}
                     </span>
