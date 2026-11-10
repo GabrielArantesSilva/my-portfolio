@@ -1,36 +1,64 @@
 {
-  "syncedAt": "2026-11-04T20:16:33.495Z",
+  "syncedAt": "2026-11-10T22:05:43.347Z",
   "projects": [
     {
       "name": "gabriel.os",
       "public": true,
-      "total": 38,
-      "lastAt": "2026-11-04",
+      "total": 46,
+      "lastAt": "2026-11-10",
       "commits": [
         {
-          "date": "2026-11-04",
-          "subject": "feat(wallpaper): tag GA em estilo graffiti wildstyle, novas figuras e melhorias de grafo/stack"
+          "date": "2026-11-10",
+          "subject": "fix(core): error boundary resiliente, importacao estrita no vitest e canonical oficial para gabr"
         },
         {
-          "date": "2026-10-31",
-          "subject": "feat(wallpaper): figura por app, mais pontos, física solta e toque que estoura"
+          "date": "2026-11-09",
+          "subject": "feat: refinamento de copy com dados reais, curadoria segura do vault e ui/ux sobria"
         },
         {
-          "date": "2026-10-31",
-          "subject": "test: dá 5s para o chunk lazy do currículo no teste de rota direta"
+          "date": "2026-11-06",
+          "subject": "docs: reformula README com visao de produto, arquitetura e diferenciais"
         },
         {
-          "date": "2026-10-31",
-          "subject": "feat(wallpaper): iniciais GA como primeira figura"
+          "date": "2026-11-06",
+          "subject": "fix(content): atualiza links dos projetos (VORTEX no ar, repositorios do Enemza e Dobra)"
+        }
+      ]
+    },
+    {
+      "name": "VORTEX OS",
+      "public": false,
+      "total": 62,
+      "lastAt": "2026-11-10",
+      "commits": [
+        {
+          "date": "2026-11-10",
+          "subject": null
+        },
+        {
+          "date": "2026-11-10",
+          "subject": null
+        },
+        {
+          "date": "2026-11-06",
+          "subject": null
+        },
+        {
+          "date": "2026-11-06",
+          "subject": null
         }
       ]
     },
     {
       "name": "Enemza",
       "public": true,
-      "total": 15,
-      "lastAt": "2026-10-31",
+      "total": 16,
+      "lastAt": "2026-11-06",
       "commits": [
+        {
+          "date": "2026-11-06",
+          "subject": "docs: reformula README com motivo, o que soluciona, arquitetura e ADRs"
+        },
         {
           "date": "2026-10-31",
           "subject": "refactor(auth): visual profissional e institucional para a tela de login"
@@ -42,34 +70,30 @@
         {
           "date": "2026-10-31",
           "subject": "feat: redesenho moderno da tela de login e organizador didático de estudos"
-        },
-        {
-          "date": "2026-08-06",
-          "subject": "feat: histórico de estudos no perfil (aulas + provas) com estatísticas"
         }
       ]
     },
     {
-      "name": "VORTEX OS",
-      "public": false,
-      "total": 6,
-      "lastAt": "2026-10-26",
+      "name": "Dobra SaaS",
+      "public": true,
+      "total": 17,
+      "lastAt": "2026-11-06",
       "commits": [
         {
-          "date": "2026-10-26",
-          "subject": null
+          "date": "2026-11-06",
+          "subject": "docs: reformula README com motivo, o que soluciona, protocolos clinicos e RLS"
         },
         {
-          "date": "2026-10-26",
-          "subject": null
+          "date": "2026-08-06",
+          "subject": "fix(auth): resolve the reset-password URL without a build-time env var"
         },
         {
-          "date": "2026-10-23",
-          "subject": null
+          "date": "2026-08-05",
+          "subject": "fix(bodyfat): adopt the original scope classification bands"
         },
         {
-          "date": "2026-10-23",
-          "subject": null
+          "date": "2026-08-05",
+          "subject": "feat(seo): add protocol guide and FAQ content to the landing page"
         }
       ]
     },
@@ -110,30 +134,6 @@
       ]
     },
     {
-      "name": "Dobra SaaS",
-      "public": true,
-      "total": 16,
-      "lastAt": "2026-08-06",
-      "commits": [
-        {
-          "date": "2026-08-06",
-          "subject": "fix(auth): resolve the reset-password URL without a build-time env var"
-        },
-        {
-          "date": "2026-08-05",
-          "subject": "fix(bodyfat): adopt the original scope classification bands"
-        },
-        {
-          "date": "2026-08-05",
-          "subject": "feat(seo): add protocol guide and FAQ content to the landing page"
-        },
-        {
-          "date": "2026-08-05",
-          "subject": "feat(seo): per-route metadata, canonical, robots and sitemap"
-        }
-      ]
-    },
-    {
       "name": "Bot de vendas",
       "public": true,
       "total": 11,
@@ -159,7 +159,7 @@
     }
   ],
   "totals": {
-    "commits": 94,
+    "commits": 160,
     "repos": 7
   }
 }

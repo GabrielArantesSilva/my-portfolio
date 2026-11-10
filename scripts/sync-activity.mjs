@@ -29,6 +29,8 @@ const TRACKED = [
     name: 'VORTEX OS',
     public: false,
     paths: [
+      join(root, '..', 'VORTEX-OS', 'Vortex-OS-feat'),
+      join(root, '..', 'VORTEX-OS', 'Vortex-OS'),
       resolve(root, '..', '..', 'DESENVOVLIEMNTO', 'VORTEX OS'),
       join(root, '..', 'VORTEX OS'),
       join(root, '..', 'VORTEX-OS'),
