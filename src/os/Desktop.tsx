@@ -21,6 +21,7 @@ import { APP_IDS, LAYOUT, byId } from './layout';
 import { Sidebar } from './Sidebar';
 import { Wallpaper } from './Wallpaper';
 import { APP_FIGURE } from './figures';
+import { AppErrorBoundary } from './AppErrorBoundary';
 import { About } from '../apps/About';
 import { Work } from '../apps/Work';
 
@@ -324,17 +325,19 @@ export function Desktop() {
                   </div>
                 </div>
 
-                {/* Conteúdo Renderizado do App Ativo */}
+                {/* Conteúdo Renderizado do App Ativo com Proteção de Exceção de Kernel */}
                 <div className="text-xs sm:text-sm leading-relaxed text-body">
-                  <Suspense
-                    fallback={
-                      <p role="status" className="py-8 text-center font-mono text-[0.7rem] text-muted">
-                        {t(UI.loading)}
-                      </p>
-                    }
-                  >
-                    {RENDERERS[activeTab]?.(ctx)}
-                  </Suspense>
+                  <AppErrorBoundary key={activeTab}>
+                    <Suspense
+                      fallback={
+                        <p role="status" className="py-8 text-center font-mono text-[0.7rem] text-muted">
+                          {t(UI.loading)}
+                        </p>
+                      }
+                    >
+                      {RENDERERS[activeTab]?.(ctx)}
+                    </Suspense>
+                  </AppErrorBoundary>
                 </div>
               </motion.section>
               )}
