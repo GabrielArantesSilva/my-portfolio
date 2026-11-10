@@ -5,6 +5,7 @@ import {
   Globe,
   MapPin,
   Phone,
+  Printer,
 } from 'lucide-react';
 import { useLang } from '../i18n/lang';
 import { ABOUT, IDENTITY, UI, WORK } from '../content/site';
@@ -55,7 +56,18 @@ export function Resume() {
           </p>
         </div>
 
-        <ResumeDownload label={UI.downloadPdf} />
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => window.print()}
+            className="inline-flex items-center gap-1.5 rounded-lg border border-hairline/80 bg-ink-850 px-2.5 py-1.5 font-mono text-xs font-semibold text-heading transition-colors hover:border-accent hover:text-accent active:scale-95 print:hidden"
+            title={lang === 'pt' ? 'Imprimir ou salvar em PDF formatado (A4)' : 'Print or save to formatted A4 PDF'}
+          >
+            <Printer className="h-3.5 w-3.5" />
+            <span className="hidden sm:inline">{lang === 'pt' ? 'Imprimir / A4' : 'Print / A4'}</span>
+          </button>
+          <ResumeDownload label={UI.downloadPdf} />
+        </div>
       </div>
 
       {/* Documento Principal do Currículo */}

@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useReducedMotion } from 'framer-motion';
 import { useLang } from '../i18n/lang';
-import { UI } from '../content/site';
+import { IDENTITY, UI } from '../content/site';
 import vault from '../content/vault.json';
 import { useForceGraph } from '../os/useForceGraph';
 
@@ -379,6 +379,22 @@ export function Brain({
               </div>
             </div>
           )}
+
+          {/* Rodapé de networking e discussão do conceito */}
+          <div className="mt-3 pt-2.5 border-t border-hairline/60 flex flex-wrap items-center justify-between gap-2 text-[0.62rem] font-mono text-muted">
+            <span className="text-ink-500">
+              {lang === 'pt' ? 'Nota do Segundo Cérebro (Obsidian)' : 'Second Brain concept note'}
+            </span>
+            <a
+              href={IDENTITY.linkedin}
+              target="_blank"
+              rel="noreferrer noopener"
+              className="text-accent hover:underline inline-flex items-center gap-1"
+            >
+              <span>{lang === 'pt' ? 'Debater conceito no LinkedIn' : 'Discuss on LinkedIn'}</span>
+              <span>→</span>
+            </a>
+          </div>
         </article>
       ) : (
         <p className="numeric rounded-xl border border-dashed border-hairline/60 px-3 py-3 text-center text-xs text-muted">

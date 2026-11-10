@@ -21,6 +21,13 @@ export interface WorkItem {
     readonly decision: Txt;
     readonly tradeOff: Txt;
   };
+  /** Snippets de código real auditados para demonstração de craft a tech leads */
+  readonly snippets?: readonly {
+    readonly title: Txt;
+    readonly language: string;
+    readonly code: string;
+    readonly caption?: Txt;
+  }[];
   readonly summary: Txt;
   readonly highlights: readonly Txt[];
   readonly stack: readonly string[];

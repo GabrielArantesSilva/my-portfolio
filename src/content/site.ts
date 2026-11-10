@@ -142,6 +142,93 @@ export const WORK: readonly WorkItem[] = [
       { pt: 'Value Object monetário em centavos eliminando erros de arredondamento em impostos', en: 'Integer-cent Money Value Object preventing IEEE 754 precision drift in tax calculations' },
       { pt: 'Emulador das rotinas do sistema Domínio para adoção imediata por escritórios', en: 'Domínio system routine emulation ensuring immediate operational adoption by firms' },
     ],
+    snippets: [
+      {
+        title: {
+          pt: 'TypeScript Domain: Money Value Object (Centavos inteiros em BigInt)',
+          en: 'TypeScript Domain: Money Value Object (BigInt integer-cents)',
+        },
+        language: 'typescript',
+        code: `export class Money {
+  private readonly cents: bigint;
+
+  private constructor(cents: bigint) {
+    this.cents = cents;
+  }
+
+  public static fromDecimal(value: number | string): Money {
+    const num = typeof value === 'string' ? parseFloat(value.replace(',', '.')) : value;
+    if (isNaN(num)) throw new Error(\`Valor decimal inválido: \${value}\`);
+    return new Money(BigInt(Math.round(num * 100)));
+  }
+
+  public static fromCents(cents: number | bigint): Money {
+    return new Money(BigInt(cents));
+  }
+
+  public add(other: Money): Money {
+    return new Money(this.cents + other.cents);
+  }
+
+  public multiply(factor: number): Money {
+    return new Money(BigInt(Math.round(Number(this.cents) * factor)));
+  }
+
+  public toDecimal(): number {
+    return Number(this.cents) / 100;
+  }
+
+  public formatBRL(): string {
+    return new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+    }).format(this.toDecimal());
+  }
+}`,
+        caption: {
+          pt: 'Elimina o problema de precisão IEEE 754 em cálculos fiscais e notas de serviço.',
+          en: 'Eliminates IEEE 754 precision drift in accounting and outward tax computations.',
+        },
+      },
+      {
+        title: {
+          pt: 'PostgreSQL / Supabase Migration: Partidas Dobradas & RLS Imutável',
+          en: 'PostgreSQL / Supabase Migration: Double-entry Bookkeeping & RLS',
+        },
+        language: 'sql',
+        code: `-- 1. Anon e authenticated sem privilégios destrutivos (TRUNCATE não respeita RLS)
+revoke all on all tables in schema public from anon;
+revoke truncate, references, trigger on all tables in schema public from authenticated;
+
+-- 2. Histórico contábil imutável (guarda fiscal de 5 anos obrigatória)
+alter table public.journal_entries
+  add constraint journal_entries_tenant_company_fkey
+  foreign key (tenant_id, company_id)
+  references public.companies (tenant_id, id) on delete restrict;
+
+-- 3. Trigger transacional: Partidas dobradas (Débito = Crédito rigoroso)
+create or replace function app.conferir_partidas() returns trigger
+language plpgsql security definer set search_path = '' as $$
+declare
+  v_d bigint;
+  v_c bigint;
+begin
+  select coalesce(sum(amount), 0) into v_d
+    from public.journal_lines where entry_id = new.id and type = 'D';
+  select coalesce(sum(amount), 0) into v_c
+    from public.journal_lines where entry_id = new.id and type = 'C';
+  if v_d <> v_c then
+    raise exception 'Partida desbalanceada: Débito (%) != Crédito (%)', v_d, v_c
+      using errcode = '23514';
+  end if;
+  return new;
+end $$;`,
+        caption: {
+          pt: 'Integridade fiscal garantida pelo motor de banco de dados PostgreSQL antes do commit da transação.',
+          en: 'Fiscal integrity guaranteed by PostgreSQL database engine before transaction commit.',
+        },
+      },
+    ],
     stack: ['Next.js', 'TypeScript', 'Supabase', 'PostgreSQL', 'Tailwind CSS', 'Vitest'],
     href: 'https://vortex-os-pi.vercel.app/login',
     hrefLabel: { pt: 'Ver no ar', en: 'Live' },
@@ -443,6 +530,12 @@ export const UI = {
   } satisfies Txt,
   nowFocusTitle: { pt: 'Radar de foco', en: 'Current focus' } satisfies Txt,
   nowActivityTitle: { pt: 'Atividade nos repositórios', en: 'Repository activity' } satisfies Txt,
+  milestonesTitle: { pt: 'Marcos de entrega', en: 'Delivery milestones' } satisfies Txt,
+  codePeekTitle: { pt: 'Trechos de código auditados', en: 'Audited code snippets' } satisfies Txt,
+  viewSnippet: { pt: 'Ver código real', en: 'Inspect actual code' } satisfies Txt,
+  hideSnippet: { pt: 'Ocultar código', en: 'Hide code' } satisfies Txt,
+  copySnippet: { pt: 'Copiar código', en: 'Copy snippet' } satisfies Txt,
+  copiedSnippet: { pt: 'Copiado!', en: 'Copied!' } satisfies Txt,
   activeToday: { pt: 'ativo hoje', en: 'active today' } satisfies Txt,
   trackedCommits: { pt: 'commits rastreados', en: 'tracked commits' } satisfies Txt,
   activeRepos: { pt: 'repositórios', en: 'repositories' } satisfies Txt,
@@ -573,4 +666,16 @@ export const NOW_FOCUS = {
       en: 'Available for remote full stack roles, backend architecture design, and high-density product development.',
     } satisfies Txt,
   },
+  milestones: [
+    {
+      label: { pt: 'VORTEX OS · Fase Beta Fechada', en: 'VORTEX OS · Closed Beta Phase' } satisfies Txt,
+      progress: '85%',
+      detail: { pt: 'NFS-e Saídas, Anexos I a V e RLS multi-tenant', en: 'Outward NFS-e, Annexes I-V and multi-tenant RLS' } satisfies Txt,
+    },
+    {
+      label: { pt: 'Disponibilidade para Contratos', en: 'Contract Availability' } satisfies Txt,
+      progress: 'Q4 2026 / Q1 2027',
+      detail: { pt: 'Remoto · Staff / Tech Lead / Full Stack', en: 'Remote · Staff / Tech Lead / Full Stack' } satisfies Txt,
+    },
+  ],
 } as const;

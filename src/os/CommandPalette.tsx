@@ -1,7 +1,7 @@
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useLang } from '../i18n/lang';
-import { UI } from '../content/site';
+import { IDENTITY, UI } from '../content/site';
 import type { Txt } from '../content/types';
 import vault from '../content/vault.json';
 
@@ -34,7 +34,7 @@ export function CommandPalette({
   onOpenApp: (id: string) => void;
   onSelectNote: (id: string) => void;
 }) {
-  const { t } = useLang();
+  const { lang, t } = useLang();
   const still = useReducedMotion() ?? false;
   const [query, setQuery] = useState('');
   const [cursor, setCursor] = useState(0);
@@ -64,11 +64,59 @@ export function CommandPalette({
 
     if (!q) return appHits;
 
+    const terminalHits: Command[] = [];
+    if (q.startsWith('cv') || q.startsWith('resum') || q.startsWith('curr')) {
+      terminalHits.push({
+        id: 'cmd:cv',
+        label: lang === 'pt' ? 'Abrir Currículo Profissional' : 'Open Professional Résumé',
+        hint: 'cmd: cv',
+        run: () => onOpenApp('cv'),
+      });
+    }
+    if (q.startsWith('print') || q.startsWith('imp') || q.startsWith('pdf')) {
+      terminalHits.push({
+        id: 'cmd:print',
+        label: lang === 'pt' ? 'Imprimir Currículo A4 / Salvar PDF' : 'Print A4 Résumé / Save PDF',
+        hint: 'cmd: print',
+        run: () => {
+          onOpenApp('cv');
+          setTimeout(() => window.print(), 350);
+        },
+      });
+    }
+    if (q.startsWith('cont') || q.startsWith('email') || q.startsWith('mail')) {
+      terminalHits.push({
+        id: 'cmd:email',
+        label: `${lang === 'pt' ? 'Copiar E-mail' : 'Copy E-mail'}: ${IDENTITY.email}`,
+        hint: 'cmd: email',
+        run: () => {
+          navigator.clipboard?.writeText(IDENTITY.email);
+          onOpenApp('contact');
+        },
+      });
+    }
+    if (q.startsWith('git') || q.startsWith('gh')) {
+      terminalHits.push({
+        id: 'cmd:github',
+        label: 'GitHub: GabrielArantesSilva',
+        hint: 'cmd: github',
+        run: () => window.open(IDENTITY.github, '_blank', 'noreferrer,noopener'),
+      });
+    }
+    if (q.startsWith('link') || q.startsWith('in')) {
+      terminalHits.push({
+        id: 'cmd:linkedin',
+        label: 'LinkedIn: /in/gabriel-arantes-silva',
+        hint: 'cmd: linkedin',
+        run: () => window.open(IDENTITY.linkedin, '_blank', 'noreferrer,noopener'),
+      });
+    }
+
     const noteHits: Command[] = vault.notes
       .filter(
         (n) =>
           n.id.toLowerCase().includes(q) ||
-            n.title.toLowerCase().includes(q) ||
+          n.title.toLowerCase().includes(q) ||
           n.domain.toLowerCase().includes(q) ||
           n.tags.some((tag) => tag.toLowerCase().includes(q))
       )
@@ -80,8 +128,8 @@ export function CommandPalette({
         run: () => onSelectNote(n.id),
       }));
 
-    return [...appHits, ...noteHits].slice(0, MAX_RESULTS + 2);
-  }, [query, apps, t, onOpenApp, onSelectNote]);
+    return [...terminalHits, ...appHits, ...noteHits].slice(0, MAX_RESULTS + 3);
+  }, [query, apps, lang, t, onOpenApp, onSelectNote]);
 
   useEffect(() => setCursor(0), [query]);
 

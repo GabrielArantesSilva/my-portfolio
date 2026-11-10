@@ -62,6 +62,36 @@ export function Now() {
         </div>
       </section>
 
+      {/* Marcos de Entrega */}
+      {NOW_FOCUS.milestones && (
+        <section className="space-y-2">
+          <div className="flex items-center justify-between text-[0.62rem] font-mono text-muted uppercase tracking-wider">
+            <span>{t(UI.milestonesTitle)}</span>
+            <span className="text-ink-500">Q4 2026</span>
+          </div>
+          <div className="grid gap-2 sm:grid-cols-2">
+            {NOW_FOCUS.milestones.map((ms) => (
+              <div
+                key={ms.label.pt}
+                className="rounded-xl border border-hairline/70 bg-ink-950/40 p-3 space-y-1.5"
+              >
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-xs font-semibold text-heading truncate">
+                    {t(ms.label)}
+                  </span>
+                  <span className="font-mono text-[0.62rem] text-accent font-semibold px-1.5 py-0.5 rounded bg-accent/10 border border-accent/20">
+                    {ms.progress}
+                  </span>
+                </div>
+                <p className="text-[0.7rem] text-muted leading-relaxed font-mono">
+                  {t(ms.detail)}
+                </p>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
       {/* Métricas Globais de Engenharia */}
       <dl className="grid grid-cols-3 gap-px overflow-hidden rounded-xl border border-hairline/70 bg-hairline">
         <div className="bg-surface px-3 py-2">

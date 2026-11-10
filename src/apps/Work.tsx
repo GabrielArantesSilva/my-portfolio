@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-import { ExternalLink, ChevronDown } from 'lucide-react';
+import { ExternalLink, ChevronDown, Code2, Check, Copy } from 'lucide-react';
 import { useLang } from '../i18n/lang';
 import { UI, WORK } from '../content/site';
 import type { WorkItem } from '../content/types';
@@ -13,6 +13,15 @@ export function Work() {
   const { t } = useLang();
   const still = useReducedMotion();
   const [open, setOpen] = useState<string | null>(WORK[0]?.id ?? null);
+  const [activeSnippet, setActiveSnippet] = useState<Record<string, number>>({});
+  const [copiedKey, setCopiedKey] = useState<string | null>(null);
+
+  const handleCopy = (key: string, code: string) => {
+    navigator.clipboard.writeText(code).then(() => {
+      setCopiedKey(key);
+      setTimeout(() => setCopiedKey(null), 2000);
+    });
+  };
 
   return (
     <div className="space-y-2">
@@ -100,6 +109,83 @@ export function Work() {
                           <span className="font-mono text-ink-500">{t({ pt: 'Trade-off: ', en: 'Trade-off: ' })}</span>
                           {t(item.architecture.tradeOff)}
                         </p>
+                      </div>
+                    )}
+
+                    {item.snippets && item.snippets.length > 0 && (
+                      <div className="mt-3 space-y-2">
+                        <div className="flex items-center justify-between text-[0.62rem] font-mono text-muted uppercase tracking-wider">
+                          <span className="flex items-center gap-1.5 text-accent font-medium">
+                            <Code2 className="h-3.5 w-3.5" />
+                            <span>{t(UI.codePeekTitle)}</span>
+                          </span>
+                          <span className="text-ink-500">
+                            {item.snippets.length} {t({ pt: 'amostras reais', en: 'production snippets' })}
+                          </span>
+                        </div>
+
+                        <div className="flex flex-wrap gap-1">
+                          {item.snippets.map((snip, sIdx) => {
+                            const isCur = (activeSnippet[item.id] ?? 0) === sIdx;
+                            return (
+                              <button
+                                key={sIdx}
+                                type="button"
+                                onClick={() => setActiveSnippet((prev) => ({ ...prev, [item.id]: sIdx }))}
+                                className={`rounded px-2 py-1 font-mono text-[0.62rem] transition-colors border ${
+                                  isCur
+                                    ? 'border-accent/80 bg-accent/15 text-heading font-semibold'
+                                    : 'border-hairline/60 bg-ink-950/40 text-muted hover:border-hairline hover:text-heading'
+                                }`}
+                              >
+                                {t(snip.title)}
+                              </button>
+                            );
+                          })}
+                        </div>
+
+                        {(() => {
+                          const currentIdx = activeSnippet[item.id] ?? 0;
+                          const snip = item.snippets[currentIdx];
+                          if (!snip) return null;
+                          const copyKey = `${item.id}-${currentIdx}`;
+                          const isCopied = copiedKey === copyKey;
+
+                          return (
+                            <div className="overflow-hidden rounded-lg border border-hairline/70 bg-ink-950/80">
+                              <div className="flex items-center justify-between border-b border-hairline/40 bg-ink-900/60 px-2.5 py-1.5">
+                                <span className="font-mono text-[0.6rem] text-muted uppercase tracking-wider">
+                                  {snip.language}
+                                </span>
+                                <button
+                                  type="button"
+                                  onClick={() => handleCopy(copyKey, snip.code)}
+                                  className="inline-flex items-center gap-1 font-mono text-[0.62rem] text-muted hover:text-accent transition-colors"
+                                >
+                                  {isCopied ? (
+                                    <>
+                                      <Check className="h-3 w-3 text-emerald-400" />
+                                      <span className="text-emerald-400">{t(UI.copiedSnippet)}</span>
+                                    </>
+                                  ) : (
+                                    <>
+                                      <Copy className="h-3 w-3" />
+                                      <span>{t(UI.copySnippet)}</span>
+                                    </>
+                                  )}
+                                </button>
+                              </div>
+                              <pre className="max-h-64 overflow-x-auto p-3 font-mono text-[0.66rem] leading-relaxed text-slate-300 scrollbar-thin">
+                                <code>{snip.code}</code>
+                              </pre>
+                              {snip.caption && (
+                                <div className="border-t border-hairline/40 bg-ink-900/30 px-2.5 py-1.5 text-[0.65rem] text-muted font-mono">
+                                  {t(snip.caption)}
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })()}
                       </div>
                     )}
 
